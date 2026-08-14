@@ -1,4 +1,4 @@
-import ky, { HTTPError, isHTTPError, type KyInstance } from 'ky'
+import ky, { HTTPError, isHTTPError, type KyInstance } from './ky'
 
 import {
   type GlobalElement,

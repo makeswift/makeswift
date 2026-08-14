@@ -1,70 +1,20 @@
 # @makeswift/controls
 
-## 0.1.21-canary.10
-
-### Patch Changes
-
-- ef350b5: fix: infinite loop when resubscribing to list instance updates in response to instance update
-
-## 0.1.21-canary.9
-
-### Patch Changes
-
-- bef8d07: feat: add the ability to subscribe to changes in the control instance state
-
-## 0.1.21-canary.8
-
-### Patch Changes
-
-- 2532e7a: Formalize `ControlInstance<any>` as `AnyControlInstance` to avoid having to suppress warnings about `any` throughout the codebase
-
-## 0.1.21-canary.7
-
-### Patch Changes
-
-- 75e23d7: feat: add `children`, `isCompositeProp` methods to `ControlInstance`
-
-## 0.1.21-canary.6
-
-### Patch Changes
-
-- 96927de: feat: allow to access `List` item controls by index
-
-## 0.1.21-canary.5
+## 0.1.21
 
 ### Patch Changes
 
 - 461939f: feat: add `resolvesToRenderableNode` method to control instances
-
-## 0.1.21-canary.4
-
-### Patch Changes
-
-- f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
-
-## 0.1.21-canary.3
-
-### Patch Changes
-
-- 85b4e18: fix: explicitly include Jest types in package globals
-
-## 0.1.21-canary.2
-
-### Patch Changes
-
-- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
-
-## 0.1.21-canary.1
-
-### Patch Changes
-
-- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
-
-## 0.1.21-canary.0
-
-### Patch Changes
-
 - f6b26bd: In an `Image` control using the `Image.Format.WithDimensions` format, show a warning when resolving an image without dimensions
+- f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
+- 96927de: feat: allow to access `List` item controls by index
+- bef8d07: feat: add the ability to subscribe to changes in the control instance state
+- ef350b5: fix: infinite loop when resubscribing to list instance updates in response to instance update
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+- 2532e7a: Formalize `ControlInstance<any>` as `AnyControlInstance` to avoid having to suppress warnings about `any` throughout the codebase
+- 75e23d7: feat: add `children`, `isCompositeProp` methods to `ControlInstance`
+- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
+- 85b4e18: fix: explicitly include Jest types in package globals
 
 ## 0.1.20
 

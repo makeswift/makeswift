@@ -1,188 +1,32 @@
 # @makeswift/express-react
 
-## 0.1.10-canary.26
-
-### Patch Changes
-
-- Updated dependencies [20de4be]
-  - @makeswift/runtime@0.28.8-canary.26
-
-## 0.1.10-canary.25
-
-### Patch Changes
-
-- Updated dependencies [27f0f37]
-  - @makeswift/runtime@0.28.8-canary.25
-
-## 0.1.10-canary.24
-
-### Patch Changes
-
-- Updated dependencies [d85d403]
-  - @makeswift/runtime@0.28.8-canary.24
-
-## 0.1.10-canary.23
-
-### Patch Changes
-
-- Updated dependencies [f814370]
-  - @makeswift/runtime@0.28.8-canary.23
-
-## 0.1.10-canary.22
-
-### Patch Changes
-
-- Updated dependencies [29ac9aa]
-  - @makeswift/runtime@0.28.8-canary.22
-
-## 0.1.10-canary.21
-
-### Patch Changes
-
-- Updated dependencies [8cd4a8d]
-  - @makeswift/runtime@0.28.8-canary.21
-
-## 0.1.10-canary.20
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.8-canary.20
-
-## 0.1.10-canary.19
-
-### Patch Changes
-
-- Updated dependencies [bef8d07]
-  - @makeswift/runtime@0.28.8-canary.19
-
-## 0.1.10-canary.18
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.8-canary.18
-
-## 0.1.10-canary.17
-
-### Patch Changes
-
-- Updated dependencies [00c4523]
-  - @makeswift/runtime@0.28.8-canary.17
-
-## 0.1.10-canary.16
-
-### Patch Changes
-
-- Updated dependencies [1e6c66c]
-  - @makeswift/runtime@0.28.8-canary.16
-
-## 0.1.10-canary.15
-
-### Patch Changes
-
-- Updated dependencies [05f2b8e]
-  - @makeswift/runtime@0.28.8-canary.15
-
-## 0.1.10-canary.14
-
-### Patch Changes
-
-- Updated dependencies [9381a84]
-  - @makeswift/runtime@0.28.8-canary.14
-
-## 0.1.10-canary.13
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.8-canary.13
-
-## 0.1.10-canary.12
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.8-canary.12
-
-## 0.1.10-canary.11
+## 0.1.10
 
 ### Patch Changes
 
 - Updated dependencies [461939f]
-  - @makeswift/runtime@0.28.8-canary.11
-
-## 0.1.10-canary.10
-
-### Patch Changes
-
+- Updated dependencies [20de4be]
 - Updated dependencies [f521bb7]
-  - @makeswift/runtime@0.28.8-canary.10
-
-## 0.1.10-canary.9
-
-### Patch Changes
-
-- Updated dependencies [85b4e18]
-  - @makeswift/runtime@0.28.8-canary.9
-
-## 0.1.10-canary.8
-
-### Patch Changes
-
-- Updated dependencies [a649920]
-  - @makeswift/runtime@0.28.8-canary.8
-
-## 0.1.10-canary.7
-
-### Patch Changes
-
-- Updated dependencies [683ecd5]
-  - @makeswift/runtime@0.28.8-canary.7
-
-## 0.1.10-canary.6
-
-### Patch Changes
-
-- Updated dependencies [1c508ee]
-  - @makeswift/runtime@0.28.8-canary.6
-
-## 0.1.10-canary.5
-
-### Patch Changes
-
-- Updated dependencies [b8e75a5]
-  - @makeswift/runtime@0.28.8-canary.5
-
-## 0.1.10-canary.4
-
-### Patch Changes
-
-- Updated dependencies [09d37fe]
-  - @makeswift/runtime@0.28.8-canary.4
-
-## 0.1.10-canary.3
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.8-canary.3
-
-## 0.1.10-canary.2
-
-### Patch Changes
-
 - Updated dependencies [9502d2a]
-  - @makeswift/runtime@0.28.8-canary.2
-
-## 0.1.10-canary.1
-
-### Patch Changes
-
-- Updated dependencies [f0a2f34]
-  - @makeswift/runtime@0.28.8-canary.1
-
-## 0.1.10-canary.0
-
-### Patch Changes
-
+- Updated dependencies [05f2b8e]
+- Updated dependencies [b8e75a5]
+- Updated dependencies [8cd4a8d]
+- Updated dependencies [9381a84]
+- Updated dependencies [d85d403]
 - Updated dependencies [62c8f9d]
-  - @makeswift/runtime@0.28.8-canary.0
+- Updated dependencies [bef8d07]
+- Updated dependencies [683ecd5]
+- Updated dependencies [27f0f37]
+- Updated dependencies [f814370]
+- Updated dependencies [09d37fe]
+- Updated dependencies [29ac9aa]
+- Updated dependencies [1c508ee]
+- Updated dependencies [a649920]
+- Updated dependencies [1e6c66c]
+- Updated dependencies [00c4523]
+- Updated dependencies [85b4e18]
+- Updated dependencies [f0a2f34]
+  - @makeswift/runtime@0.28.8
 
 ## 0.1.9
 

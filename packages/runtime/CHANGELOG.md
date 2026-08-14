@@ -1,194 +1,44 @@
 # @makeswift/runtime
 
-## 0.28.8-canary.26
-
-### Patch Changes
-
-- 20de4be: REST API client now throws on non-404 failures. Also implement request retries when hitting rate limits, with exponential backoff and jitter applied.
-
-## 0.28.8-canary.25
-
-### Patch Changes
-
-- 27f0f37: Add `use client` to `framework-context`
-
-## 0.28.8-canary.24
-
-### Patch Changes
-
-- d85d403: Fix builder flicker on element reparenting by batching mount change events per React commit
-
-## 0.28.8-canary.23
-
-### Patch Changes
-
-- f814370: Unset body overflow styles when loaded in builder to allow scrolling
-
-## 0.28.8-canary.22
-
-### Patch Changes
-
-- 29ac9aa: feat: resolved value overrides infra, `Slot` supports overrides
-
-## 0.28.8-canary.21
-
-### Patch Changes
-
-- 8cd4a8d: feat: RSC-enabled `Slot` prop rendering
-
-## 0.28.8-canary.20
-
-### Patch Changes
-
-- Updated dependencies [ef350b5]
-  - @makeswift/controls@0.1.21-canary.10
-  - @makeswift/prop-controllers@0.4.15-canary.10
-
-## 0.28.8-canary.19
-
-### Patch Changes
-
-- bef8d07: feat: add the ability to subscribe to changes in the control instance state
-- Updated dependencies [bef8d07]
-  - @makeswift/controls@0.1.21-canary.9
-  - @makeswift/prop-controllers@0.4.15-canary.9
-
-## 0.28.8-canary.18
-
-### Patch Changes
-
-- Updated dependencies [2532e7a]
-  - @makeswift/controls@0.1.21-canary.8
-  - @makeswift/prop-controllers@0.4.15-canary.8
-
-## 0.28.8-canary.17
-
-### Patch Changes
-
-- 00c4523: refactor: make element prop controllers available on first render
-
-## 0.28.8-canary.16
-
-### Patch Changes
-
-- 1e6c66c: fix: unregister prop controllers handle when the component unmounts
-
-## 0.28.8-canary.15
-
-### Patch Changes
-
-- 05f2b8e: refactor: move prop controllers to read-write state
-
-## 0.28.8-canary.14
-
-### Patch Changes
-
-- 9381a84: fix: don't register elements when we're not in the builder
-
-## 0.28.8-canary.13
-
-### Patch Changes
-
-- Updated dependencies [75e23d7]
-  - @makeswift/controls@0.1.21-canary.7
-  - @makeswift/prop-controllers@0.4.15-canary.7
-
-## 0.28.8-canary.12
-
-### Patch Changes
-
-- Updated dependencies [96927de]
-  - @makeswift/controls@0.1.21-canary.6
-  - @makeswift/prop-controllers@0.4.15-canary.6
-
-## 0.28.8-canary.11
+## 0.28.8
 
 ### Patch Changes
 
 - 461939f: feat: add `resolvesToRenderableNode` method to control instances
-- Updated dependencies [461939f]
-  - @makeswift/controls@0.1.21-canary.5
-  - @makeswift/prop-controllers@0.4.15-canary.5
-
-## 0.28.8-canary.10
-
-### Patch Changes
-
+- 20de4be: REST API client now throws on non-404 failures. Also implement request retries when hitting rate limits, with exponential backoff and jitter applied.
 - f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
-- Updated dependencies [f521bb7]
-  - @makeswift/controls@0.1.21-canary.4
-  - @makeswift/prop-controllers@0.4.15-canary.4
-
-## 0.28.8-canary.9
-
-### Patch Changes
-
-- 85b4e18: fix: explicitly include Jest types in package globals
-- Updated dependencies [85b4e18]
-  - @makeswift/prop-controllers@0.4.15-canary.3
-  - @makeswift/controls@0.1.21-canary.3
-
-## 0.28.8-canary.8
-
-### Patch Changes
-
-- a649920: Fixes an issue where scripts within the builtin `Embed` component may not have properly persisted DOM manipulations in the builder.
-
-## 0.28.8-canary.7
-
-### Patch Changes
-
-- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
-- Updated dependencies [683ecd5]
-  - @makeswift/controls@0.1.21-canary.2
-  - @makeswift/prop-controllers@0.4.15-canary.2
-
-## 0.28.8-canary.6
-
-### Patch Changes
-
-- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
-- Updated dependencies [1c508ee]
-  - @makeswift/controls@0.1.21-canary.1
-  - @makeswift/prop-controllers@0.4.15-canary.1
-
-## 0.28.8-canary.5
-
-### Patch Changes
-
-- b8e75a5: Add unstable_migration API to component registration
-
-## 0.28.8-canary.4
-
-### Patch Changes
-
-- 09d37fe: Fix accidental deletion of elements from element tree state when deleting props
-
-## 0.28.8-canary.3
-
-### Patch Changes
-
-- Updated dependencies [f6b26bd]
-  - @makeswift/controls@0.1.21-canary.0
-  - @makeswift/prop-controllers@0.4.15-canary.0
-
-## 0.28.8-canary.2
-
-### Patch Changes
-
 - 9502d2a: feat: stackable `FrameworkContextProvider` with support for partial overrides.
-
-## 0.28.8-canary.1
-
-### Patch Changes
-
-- f0a2f34: feat: use `MakeswiftApiResourcesClient` on the server if runtime instance was provided with an API key
-
-## 0.28.8-canary.0
-
-### Patch Changes
-
+- 05f2b8e: refactor: move prop controllers to read-write state
+- b8e75a5: Add unstable_migration API to component registration
+- 8cd4a8d: feat: RSC-enabled `Slot` prop rendering
+- 9381a84: fix: don't register elements when we're not in the builder
+- d85d403: Fix builder flicker on element reparenting by batching mount change events per React commit
 - 62c8f9d: feat: server-side implementation of `ApiResourcesClient` interface
+- bef8d07: feat: add the ability to subscribe to changes in the control instance state
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+- 27f0f37: Add `use client` to `framework-context`
+- f814370: Unset body overflow styles when loaded in builder to allow scrolling
+- 09d37fe: Fix accidental deletion of elements from element tree state when deleting props
+- 29ac9aa: feat: resolved value overrides infra, `Slot` supports overrides
+- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
+- a649920: Fixes an issue where scripts within the builtin `Embed` component may not have properly persisted DOM manipulations in the builder.
+- 1e6c66c: fix: unregister prop controllers handle when the component unmounts
+- 00c4523: refactor: make element prop controllers available on first render
+- 85b4e18: fix: explicitly include Jest types in package globals
+- f0a2f34: feat: use `MakeswiftApiResourcesClient` on the server if runtime instance was provided with an API key
+- Updated dependencies [461939f]
+- Updated dependencies [f6b26bd]
+- Updated dependencies [f521bb7]
+- Updated dependencies [96927de]
+- Updated dependencies [bef8d07]
+- Updated dependencies [ef350b5]
+- Updated dependencies [683ecd5]
+- Updated dependencies [2532e7a]
+- Updated dependencies [75e23d7]
+- Updated dependencies [1c508ee]
+- Updated dependencies [85b4e18]
+  - @makeswift/controls@0.1.21
+  - @makeswift/prop-controllers@0.4.15
 
 ## 0.28.7
 

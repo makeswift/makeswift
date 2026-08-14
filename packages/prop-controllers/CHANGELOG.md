@@ -1,82 +1,22 @@
 # @makeswift/prop-controllers
 
-## 0.4.15-canary.10
-
-### Patch Changes
-
-- Updated dependencies [ef350b5]
-  - @makeswift/controls@0.1.21-canary.10
-
-## 0.4.15-canary.9
-
-### Patch Changes
-
-- Updated dependencies [bef8d07]
-  - @makeswift/controls@0.1.21-canary.9
-
-## 0.4.15-canary.8
-
-### Patch Changes
-
-- Updated dependencies [2532e7a]
-  - @makeswift/controls@0.1.21-canary.8
-
-## 0.4.15-canary.7
-
-### Patch Changes
-
-- Updated dependencies [75e23d7]
-  - @makeswift/controls@0.1.21-canary.7
-
-## 0.4.15-canary.6
-
-### Patch Changes
-
-- Updated dependencies [96927de]
-  - @makeswift/controls@0.1.21-canary.6
-
-## 0.4.15-canary.5
-
-### Patch Changes
-
-- Updated dependencies [461939f]
-  - @makeswift/controls@0.1.21-canary.5
-
-## 0.4.15-canary.4
-
-### Patch Changes
-
-- Updated dependencies [f521bb7]
-  - @makeswift/controls@0.1.21-canary.4
-
-## 0.4.15-canary.3
+## 0.4.15
 
 ### Patch Changes
 
 - 85b4e18: fix: explicitly include Jest types in package globals
-- Updated dependencies [85b4e18]
-  - @makeswift/controls@0.1.21-canary.3
-
-## 0.4.15-canary.2
-
-### Patch Changes
-
-- Updated dependencies [683ecd5]
-  - @makeswift/controls@0.1.21-canary.2
-
-## 0.4.15-canary.1
-
-### Patch Changes
-
-- Updated dependencies [1c508ee]
-  - @makeswift/controls@0.1.21-canary.1
-
-## 0.4.15-canary.0
-
-### Patch Changes
-
+- Updated dependencies [461939f]
 - Updated dependencies [f6b26bd]
-  - @makeswift/controls@0.1.21-canary.0
+- Updated dependencies [f521bb7]
+- Updated dependencies [96927de]
+- Updated dependencies [bef8d07]
+- Updated dependencies [ef350b5]
+- Updated dependencies [683ecd5]
+- Updated dependencies [2532e7a]
+- Updated dependencies [75e23d7]
+- Updated dependencies [1c508ee]
+- Updated dependencies [85b4e18]
+  - @makeswift/controls@0.1.21
 
 ## 0.4.14
 
