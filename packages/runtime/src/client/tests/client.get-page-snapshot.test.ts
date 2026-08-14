@@ -1,6 +1,7 @@
 import { MakeswiftClient, type MakeswiftPageDocument } from '../../client'
 import { http, HttpResponse } from 'msw'
 
+import { type RestApiClientError } from '../../api/rest-api-client'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
@@ -154,7 +155,7 @@ describe('getPageSnapshot', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
-  test('throws on errors other than 404, logs details to the console', async () => {
+  test('throws on errors other than 404, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -165,27 +166,19 @@ describe('getPageSnapshot', () => {
     )
 
     // Act
-    const resultPromise = client.getPageSnapshot(pathname, {
-      siteVersion: null,
-      locale,
-    })
-
-    try {
-      await resultPromise
-    } catch (e) {}
+    const error = await client
+      .getPageSnapshot(pathname, { siteVersion: null, locale })
+      .then(() => null)
+      .catch((e: RestApiClientError) => e)
 
     // Assert
-    await expect(resultPromise).rejects.toThrow(
+    expect(error?.message).toBe(
       "Failed to get page snapshot for 'blog/hello-world': 500 Internal Server Error",
     )
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to get page snapshot for 'blog/hello-world'",
-      {
-        response: 'Internal server error',
-        siteVersion: null,
-        locale: 'es-MX',
-      },
-    )
+    expect(error?.cause).toEqual({
+      body: 'Internal server error',
+      siteVersion: null,
+      locale: 'es-MX',
+    })
   })
 })

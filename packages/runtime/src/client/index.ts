@@ -18,7 +18,11 @@ import {
 import { CacheData } from '../api/api-resources-client'
 
 import { MakeswiftGraphQLApiClient } from '../api/graphql-api-client'
-import { MakeswiftRestAPIClient, failedResponseBody } from '../api/rest-api-client'
+import {
+  MakeswiftRestAPIClient,
+  failedResponseBody,
+  RestApiClientError,
+} from '../api/rest-api-client'
 import { type SiteVersion } from '../api/site-version'
 
 import { Descriptor as PropControllerDescriptor } from '../prop-controllers/descriptors'
@@ -142,13 +146,12 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
 
     const response = await this.fetch(`v5/pages?${queryParams.toString()}`, siteVersion)
     if (!response.ok) {
-      console.error('Failed to get pages', {
-        response: await failedResponseBody(response),
+      const body = await failedResponseBody(response)
+      throw new RestApiClientError('Failed to get pages', response, {
+        body: body,
         siteVersion,
         params,
       })
-
-      throw new Error(`Failed to get pages: ${responseError(response)}`)
     }
 
     const result = await response.json()
@@ -176,13 +179,11 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       const failedBody = await failedResponseBody(response)
       if (response.status === 404) return null
 
-      console.error(`Failed to get page snapshot for '${pathname}'`, {
-        response: failedBody,
+      throw new RestApiClientError(`Failed to get page snapshot for '${pathname}'`, response, {
+        body: failedBody,
         siteVersion,
         locale,
       })
-
-      throw new Error(`Failed to get page snapshot for '${pathname}': ${responseError(response)}`)
     }
 
     const json = await response.json()
@@ -205,12 +206,14 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
-      console.error(`Failed to get typographies for [${typographyIds.join(', ')}]`, {
-        response: await failedResponseBody(response),
-        siteVersion,
-      })
+      const failedBody = await failedResponseBody(response)
+      if (response.status === 404) return []
 
-      return []
+      throw new RestApiClientError(
+        `Failed to get typographies for [${typographyIds.join(', ')}]`,
+        response,
+        { body: failedBody, siteVersion },
+      )
     }
 
     const body = await response.json()
@@ -233,12 +236,13 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
-      console.error(`Failed to get swatches for ${ids.join(', ')}`, {
-        response: await failedResponseBody(response),
+      const failedBody = await failedResponseBody(response)
+      if (response.status === 404) return []
+
+      throw new RestApiClientError(`Failed to get swatches for ${ids.join(', ')}`, response, {
+        body: failedBody,
         siteVersion,
       })
-
-      return []
     }
 
     return await response.json()
@@ -266,13 +270,11 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       // 404 can mean the requested version has no commit (e.g., site never published)
       if (response.status === 404) return ids.map(() => null)
 
-      console.error(`Failed to get element trees for [${ids.join(', ')}]`, {
-        response: failedBody,
-        siteVersion,
-        locale,
-      })
-
-      throw new Error(`Failed to get element trees: ${responseError(response)}`)
+      throw new RestApiClientError(
+        `Failed to get element trees for [${ids.join(', ')}]`,
+        response,
+        { body: failedBody, siteVersion, locale },
+      )
     }
 
     const responseBody = await response.json()
@@ -726,13 +728,11 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       const failedBody = await failedResponseBody(response)
       if (response.status === 404) return null
 
-      console.error(`Failed to get page snapshot for '${pathname}'`, {
-        response: failedBody,
+      throw new RestApiClientError(`Failed to get page snapshot for '${pathname}'`, response, {
+        body: failedBody,
         siteVersion,
         locale,
       })
-
-      throw new Error(`Failed to get page snapshot for '${pathname}': ${responseError(response)}`)
     }
 
     const document: MakeswiftPageDocument = await response.json()
@@ -784,13 +784,11 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
           return null
         }
 
-        console.error(`Failed to get component snapshot for '${id}':`, {
-          response: failedBody,
+        throw new RestApiClientError(`Failed to get component snapshot for '${id}'`, response, {
+          body: failedBody,
           siteVersion,
           locale,
         })
-
-        throw new Error(`Failed to get component snapshot for '${id}': ${responseError(response)}`)
       }
 
       const responseBody = await response.json()
@@ -948,14 +946,9 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
   }
 
   async readPreviewToken(token: string): Promise<PreviewTokenPayload | null> {
-    const response = await fetch(new URL('v1/preview-tokens/reads', this.apiOrigin).toString(), {
+    const response = await this.fetch('v1/preview-tokens/reads', null, {
       method: 'POST',
-      headers: {
-        'x-api-key': this.apiKey,
-        'makeswift-site-api-key': this.apiKey,
-        'makeswift-runtime-version': PACKAGE_VERSION,
-        'content-type': 'application/json',
-      },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ token }),
       cache: 'no-store',
     })
@@ -966,13 +959,15 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
         console.error(`Preview token is invalid or expired`, {
           response: failedBody,
         })
-      } else if (response.status !== 404) {
-        console.error(`Failed to verify preview token`, {
-          response: failedBody,
-        })
+
+        return null
       }
 
-      return null
+      if (response.status === 404) return null
+
+      throw new RestApiClientError(`Failed to verify preview token`, response, {
+        body: failedBody,
+      })
     }
 
     const json = await response.json()
@@ -991,12 +986,13 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     const response = await this.fetch('v1_unstable/fonts', siteVersion)
 
     if (!response.ok) {
-      console.error('Failed to fetch fonts', {
-        response: await failedResponseBody(response),
+      const failedBody = await failedResponseBody(response)
+      if (response.status === 404) return null
+
+      throw new RestApiClientError('Failed to fetch fonts', response, {
+        body: failedBody,
         siteVersion,
       })
-
-      return null
     }
 
     const json = await response.json()
@@ -1039,8 +1035,4 @@ function getPagesQueryParams({
   if (locale != null) params.set('locale', locale)
 
   return params
-}
-
-function responseError(response: Response): string {
-  return `${response.status} ${response.statusText}`
 }

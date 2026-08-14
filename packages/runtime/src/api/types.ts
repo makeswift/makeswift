@@ -74,4 +74,4 @@ export type APIResourceLocale<R extends APIResource | APIResourceType> = R exten
   ? string | null
   : never
 
-export type HttpFetch = (url: string | URL, init?: RequestInit) => Promise<Response>
+export type HttpFetch = (input: string | URL | Request, init?: RequestInit) => Promise<Response>
