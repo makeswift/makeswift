@@ -30,9 +30,23 @@ export default defineConfig(() => {
 
   const cjsOptions: Options = {
     ...commonOptions,
+    entry: [...commonOptions.entry, '!src/api/ky.ts'],
     format: 'cjs',
     outDir: 'dist/cjs',
   }
 
-  return [esmOptions, cjsOptions]
+  // `ky` is ESM-only, so a `require('ky')` left in our CommonJS output throws
+  // `ERR_REQUIRE_ESM` on hosts whose loader doesn't implement `require(esm)`.
+  // Every `ky` import goes through `src/api/ky.ts`, which we bundle for CJS,
+  // since the ESM output can import `ky` as-is.
+  const cjsKyOptions: Options = {
+    ...commonOptions,
+    entry: { 'api/ky': 'src/api/ky.ts' },
+    bundle: true,
+    noExternal: ['ky'],
+    format: 'cjs',
+    outDir: 'dist/cjs',
+  }
+
+  return [esmOptions, cjsOptions, cjsKyOptions]
 })
