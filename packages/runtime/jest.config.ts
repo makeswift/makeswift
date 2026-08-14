@@ -10,6 +10,8 @@ const baseConfig: Config = {
   setupFiles: ['./jest.polyfills.js'],
   setupFilesAfterEnv: ['<rootDir>/src/jest-setup.ts'],
   resolver: `${__dirname}/jest.resolver.js`,
+  // `ky` is ESM-only
+  transformIgnorePatterns: ['/node_modules/(?!(.*/)?ky/)'],
   transform: {
     '^.+\\.(t|j)s?$': '@swc/jest',
     '^.+\\.(t|j)sx?$': [

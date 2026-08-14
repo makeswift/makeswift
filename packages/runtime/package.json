@@ -18,7 +18,7 @@
     "unstable-framework-support"
   ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.19.0"
   },
   "sideEffects": false,
   "exports": {
@@ -242,6 +242,7 @@
     "is-hotkey": "^0.1.4",
     "js-base64": "^3.7.7",
     "jwt-decode": "^4.0.0",
+    "ky": "^1.14.3",
     "ot-json0": "^1.1.0",
     "parse5": "^7.3.0",
     "path-to-regexp": "^6.2.1",

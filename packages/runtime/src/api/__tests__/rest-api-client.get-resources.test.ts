@@ -1,4 +1,4 @@
-import { MakeswiftRestAPIClient } from '../rest-api-client'
+import { MakeswiftRestAPIClient, RestApiClientError } from '../rest-api-client'
 import { http, HttpResponse } from 'msw'
 
 import { server } from '../../mocks/server'
@@ -13,6 +13,18 @@ function createTestClient() {
     apiKey: TEST_API_KEY,
     apiOrigin: TestOrigins.apiOrigin,
   })
+}
+
+async function captureClientError(promise: Promise<unknown>): Promise<RestApiClientError> {
+  try {
+    await promise
+  } catch (error) {
+    if (error instanceof RestApiClientError) return error
+
+    throw new Error(`Expected a RestApiClientError, but got: ${error}`)
+  }
+
+  throw new Error('Expected the request to fail, but it succeeded')
 }
 
 let consoleErrorSpy: jest.SpyInstance
@@ -47,7 +59,7 @@ describe('getSwatch', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
-  test('returns null on other errors, logs details to the console', async () => {
+  test('throws on other errors, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -58,12 +70,14 @@ describe('getSwatch', () => {
     )
 
     // Act
-    const result = await client.getSwatch(swatchId, TestWorkingSiteVersion)
+    const error = await captureClientError(client.getSwatch(swatchId, TestWorkingSiteVersion))
 
     // Assert
-    expect(result).toBeNull()
-    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to get swatch 'mySwatch'", {
-      response: 'Internal server error',
+    expect(error.name).toBe('RestApiClientError')
+    expect(error.message).toBe("Failed to get swatch 'mySwatch': 500 Internal Server Error")
+    expect(error.status).toBe(500)
+    expect(error.cause).toEqual({
+      body: 'Internal server error',
       siteVersion: TestWorkingSiteVersion,
     })
   })
@@ -91,7 +105,7 @@ describe('getTypography', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
-  test('returns null on other errors, logs details to the console', async () => {
+  test('throws on other errors, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -102,14 +116,13 @@ describe('getTypography', () => {
     )
 
     // Act
-    const result = await client.getTypography(typographyId, TestWorkingSiteVersion)
+    const error = await captureClientError(
+      client.getTypography(typographyId, TestWorkingSiteVersion),
+    )
 
     // Assert
-    expect(result).toBeNull()
-    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to get typography 'myTypography'", {
-      response: 'Unauthorized',
-      siteVersion: TestWorkingSiteVersion,
-    })
+    expect(error.message).toBe("Failed to get typography 'myTypography': 401 Unauthorized")
+    expect(error.cause).toEqual({ body: 'Unauthorized', siteVersion: TestWorkingSiteVersion })
   })
 })
 
@@ -135,7 +148,7 @@ describe('getGlobalElement', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
-  test('returns null on other errors, logs details to the console', async () => {
+  test('throws on other errors, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -146,14 +159,11 @@ describe('getGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getGlobalElement(globalElementId, null)
+    const error = await captureClientError(client.getGlobalElement(globalElementId, null))
 
     // Assert
-    expect(result).toBeNull()
-    expect(consoleErrorSpy).toHaveBeenCalledWith("Failed to get global element 'myGlobalElement'", {
-      response: 'Bad request',
-      siteVersion: null,
-    })
+    expect(error.message).toBe("Failed to get global element 'myGlobalElement': 400 Bad Request")
+    expect(error.cause).toEqual({ body: 'Bad request', siteVersion: null })
   })
 })
 
@@ -184,7 +194,7 @@ describe('getLocalizedGlobalElement', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
-  test('returns null on other errors, logs details to the console', async () => {
+  test('throws on other errors, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -195,18 +205,19 @@ describe('getLocalizedGlobalElement', () => {
     )
 
     // Act
-    const result = await client.getLocalizedGlobalElement(globalElementId, locale, null)
+    const error = await captureClientError(
+      client.getLocalizedGlobalElement(globalElementId, locale, null),
+    )
 
     // Assert
-    expect(result).toBeNull()
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Failed to get localized global element 'myGlobalElement'",
-      {
-        response: 'Request timeout',
-        locale: 'es-MX',
-        siteVersion: null,
-      },
+    expect(error.message).toBe(
+      "Failed to get localized global element 'myGlobalElement': 408 Request Timeout",
     )
+    expect(error.cause).toEqual({
+      body: 'Request timeout',
+      locale: 'es-MX',
+      siteVersion: null,
+    })
   })
 })
 
@@ -215,7 +226,7 @@ describe('getPagePathnameSlice', () => {
   const locale = 'fr'
   const resourceUrl = `${baseUrl}/page-pathname-slices/bulk`
 
-  test('returns null on all errors, logs details to the console', async () => {
+  test('throws on errors, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()
 
@@ -226,17 +237,12 @@ describe('getPagePathnameSlice', () => {
     )
 
     // Act
-    const result = await client.getPagePathnameSlice(pageId, null, { locale })
+    const error = await captureClientError(client.getPagePathnameSlice(pageId, null, { locale }))
 
     // Assert
-    expect(result).toBeNull()
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Failed to get page pathname slice(s) for pageId',
-      {
-        response: 'Request timeout',
-        locale: 'fr',
-        siteVersion: null,
-      },
+    expect(error.message).toBe(
+      'Failed to get page pathname slice(s) for pageId: 408 Request Timeout',
     )
+    expect(error.cause).toEqual({ body: 'Request timeout', locale: 'fr', siteVersion: null })
   })
 })
