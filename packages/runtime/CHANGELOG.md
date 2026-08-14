@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.8-canary.26
+
+### Patch Changes
+
+- 20de4be: REST API client now throws on non-404 failures. Also implement request retries when hitting rate limits, with exponential backoff and jitter applied.
+
 ## 0.28.8-canary.25
 
 ### Patch Changes
