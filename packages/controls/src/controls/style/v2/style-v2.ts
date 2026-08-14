@@ -136,6 +136,10 @@ class Definition<
     )
   }
 
+  resolveContextValue(): string | undefined {
+    return undefined
+  }
+
   resolveValue(
     data: DataType<Prop> | undefined,
     resolver: ResourceResolver,

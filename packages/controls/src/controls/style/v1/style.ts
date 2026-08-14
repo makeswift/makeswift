@@ -166,6 +166,10 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
+  resolveContextValue(): ResolvedValueType<C> | undefined {
+    return undefined
+  }
+
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,

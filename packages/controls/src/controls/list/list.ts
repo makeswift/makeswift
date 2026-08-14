@@ -176,6 +176,14 @@ class Definition<C extends Config> extends ControlDefinition<
     )
   }
 
+  resolveContextValue(data: DataType<C>): ResolvedValueType<C> | undefined {
+    const itemValues = data?.map(({ value }) =>
+      this.itemDef.resolveContextValue(value),
+    )
+
+    return itemValues ?? []
+  }
+
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,

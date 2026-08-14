@@ -163,6 +163,10 @@ abstract class Definition<
       : data
   }
 
+  resolveContextValue(): undefined {
+    return undefined
+  }
+
   abstract toText(data: DataType | undefined): string
   abstract get pluginControls(): RichTextPluginControl[]
   abstract pluginControlAt(index: number): RichTextPluginControl | undefined

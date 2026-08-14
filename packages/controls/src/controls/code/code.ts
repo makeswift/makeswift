@@ -170,6 +170,11 @@ class Definition<C extends Config> extends ControlDefinition<
     return data
   }
 
+  resolveContextValue(data: DataType<C>): ResolvedValueType<C> | undefined {
+    const value = this.fromData(data) ?? this.config.defaultValue
+    return value === undefined ? undefined : ({ value } as ResolvedValueType<C>)
+  }
+
   resolveValue(
     data: DataType<C> | undefined,
   ): Resolvable<ResolvedValueType<C> | undefined> {

@@ -163,6 +163,10 @@ class Definition extends ControlDefinition<
     }
   }
 
+  resolveContextValue(): ResolvedValueType | undefined {
+    return undefined
+  }
+
   resolveValue(
     data: DataType | undefined,
     resolver: ResourceResolver,
