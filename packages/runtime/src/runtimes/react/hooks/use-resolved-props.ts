@@ -20,6 +20,9 @@ type CacheItem = {
   resolvedValue: Resolvable<unknown>
 }
 
+/**
+ * Client-side prop resolution. See `resolveProps` for server-side counterpart.
+ */
 export function useResolvedProps({
   elementKey,
   propDefs,
