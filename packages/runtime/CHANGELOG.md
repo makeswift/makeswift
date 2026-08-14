@@ -1,5 +1,45 @@
 # @makeswift/runtime
 
+## 0.28.8
+
+### Patch Changes
+
+- 461939f: feat: add `resolvesToRenderableNode` method to control instances
+- 20de4be: REST API client now throws on non-404 failures. Also implement request retries when hitting rate limits, with exponential backoff and jitter applied.
+- f521bb7: feat: add `instanceKey` (`elementKey` + `propPath`) to control instances
+- 9502d2a: feat: stackable `FrameworkContextProvider` with support for partial overrides.
+- 05f2b8e: refactor: move prop controllers to read-write state
+- b8e75a5: Add unstable_migration API to component registration
+- 8cd4a8d: feat: RSC-enabled `Slot` prop rendering
+- 9381a84: fix: don't register elements when we're not in the builder
+- d85d403: Fix builder flicker on element reparenting by batching mount change events per React commit
+- 62c8f9d: feat: server-side implementation of `ApiResourcesClient` interface
+- bef8d07: feat: add the ability to subscribe to changes in the control instance state
+- 683ecd5: Tighten `deepEqual`/`shallowEqual` typings, fix corner-case false positives on object-to-array comparisons
+- 27f0f37: Add `use client` to `framework-context`
+- f814370: Unset body overflow styles when loaded in builder to allow scrolling
+- 09d37fe: Fix accidental deletion of elements from element tree state when deleting props
+- 29ac9aa: feat: resolved value overrides infra, `Slot` supports overrides
+- 1c508ee: Add the `unstable_Gallery` control, an image-grid picker control.
+- a649920: Fixes an issue where scripts within the builtin `Embed` component may not have properly persisted DOM manipulations in the builder.
+- 1e6c66c: fix: unregister prop controllers handle when the component unmounts
+- 00c4523: refactor: make element prop controllers available on first render
+- 85b4e18: fix: explicitly include Jest types in package globals
+- f0a2f34: feat: use `MakeswiftApiResourcesClient` on the server if runtime instance was provided with an API key
+- Updated dependencies [461939f]
+- Updated dependencies [f6b26bd]
+- Updated dependencies [f521bb7]
+- Updated dependencies [96927de]
+- Updated dependencies [bef8d07]
+- Updated dependencies [ef350b5]
+- Updated dependencies [683ecd5]
+- Updated dependencies [2532e7a]
+- Updated dependencies [75e23d7]
+- Updated dependencies [1c508ee]
+- Updated dependencies [85b4e18]
+  - @makeswift/controls@0.1.21
+  - @makeswift/prop-controllers@0.4.15
+
 ## 0.28.7
 
 ### Patch Changes
