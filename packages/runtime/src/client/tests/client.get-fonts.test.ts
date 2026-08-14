@@ -1,6 +1,7 @@
 import { GetFontsAPI, MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 
+import { type RestApiClientError } from '../../api/rest-api-client'
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
 
 import { server } from '../../mocks/server'
@@ -72,9 +73,9 @@ describe('getFonts', () => {
   })
 
   test.each([
-    { status: 400, label: '400' },
-    { status: 500, label: '500' },
-  ])('returns null and logs error when response is $label', async ({ status }) => {
+    { status: 400, statusText: 'Bad Request' },
+    { status: 500, statusText: 'Internal Server Error' },
+  ])('throws when response is $status', async ({ status, statusText }) => {
     // Arrange
     const client = createTestClient()
     const errorResponseBody = 'Error response body'
@@ -86,14 +87,19 @@ describe('getFonts', () => {
     )
 
     // Act
-    const result = await client.unstable_getFonts(TestWorkingSiteVersion)
+    const error = await client
+      .unstable_getFonts(TestWorkingSiteVersion)
+      .then(() => null)
+      .catch((e: RestApiClientError) => e)
 
     // Assert
-    expect(result).toBeNull()
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to fetch fonts', {
-      response: errorResponseBody,
+    expect(error?.message).toBe(`Failed to fetch fonts: ${status} ${statusText}`)
+    expect(error?.status).toBe(status)
+    expect(error?.cause).toEqual({
+      body: errorResponseBody,
       siteVersion: TestWorkingSiteVersion,
     })
+    expect(consoleErrorSpy).not.toHaveBeenCalled()
   })
 
   test('returns null and logs error on failure to parse the response', async () => {

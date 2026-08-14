@@ -1,3 +1,5 @@
+import ky, { HTTPError, isHTTPError, type KyInstance } from 'ky'
+
 import {
   type GlobalElement,
   type LocalizedGlobalElement,
@@ -10,8 +12,13 @@ import {
 import { type SiteVersion } from './site-version'
 import * as Schema from './schema'
 
+const RetryBackoffConfig = {
+  MaxAttempts: 3,
+  MaxDelayMs: 5_000,
+}
+
 export class MakeswiftRestAPIClient {
-  private _fetch: HttpFetch
+  private _fetch: KyInstance
 
   readonly apiKey: string
   readonly apiOrigin: string
@@ -25,7 +32,30 @@ export class MakeswiftRestAPIClient {
     apiKey: string
     apiOrigin: string
   }) {
-    this._fetch = fetch
+    this._fetch = ky.create({
+      fetch,
+      timeout: false,
+      retry: {
+        statusCodes: [429],
+        limit: RetryBackoffConfig.MaxAttempts,
+        backoffLimit: RetryBackoffConfig.MaxDelayMs,
+        delay: attemptCount => 2 ** (attemptCount - 1) * 1000,
+        jitter: true,
+      },
+      hooks: {
+        beforeRetry: [
+          async ({ request, error, retryCount }) => {
+            console.warn(
+              `Request to ${request.url} failed with ${error}. Retrying (${retryCount}/${RetryBackoffConfig.MaxAttempts})`,
+            )
+            // Drain the response body before retrying so we don't leak unconsumed
+            // response bodies (see the comment on `failedResponseBody` below).
+            if (isHTTPError(error)) await failedResponseBody(error.response)
+          },
+        ],
+      },
+    })
+
     this.apiKey = apiKey
     this.apiOrigin = apiOrigin
   }
@@ -35,14 +65,12 @@ export class MakeswiftRestAPIClient {
 
     if (!response.ok) {
       const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get swatch '${swatchId}'`, {
-          response: failedBody,
-          siteVersion,
-        })
-      }
+      if (response.status === 404) return null
 
-      return null
+      throw new RestApiClientError(`Failed to get swatch '${swatchId}'`, response, {
+        body: failedBody,
+        siteVersion,
+      })
     }
 
     const swatch = await response.json()
@@ -58,14 +86,12 @@ export class MakeswiftRestAPIClient {
 
     if (!response.ok) {
       const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get typography '${typographyId}'`, {
-          response: failedBody,
-          siteVersion,
-        })
-      }
+      if (response.status === 404) return null
 
-      return null
+      throw new RestApiClientError(`Failed to get typography '${typographyId}'`, response, {
+        body: failedBody,
+        siteVersion,
+      })
     }
 
     const typography = await response.json()
@@ -81,14 +107,12 @@ export class MakeswiftRestAPIClient {
 
     if (!response.ok) {
       const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get global element '${globalElementId}'`, {
-          response: failedBody,
-          siteVersion,
-        })
-      }
+      if (response.status === 404) return null
 
-      return null
+      throw new RestApiClientError(`Failed to get global element '${globalElementId}'`, response, {
+        body: failedBody,
+        siteVersion,
+      })
     }
 
     const globalElement = await response.json()
@@ -108,15 +132,13 @@ export class MakeswiftRestAPIClient {
 
     if (!response.ok) {
       const failedBody = await failedResponseBody(response)
-      if (response.status !== 404) {
-        console.error(`Failed to get localized global element '${globalElementId}'`, {
-          response: failedBody,
-          siteVersion,
-          locale,
-        })
-      }
+      if (response.status === 404) return null
 
-      return null
+      throw new RestApiClientError(
+        `Failed to get localized global element '${globalElementId}'`,
+        response,
+        { body: failedBody, siteVersion, locale },
+      )
     }
 
     const localizedGlobalElement = await response.json()
@@ -139,13 +161,14 @@ export class MakeswiftRestAPIClient {
     const response = await this.fetch(url.pathname + url.search, siteVersion)
 
     if (!response.ok) {
-      console.error(`Failed to get page pathname slice(s) for ${pageIds.join(', ')}`, {
-        response: await failedResponseBody(response),
-        siteVersion,
-        locale,
-      })
+      const failedBody = await failedResponseBody(response)
+      if (response.status === 404) return []
 
-      return []
+      throw new RestApiClientError(
+        `Failed to get page pathname slice(s) for ${pageIds.join(', ')}`,
+        response,
+        { body: failedBody, siteVersion, locale },
+      )
     }
 
     const json = await response.json()
@@ -201,13 +224,16 @@ export class MakeswiftRestAPIClient {
       })
     }
 
-    const response = await this._fetch(requestUrl.toString(), {
-      ...init,
-      headers: requestHeaders,
-      ...(siteVersion != null ? { cache: 'no-store' } : {}),
-    })
-
-    return response
+    try {
+      return await this._fetch(requestUrl.toString(), {
+        ...init,
+        headers: requestHeaders,
+        ...(siteVersion != null ? { cache: 'no-store' } : {}),
+      })
+    } catch (error) {
+      if (error instanceof HTTPError) return error.response
+      throw error
+    }
   }
 }
 
@@ -231,5 +257,20 @@ export async function failedResponseBody(response: Response): Promise<unknown> {
     }
   } catch (e) {
     return `Failed to extract response body: ${e}`
+  }
+}
+
+function responseError(response: Response): string {
+  return `${response.status} ${response.statusText}`
+}
+
+export class RestApiClientError extends Error {
+  readonly status: number
+
+  constructor(message: string, response: Response, cause: Record<string, unknown>) {
+    super(`${message}: ${responseError(response)}`, { cause })
+
+    this.name = 'RestApiClientError'
+    this.status = response.status
   }
 }
