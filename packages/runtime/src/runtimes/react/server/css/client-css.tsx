@@ -32,21 +32,19 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
     [],
   )
 
-  // Initialize style elements map and capture server styles
-  useEffect(() => {
-    const styleElements = document.querySelectorAll<HTMLStyleElement>(
-      `style[data-href^="${MAKESWIFT_RSC_STYLE_TAG_ID_PREFIX}"]`,
-    )
+  const registerStyleElement = useCallback(
+    (styleElement: HTMLStyleElement) => {
+      const href = styleElement.dataset['href']
+      if (href == null || !href.startsWith(MAKESWIFT_RSC_STYLE_TAG_ID_PREFIX)) return
 
-    styleElements.forEach(styleElement => {
-      const elementKey = styleElement.dataset['href']?.substring(
-        MAKESWIFT_RSC_STYLE_TAG_ID_PREFIX.length,
-      )
-
-      if (elementKey == null) {
-        console.error('Unrecognized style element, ignoring', styleElement)
+      const elementKey = href.substring(MAKESWIFT_RSC_STYLE_TAG_ID_PREFIX.length)
+      if (elementKey == '') {
+        console.error('Ignoring style element with a missing element key', styleElement)
         return
       }
+
+      // don't recapture elements that we're already tracking
+      if (styleElement === styleElementsRef.current.get(elementKey)) return
 
       styleElementsRef.current.set(elementKey, styleElement)
       serverStylesRef.current.set(elementKey, styleElement.textContent)
@@ -55,8 +53,34 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
       if (elementStyles != null) {
         updateStyleElement(elementKey, elementStyles)
       }
+    },
+    [updateStyleElement],
+  )
+
+  useEffect(() => {
+    // initialize style elements map and capture server styles for existing
+    // RSC-rendered elements, if any
+    document.head
+      .querySelectorAll<HTMLStyleElement>(
+        `style[data-href^="${MAKESWIFT_RSC_STYLE_TAG_ID_PREFIX}"]`,
+      )
+      .forEach(registerStyleElement)
+
+    // set up a `document.head` observer to capture dynamically added RSC `<style>` nodes
+    const observer = new MutationObserver(mutationList => {
+      for (const mutation of mutationList) {
+        for (const node of mutation.addedNodes) {
+          if (node instanceof HTMLStyleElement) registerStyleElement(node)
+        }
+      }
     })
-  }, [updateStyleElement])
+
+    observer.observe(document.head, { childList: true })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [registerStyleElement])
 
   const updateStyle = useCallback(
     (elementKey: string, propName: string, cssString: string) => {
