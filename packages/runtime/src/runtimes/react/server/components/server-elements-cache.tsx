@@ -3,6 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useState } from 'react'
 
 import { type ElementsMap } from '../collect-server-elements'
+import { ClientCSSProvider } from '../css/client-css'
 
 type ContextValue = {
   getElement: (elementKey: string) => ReactNode
@@ -22,13 +23,7 @@ const Context = createContext<ContextValue>({
 // renders and encodes them in the RSC stream and then reconstructs them on the client. All
 // we need to do on the client is to make these React elements available for lookup/
 // manipulation when editing in the builder.
-export const ServerElementsCache = ({
-  children,
-  value,
-}: {
-  children: ReactNode
-  value: ElementsMap
-}) => {
+const ServerElementsCache = ({ children, value }: { children: ReactNode; value: ElementsMap }) => {
   const [nodes, setNodes] = useState(value)
 
   const getElement = useCallback((elementKey: string): ReactNode => nodes.get(elementKey), [nodes])
@@ -54,5 +49,17 @@ export const ServerElementsCache = ({
     </Context.Provider>
   )
 }
+
+export const ServerElementsProvider = ({
+  children,
+  elements,
+}: {
+  children: ReactNode
+  elements: ElementsMap
+}) => (
+  <ServerElementsCache value={elements}>
+    <ClientCSSProvider>{children}</ClientCSSProvider>
+  </ServerElementsCache>
+)
 
 export const useServerElementsCache = () => useContext(Context)
