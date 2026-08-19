@@ -75,6 +75,27 @@ async function serverSideRender(children: ReactNode) {
   return dom.window.document
 }
 
+/**
+ * In read-write mode, the runtime opens a `MessageChannel` to the builder
+ * parent frame; jsdom doesn't implement `MessageChannel`, so stub them to keep
+ * the read-write setup from throwing.
+ */
+function stubBuilderMessageChannel(): () => void {
+  const postMessageSpy = jest.spyOn(window, 'postMessage').mockImplementation(() => {})
+
+  const originalMessageChannel = window.MessageChannel
+  const stubPort = () => ({ onmessage: null, postMessage: () => {}, close: () => {} })
+  window.MessageChannel = class {
+    port1 = stubPort()
+    port2 = stubPort()
+  } as unknown as typeof MessageChannel
+
+  return () => {
+    postMessageSpy.mockRestore()
+    window.MessageChannel = originalMessageChannel
+  }
+}
+
 export async function testPageControlPropRendering<D extends ControlDefinition>(
   controlDefinition: D,
   {
@@ -87,6 +108,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     action,
     rootElements = [],
     isInBuilder = false,
+    isReadOnly = true,
   }: {
     toData?: (value: ValueType<D>) => DataType<D>
     value: ValueType<D> | undefined
@@ -97,6 +119,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     action?: (element: HTMLElement) => Promise<void>
     rootElements?: ElementData[]
     isInBuilder?: boolean
+    isReadOnly?: boolean
   },
 ) {
   // Arrange
@@ -143,11 +166,20 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     },
   )
 
-  const testElementTree = (component: ReactNode) => (
-    <Testing.ReactProvider runtime={runtime}>{component}</Testing.ReactProvider>
-  )
+  const testElementTree = (component: ReactNode) => {
+    // The runtime enters the read-write state when a non-null site version is
+    // passed
+    const siteVersion = isReadOnly ? null : { token: 'test-token', version: 'draft' }
+    return (
+      <Testing.ReactProvider runtime={runtime} siteVersion={siteVersion}>
+        {component}
+      </Testing.ReactProvider>
+    )
+  }
 
   if (!isServer()) {
+    const restoreMessageChannel = isReadOnly ? null : stubBuilderMessageChannel()
+
     const rootElementData: ElementData = Testing.createRootComponent(
       [elementData, ...rootElements],
       ROOT_ID,
@@ -170,6 +202,8 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
     if (expectedRenders != null) {
       expect(Number(screen.getByTestId(renderCountTestId).textContent)).toBe(expectedRenders)
     }
+
+    restoreMessageChannel?.()
   } else {
     // test server-side rendering using a component snapshot
     console.assert(action == null)
