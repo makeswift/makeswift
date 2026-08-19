@@ -21,3 +21,23 @@ test(`renders provided text content`, async () => {
     expectedRenders: 1,
   })
 })
+
+test(`editable text reverts host styles on slate-internal text spans`, async () => {
+  const slateInternalNodeAttributes = ['data-slate-string', 'data-slate-zero-width']
+
+  await testPageControlPropRendering(RichText(), {
+    value,
+    cacheData: cacheData(),
+    isInBuilder: true,
+    isReadOnly: false,
+  })
+
+  for (const attribute of slateInternalNodeAttributes) {
+    const internalNodes = Array.from(document.querySelectorAll(`[${attribute}]`))
+    expect(internalNodes.length).toBeGreaterThan(0)
+
+    for (const node of internalNodes) {
+      expect(window.getComputedStyle(node).getPropertyValue('all')).toBe('revert')
+    }
+  }
+})
