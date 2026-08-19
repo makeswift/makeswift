@@ -4,6 +4,7 @@ import {
   serializeObject,
 } from '../../serialization'
 
+import { type CascadeDefinition } from '../cascade'
 import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
@@ -51,6 +52,11 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
     } as unknown as SerializedRecord
   }
 
+  visitCascade(_def: CascadeDefinition): SerializedRecord {
+    throw new Error(
+      'unstable_Cascade: serialization is not yet supported outside a live builder connection',
+    )
+  }
   visitCode(def: CodeDefinition): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })
   }

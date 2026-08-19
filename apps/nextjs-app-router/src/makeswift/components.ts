@@ -1,3 +1,4 @@
+import '@/components/cascade-demo/cascade-demo.makeswift'
 import '@/components/code-demo/code-demo.makeswift'
 import '@/components/font-control-demo/font-control-demo.makeswift'
 import '@/components/gallery-demo/gallery-demo.makeswift'
