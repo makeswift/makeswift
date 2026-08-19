@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.1
+
+### Patch Changes
+
+- d2f7e6b: feat: core runtime infrastructure for React Server Components support
+
 ## 0.28.10-canary.0
 
 ### Patch Changes
