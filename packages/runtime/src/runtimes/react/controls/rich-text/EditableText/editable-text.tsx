@@ -21,6 +21,7 @@ import { Slate as SlateReact, Editable, withReact, ReactEditor } from 'slate-rea
 import { Slate, richTextDTOtoDAO, type RichTextValue } from '@makeswift/controls'
 
 import { useBuilderEditMode } from '../../..'
+import { useSlateReset } from '../../use-slate-reset'
 import { DescriptorsPropControllers } from '../../../../../prop-controllers/instances'
 import { withBlock, withTypography, withBuilder, onKeyDown } from '../../../../../slate'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
@@ -102,6 +103,8 @@ export const EditableText = forwardRef(function EditableText(
     [controller, editor],
   )
 
+  const slateReset = useSlateReset()
+
   const handleBlur = useCallback((e: FocusEvent) => {
     // When clicking outside of the iframe (`relatedTarget` is null) we want to preserve the DOM selection.
     if (e.relatedTarget == null) return
@@ -119,7 +122,7 @@ export const EditableText = forwardRef(function EditableText(
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
-        className={cx(width, margin)}
+        className={cx(slateReset, width, margin)}
         readOnly={editMode !== BuilderEditMode.CONTENT}
         placeholder="Write some text..."
       />

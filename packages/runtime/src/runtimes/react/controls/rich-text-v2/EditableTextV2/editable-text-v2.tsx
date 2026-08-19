@@ -30,6 +30,7 @@ import {
 } from '../../../../../controls/rich-text-v2'
 
 import { useBuilderEditMode } from '../../..'
+import { useSlateReset } from '../../use-slate-reset'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
@@ -184,9 +185,12 @@ export function EditableTextV2({ text, definition, control }: Props) {
       isPreservingFocus.current = false
   }, [])
 
+  const slateReset = useSlateReset()
+
   return (
     <Slate editor={editor} value={initialValue}>
       <Editable
+        className={slateReset}
         renderLeaf={renderLeaf}
         renderElement={renderElement}
         onFocus={handleFocus}
