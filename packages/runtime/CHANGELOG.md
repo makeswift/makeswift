@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.0
+
+### Patch Changes
+
+- 899684f: fix: host CSS targeting `span` elements no longer overrides Makeswift text styles in the builder.
+
 ## 0.28.9
 
 ### Patch Changes
