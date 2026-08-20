@@ -157,11 +157,11 @@ class Definition<C extends Config> extends ControlDefinition<
     })
   }
 
-  resolveContextValue(
+  resolveValueFromData(
     data: DataType<C> | undefined,
   ): ResolvedValueType<C> | undefined {
     return mapValues(this.keyDefs, (def, key) =>
-      def.resolveContextValue(data?.[key]),
+      def.resolveValueFromData(data?.[key]),
     ) as ResolvedValueType<C>
   }
 

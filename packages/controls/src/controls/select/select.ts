@@ -144,7 +144,7 @@ class Definition<C extends Config> extends ControlDefinition<
     return data
   }
 
-  resolveContextValue(
+  resolveValueFromData(
     data: DataType<C> | undefined,
   ): ResolvedValueType<C> | undefined {
     return (
@@ -157,9 +157,7 @@ class Definition<C extends Config> extends ControlDefinition<
   ): Resolvable<ResolvedValueType<C> | undefined> {
     return {
       name: Definition.type,
-      readStable: () =>
-        this.fromData(data) ??
-        (this.config.defaultValue as ResolvedValueType<C>),
+      readStable: () => this.resolveValueFromData(data),
       subscribe: () => () => {},
       triggerResolve: async () => {},
     }

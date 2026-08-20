@@ -244,11 +244,11 @@ class Definition<C extends Config> extends ControlDefinition<
     )
   }
 
-  resolveContextValue(data: DataType<C>): ResolvedValueType<C> | undefined {
+  resolveValueFromData(data: DataType<C>): ResolvedValueType<C> | undefined {
     const propsData = data != null ? Definition.propsData(data) : undefined
 
     return mapValues(this.propDefs, (def, key) =>
-      def.resolveContextValue(propsData?.[key]),
+      def.resolveValueFromData(propsData?.[key]),
     ) as ResolvedValueType<C>
   }
 

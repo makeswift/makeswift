@@ -173,7 +173,7 @@ class Definition<
     return data
   }
 
-  resolveContextValue(): ResolvedValueType<MouseEventType, C> | undefined {
+  resolveValueFromData(): undefined {
     return undefined
   }
 

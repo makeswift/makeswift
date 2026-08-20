@@ -163,7 +163,7 @@ abstract class Definition<
       : data
   }
 
-  resolveContextValue(): undefined {
+  resolveValueFromData(): undefined {
     return undefined
   }
 

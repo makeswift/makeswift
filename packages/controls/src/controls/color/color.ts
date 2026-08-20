@@ -230,7 +230,7 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
-  resolveContextValue(): ResolvedValueType<C> | undefined {
+  resolveValueFromData(): undefined {
     return undefined
   }
 

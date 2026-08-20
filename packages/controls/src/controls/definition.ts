@@ -77,7 +77,7 @@ export abstract class ControlDefinition<
     return null
   }
 
-  abstract resolveContextValue(
+  abstract resolveValueFromData(
     data: DataType | undefined,
   ): ResolvedValueType | undefined
 

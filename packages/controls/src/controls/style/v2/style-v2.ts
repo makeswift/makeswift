@@ -136,7 +136,7 @@ class Definition<
     )
   }
 
-  resolveContextValue(): string | undefined {
+  resolveValueFromData(): undefined {
     return undefined
   }
 

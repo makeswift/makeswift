@@ -161,7 +161,7 @@ abstract class Definition<
     return []
   }
 
-  resolveContextValue(): undefined {
+  resolveValueFromData(): undefined {
     return undefined
   }
 }

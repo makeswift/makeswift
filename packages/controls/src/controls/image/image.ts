@@ -285,7 +285,7 @@ class Definition<C extends Config = DefaultConfig> extends ControlDefinition<
       .otherwise((val) => val)
   }
 
-  resolveContextValue(): ResolvedValueType<C> | undefined {
+  resolveValueFromData(): undefined {
     return undefined
   }
 
