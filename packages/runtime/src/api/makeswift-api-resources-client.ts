@@ -71,7 +71,7 @@ export class MakeswiftApiResourcesClient extends ApiResourcesClient {
 
   protected async fetchFileImpl(id: string, _version: SiteVersion | null): Promise<File | null> {
     // files are unversioned
-    return (await this.graphQlClient).getFile(id)
+    return (await this.restApiClient).getFile(id)
   }
 
   protected async fetchTypographyImpl(

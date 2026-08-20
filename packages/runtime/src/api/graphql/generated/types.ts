@@ -206,21 +206,6 @@ export type SwatchQueryResult = {
   } | null
 }
 
-export type FileQueryVariables = Exact<{
-  fileId: Scalars['ID']
-}>
-
-export type FileQueryResult = {
-  file: {
-    __typename: 'File'
-    id: string
-    name: string
-    extension: string | null
-    publicUrl: string
-    dimensions: { width: number; height: number } | null
-  } | null
-}
-
 export type TypographyQueryVariables = Exact<{
   typographyId: Scalars['ID']
 }>

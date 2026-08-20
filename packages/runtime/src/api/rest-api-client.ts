@@ -1,6 +1,7 @@
 import ky, { HTTPError, isHTTPError, type KyInstance } from './ky'
 
 import {
+  type File,
   type GlobalElement,
   type LocalizedGlobalElement,
   type PagePathnameSlice,
@@ -76,6 +77,23 @@ export class MakeswiftRestAPIClient {
     const swatch = await response.json()
 
     return swatch
+  }
+
+  async getFile(fileId: string): Promise<File | null> {
+    const response = await this.fetch(`v1/files/${fileId}`, null)
+
+    if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
+      if (response.status === 404) return null
+
+      throw new RestApiClientError(`Failed to get file '${fileId}'`, response, {
+        body: failedBody,
+      })
+    }
+
+    const file = await response.json()
+
+    return file
   }
 
   async getTypography(
