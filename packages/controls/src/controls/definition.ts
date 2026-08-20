@@ -23,6 +23,15 @@ export type Resolvable<T> = ValueSubscription<T> & {
   triggerResolve(currentValue?: T): Promise<unknown>
 }
 
+export type KeyedContainer<T> = { kind: 'keyed'; type: T }
+export type MultiValueContainer<T> = { kind: 'multivalue'; type: T }
+export type Scalar = { kind: 'scalar' }
+
+export type AnyContainerType =
+  | KeyedContainer<unknown>
+  | MultiValueContainer<unknown>
+  | Scalar
+
 export abstract class ControlDefinition<
   ControlType extends string = string,
   Config = unknown,
@@ -30,6 +39,7 @@ export abstract class ControlDefinition<
   ValueType extends Data = Data,
   ResolvedValueType = Data | unknown,
   InstanceType extends AnyControlInstance = AnyControlInstance,
+  ContainerType extends AnyContainerType = AnyContainerType,
 > {
   // workaround for TypeScript type inference issues: https://bit.ly/4g2RvOQ
   __associatedTypes(_: {
@@ -39,6 +49,7 @@ export abstract class ControlDefinition<
     ValueType: ValueType
     ResolvedValueType: ResolvedValueType
     InstanceType: InstanceType
+    ContainerType: ContainerType
   }) {}
 
   constructor(readonly config: Config) {}
