@@ -154,6 +154,14 @@ export default function useEnhancedTypography(
     .filter(isNonNullable)
 }
 
+// Prevent typography styles from being overriden by top level host styles by
+// applying the "!important" modifier.
+function important(styles: CSSObject): CSSObject {
+  return Object.fromEntries(
+    Object.entries(styles).map(([property, value]) => [property, `${value} !important`]),
+  )
+}
+
 function typographyToCssObject(value: EnhancedTypographyValue): CSSObject {
   let styles: CSSObject = {}
   if (value.color != null) styles.color = colorToString(value.color)
@@ -174,7 +182,7 @@ function typographyToCssObject(value: EnhancedTypographyValue): CSSObject {
       .join(' ')
   if (value.italic != null) styles.fontStyle = value.italic === true ? 'italic' : 'initial'
 
-  return styles
+  return important(styles)
 }
 
 export function typographyCss(breakpoints: Breakpoints, style: EnhancedTypography): CSSObject {
