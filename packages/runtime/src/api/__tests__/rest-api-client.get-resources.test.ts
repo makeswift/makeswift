@@ -83,6 +83,51 @@ describe('getSwatch', () => {
   })
 })
 
+describe('getFile', () => {
+  const fileId = 'myFile'
+  const resourceUrl = `${TestOrigins.apiOrigin}/v1/files/${fileId}`
+
+  test('returns null on 404', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(resourceUrl, () => HttpResponse.text('', { status: 404 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const result = await client.getFile(fileId)
+
+    // Assert
+    expect(result).toBeNull()
+    expect(consoleErrorSpy).not.toHaveBeenCalled()
+  })
+
+  test('throws on other errors, attaching the details to the error', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(resourceUrl, () => HttpResponse.json('Internal server error', { status: 500 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const error = await captureClientError(client.getFile(fileId))
+
+    // Assert
+    expect(error.name).toBe('RestApiClientError')
+    expect(error.message).toBe("Failed to get file 'myFile': 500 Internal Server Error")
+    expect(error.status).toBe(500)
+    expect(error.cause).toEqual({
+      body: 'Internal server error',
+    })
+  })
+})
+
 describe('getTypography', () => {
   const typographyId = 'myTypography'
   const resourceUrl = `${baseUrl}/typographies/${typographyId}`
