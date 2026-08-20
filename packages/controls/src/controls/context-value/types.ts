@@ -11,10 +11,11 @@ export type ContextValue<Id extends string = string, T = unknown> = {
 }
 
 export type ContextValueBuilder<Id extends string> = {
-  withType<V>(): ContextValue<Id, V>
+  ofType<V>(): ContextValue<Id, V>
 }
 
 // Providing
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyContextValue = ContextValue<string, any>
 
 // Dependency
@@ -25,8 +26,10 @@ export type ContextValues<D extends ContextValueDependencies> = {
   [K in keyof D]: ContextValueOf<D[K]> | undefined
 }
 
-export type ContextIdOf<C> = C extends ContextValue<infer Id, any> ? Id : never
-export type ContextValueOf<C> = C extends ContextValue<any, infer V> ? V : never
+export type ContextIdOf<C> =
+  C extends ContextValue<infer Id, unknown> ? Id : never
+export type ContextValueOf<C> =
+  C extends ContextValue<string, infer V> ? V : never
 
 // Configs
 // Unconstrained versions used for typechecking to prevent type widening

@@ -8,7 +8,7 @@ import { List } from '../list'
 import { Number } from '../number'
 import { Shape } from '../shape/v1'
 
-import { ContextValue } from '.'
+import { unstable_ContextValue } from '.'
 import type {
   ContextDependencyIds,
   ContextValues,
@@ -22,8 +22,8 @@ import type {
   RequiredIds,
 } from './types'
 
-const stateNameContext = ContextValue('stateName').withType<string>()
-const zoomContext = ContextValue('zoom').withType<number>()
+const stateNameContext = unstable_ContextValue('stateName').ofType<string>()
+const zoomContext = unstable_ContextValue('zoom').ofType<number>()
 
 const stateCombobox = () =>
   Combobox({
@@ -346,10 +346,12 @@ describe('duplicate provider detection', () => {
 
 describe('namespaced contexts', () => {
   const Selector = <Ns extends string>(namespace: Ns) => {
-    const generation = ContextValue(
+    const generation = unstable_ContextValue(
       `${namespace}.generation`,
-    ).withType<number>()
-    const selection = ContextValue(`${namespace}.selection`).withType<string>()
+    ).ofType<number>()
+    const selection = unstable_ContextValue(
+      `${namespace}.selection`,
+    ).ofType<string>()
 
     return Group({
       props: {
@@ -372,7 +374,8 @@ describe('namespaced contexts', () => {
   }
 
   test('a template-literal id stays literal, so prefixing gives distinct ids', () => {
-    const generation = ContextValue(`primary.generation`).withType<number>()
+    const generation =
+      unstable_ContextValue(`primary.generation`).ofType<number>()
 
     expectTypeOf(generation).toEqualTypeOf<
       ContextValueType<'primary.generation', number>

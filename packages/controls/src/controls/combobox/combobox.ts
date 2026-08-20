@@ -41,9 +41,11 @@ type Config<
     getOptions: GetOptionsType<T, D>
   }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyConfig = Config<any, any, any>
 
 type ItemType<C extends AnyConfig> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   C extends Config<infer Item, any, any> ? Item : never
 type DataType<C extends AnyConfig> = Option<ItemType<C>>
 type ValueType<C extends AnyConfig> = DataType<C>

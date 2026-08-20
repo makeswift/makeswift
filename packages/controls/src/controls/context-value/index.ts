@@ -8,7 +8,7 @@ export * from './schemas'
  * Declares a value one control makes available to others in the same component.
  *
  * ```ts
- * const stateName = PropContext('stateName').withType<string>()
+ * const stateName = unstable_ContextValue('stateName').ofType<string>()
  *
  * props: {
  *   stateName: Combobox({ provides: stateName, getOptions(q) { ... } }),
@@ -20,7 +20,7 @@ export * from './schemas'
  * ```
  *
  */
-export function ContextValue<Id extends string>(
+export function unstable_ContextValue<Id extends string>(
   id: Id,
 ): ContextValueBuilder<Id> {
   /*
@@ -28,5 +28,5 @@ export function ContextValue<Id extends string>(
     type argument inference: naming `T` explicitly in a single call would prevent
     `Id` being inferred. This prevents requiring duplicate declarations of the id.
   */
-  return { withType: <T>() => ({ id }) as ContextValue<Id, T> }
+  return { ofType: <T>(): ContextValue<Id, T> => ({ id }) }
 }

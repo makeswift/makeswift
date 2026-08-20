@@ -13,7 +13,7 @@ export {
   isDependsOnConfig,
   isProvidesConfig,
   isContextValue,
-  ContextValue,
+  unstable_ContextValue,
   type ProvidesConfig,
   type DependsOnConfig,
   type AnyContextValue,
