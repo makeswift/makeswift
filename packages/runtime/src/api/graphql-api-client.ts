@@ -1,14 +1,8 @@
 import { GraphQLClient } from './graphql/client'
 
-import {
-  CreateTableRecordMutation,
-  TableQuery,
-  UnversionedResourcesQuery,
-} from './graphql/documents'
+import { TableQuery, UnversionedResourcesQuery } from './graphql/documents'
 
 import {
-  type CreateTableRecordMutationResult,
-  type CreateTableRecordMutationVariables,
   type TableQueryResult,
   type TableQueryVariables,
   type UnversionedResourcesQueryResult,
@@ -24,13 +18,6 @@ export class MakeswiftGraphQLApiClient {
     this.graphqlClient = new GraphQLClient(endpoint, {
       'makeswift-runtime-version': PACKAGE_VERSION,
     })
-  }
-
-  async createTableRecord(tableId: string, columns: any): Promise<void> {
-    await this.graphqlClient.request<
-      CreateTableRecordMutationResult,
-      CreateTableRecordMutationVariables
-    >(CreateTableRecordMutation, { input: { data: { tableId, columns } } })
   }
 
   async getUnversionedResources({
