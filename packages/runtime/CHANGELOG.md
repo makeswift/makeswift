@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.3
+
+### Patch Changes
+
+- 76d508e: The built-in Form component now creates table records via the Makeswift Host API REST endpoint (proxied through the host's `/api/makeswift` route) instead of the GraphQL API, so Form submissions no longer require hitting the GraphQL/Builder API.
+
 ## 0.28.10-canary.2
 
 ### Patch Changes
