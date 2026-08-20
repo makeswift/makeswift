@@ -16,7 +16,7 @@ export function isProvidesConfig<T>(
 ): config is T & Required<ProvidesConfig<AnyContextValue>> {
   return (
     typeof config === 'object' &&
-    config != undefined &&
+    config != null &&
     'provides' in config &&
     providesSchema.safeParse(config.provides).success
   )
@@ -27,7 +27,7 @@ export function isDependsOnConfig<T>(
 ): config is T & Required<DependsOnConfig<ContextValueDependencies>> {
   return (
     typeof config === 'object' &&
-    config != undefined &&
+    config != null &&
     'dependsOn' in config &&
     dependsOnSchema.safeParse(config.dependsOn).success
   )

@@ -8,7 +8,7 @@ import {
   Link,
   List,
   Number,
-  ContextValue,
+  unstable_ContextValue,
   Select,
   Shape,
   TextArea,
@@ -109,7 +109,7 @@ describe('registerComponent', () => {
 describe('options context validation', () => {
   // Enforced entirely by `ValidComponentProps` on `registerComponent`'s `props`,
   // so these assert compile-time behaviour: the bodies only have to run.
-  const stateNameContext = ContextValue('stateName').withType<string>()
+  const stateNameContext = unstable_ContextValue('stateName').ofType<string>()
 
   const stateCombobox = () =>
     Combobox({
