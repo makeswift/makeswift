@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.2
+
+### Patch Changes
+
+- 25a7e1c: File fetching now goes through the Host API's `GET v1/files/:id` REST endpoint instead of the GraphQL `file` query.
+
 ## 0.28.10-canary.1
 
 ### Patch Changes
