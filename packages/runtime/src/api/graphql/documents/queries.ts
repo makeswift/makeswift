@@ -70,13 +70,3 @@ export const GlobalElementQuery = /* GraphQL */ `
 
   ${GlobalElementFragment}
 `
-
-export const CreateTableRecordMutation = /* GraphQL */ `
-  mutation CreateTableRecord($input: CreateTableRecordInput!) {
-    createTableRecord(input: $input) {
-      tableRecord {
-        id
-      }
-    }
-  }
-`

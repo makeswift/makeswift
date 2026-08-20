@@ -12,6 +12,7 @@ import { fontsHandler, type Font, type GetFonts } from './handlers/fonts'
 import { manifestHandler, type Manifest } from './handlers/manifest'
 import { mergeTranslatedDataHandler } from './handlers/merge-translated-data'
 import { revalidateHandler } from './handlers/revalidate'
+import { tableRecordHandler } from './handlers/table-record'
 import { translatableDataHandler } from './handlers/translatable-data'
 import { webhookHandler } from './handlers/webhook'
 import { type OnPublish, type SitePublishedWebhookPayloadData } from './handlers/webhook/types'
@@ -52,6 +53,7 @@ type ResponseType =
       | ReturnType<typeof manifestHandler>
       | ReturnType<typeof mergeTranslatedDataHandler>
       | ReturnType<typeof revalidateHandler>
+      | ReturnType<typeof tableRecordHandler>
       | ReturnType<typeof translatableDataHandler>
       | ReturnType<typeof webhookHandler>
     >
@@ -111,6 +113,7 @@ export function createApiHandler(
       return revalidateHandler(req, { apiKey, revalidatePath: revalidationHandler })
     }
 
+    if (matches('/table-records')) return tableRecordHandler(req, { client })
     if (matches('/translatable-data')) return translatableDataHandler(req, { client })
     if (matches('/webhook')) {
       return webhookHandler(req, { apiKey, events, revalidate: revalidationHandler })
