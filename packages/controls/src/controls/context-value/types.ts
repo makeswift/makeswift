@@ -70,51 +70,39 @@ export type ContextDependencyIds<Def> =
       ? ContextIdOf<NonNullable<D>[keyof NonNullable<D>]>
       : never
 
-type ContainerKindOf<Def> =
-  ContainerType<Def> extends { kind: infer Kind } ? Kind : never
-
-type KeyDefsOf<Def> =
-  ContainerType<Def> extends KeyedContainer<infer Defs> ? Defs : never
-
-type ItemDefOf<Def> =
-  ContainerType<Def> extends MultiValueContainer<infer Item> ? Item : never
-
 export type ProvidedIds<Def> = Def extends unknown
   ? ProvidedIdsImpl<Def>
   : never
-type ProvidedIdsImpl<Def> =
-  ContainerKindOf<Def> extends 'keyed'
-    ? {
-        [K in keyof KeyDefsOf<Def>]: ProvidedIds<KeyDefsOf<Def>[K]>
-      }[keyof KeyDefsOf<Def>]
-    : ContainerKindOf<Def> extends 'multivalue'
-      ? never
-      : ProvidedContextId<Def>
+type ProvidedIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
+  KeyedContainer<infer Defs>,
+]
+  ? { [K in keyof Defs]: ProvidedIds<Defs[K]> }[keyof Defs]
+  : [C] extends [MultiValueContainer<unknown>]
+    ? never
+    : ProvidedContextId<Def>
 
 export type RequiredIds<Def> = Def extends unknown
   ? RequiredIdsImpl<Def>
   : never
-type RequiredIdsImpl<Def> =
-  ContainerKindOf<Def> extends 'keyed'
-    ? {
-        [K in keyof KeyDefsOf<Def>]: RequiredIds<KeyDefsOf<Def>[K]>
-      }[keyof KeyDefsOf<Def>]
-    : ContainerKindOf<Def> extends 'multivalue'
-      ? RequiredIds<ItemDefOf<Def>>
-      : ContextDependencyIds<Def>
+type RequiredIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
+  KeyedContainer<infer Defs>,
+]
+  ? { [K in keyof Defs]: RequiredIds<Defs[K]> }[keyof Defs]
+  : [C] extends [MultiValueContainer<infer Item>]
+    ? RequiredIds<Item>
+    : ContextDependencyIds<Def>
 
 /** Context ids provided under a multivalue container. */
 export type MultiValueProvidedIds<Def> = Def extends unknown
   ? MultiValueProvidedIdsImpl<Def>
   : never
-type MultiValueProvidedIdsImpl<Def> =
-  ContainerKindOf<Def> extends 'keyed'
-    ? {
-        [K in keyof KeyDefsOf<Def>]: MultiValueProvidedIds<KeyDefsOf<Def>[K]>
-      }[keyof KeyDefsOf<Def>]
-    : ContainerKindOf<Def> extends 'multivalue'
-      ? ProvidedIds<ItemDefOf<Def>> | MultiValueProvidedIds<ItemDefOf<Def>>
-      : never
+type MultiValueProvidedIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
+  KeyedContainer<infer Defs>,
+]
+  ? { [K in keyof Defs]: MultiValueProvidedIds<Defs[K]> }[keyof Defs]
+  : [C] extends [MultiValueContainer<infer Item>]
+    ? ProvidedIds<Item> | MultiValueProvidedIds<Item>
+    : never
 
 // Non-distributive on purpose: a resolved value type is usually a union
 // (`T | undefined`), and a distributive conditional would union `unknown` in
@@ -131,21 +119,20 @@ type ContextAccepts<C, Resolved> = [Resolved] extends [
 export type MismatchedProvidedIds<Def> = Def extends unknown
   ? MismatchedProvidedIdsOf<Def>
   : never
-type MismatchedProvidedIdsOf<Def> =
-  ContainerKindOf<Def> extends 'keyed'
-    ? {
-        [K in keyof KeyDefsOf<Def>]: MismatchedProvidedIds<KeyDefsOf<Def>[K]>
-      }[keyof KeyDefsOf<Def>]
-    : ContainerKindOf<Def> extends 'multivalue'
-      ? MismatchedProvidedIds<ItemDefOf<Def>>
-      : [ProvidedContext<Def>] extends [never]
+type MismatchedProvidedIdsOf<Def, C = ContainerType<Def>> = [C] extends [
+  KeyedContainer<infer Defs>,
+]
+  ? { [K in keyof Defs]: MismatchedProvidedIds<Defs[K]> }[keyof Defs]
+  : [C] extends [MultiValueContainer<infer Item>]
+    ? MismatchedProvidedIds<Item>
+    : [ProvidedContext<Def>] extends [never]
+      ? never
+      : ContextAccepts<
+            ProvidedContext<Def>,
+            ResolvedValueType<Def>
+          > extends true
         ? never
-        : ContextAccepts<
-              ProvidedContext<Def>,
-              ResolvedValueType<Def>
-            > extends true
-          ? never
-          : ProvidedContextId<Def>
+        : ProvidedContextId<Def>
 
 /**
  * Ids provided more than once within a record of definitions.
@@ -159,13 +146,14 @@ export type DuplicateIds<R> = {
 type DuplicateIdsWithin<Def> = Def extends unknown
   ? DuplicateIdsWithinImpl<Def>
   : never
-type DuplicateIdsWithinImpl<Def> =
-  ContainerKindOf<Def> extends 'keyed'
-    ? DuplicateIds<KeyDefsOf<Def>>
-    : ContainerKindOf<Def> extends 'multivalue'
-      ? // a provider in here is already a `ProviderInMultiValue` error
-        DuplicateIdsWithin<ItemDefOf<Def>>
-      : never
+type DuplicateIdsWithinImpl<Def, C = ContainerType<Def>> = [C] extends [
+  KeyedContainer<infer Defs>,
+]
+  ? DuplicateIds<Defs>
+  : [C] extends [MultiValueContainer<infer Item>]
+    ? // a provider in here is already a `ProviderInMultiValue` error
+      DuplicateIdsWithin<Item>
+    : never
 
 // Validation errors
 export type UnprovidedContext<Ids extends string> = [Ids] extends [never]
