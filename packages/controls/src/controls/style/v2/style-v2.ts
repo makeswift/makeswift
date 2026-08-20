@@ -21,6 +21,7 @@ import {
 } from '../../associated-types'
 import {
   ControlDefinition,
+  MultiValueContainer,
   type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
@@ -59,7 +60,8 @@ class Definition<
   DataType<Prop>,
   ValueType<Prop>,
   ResolvedValueType<Prop>,
-  InstanceType<Prop>
+  InstanceType<Prop>,
+  MultiValueContainer<Prop>
 > {
   static readonly type = 'makeswift::controls::style-v2' as const
 

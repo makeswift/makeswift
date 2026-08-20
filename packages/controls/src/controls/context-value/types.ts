@@ -1,8 +1,9 @@
 import {
   type ConfigType,
-  type ControlType,
+  type ContainerType,
   type ResolvedValueType,
 } from '../associated-types'
+import { KeyedContainer, MultiValueContainer } from '../definition'
 
 // Declaration
 export type ContextValue<Id extends string = string, T = unknown> = {
@@ -69,37 +70,24 @@ export type ContextDependencyIds<Def> =
       ? ContextIdOf<NonNullable<D>[keyof NonNullable<D>]>
       : never
 
-const GROUP_TYPE = 'makeswift::controls::group'
-const SHAPE_TYPE = 'makeswift::controls::shape'
-const LIST_TYPE = 'makeswift::controls::list'
-const STYLE_V2_TYPE = 'makeswift::controls::style-v2'
-
-type GroupType = typeof GROUP_TYPE
-type ShapeType = typeof SHAPE_TYPE
-type ListType = typeof LIST_TYPE
-type StyleV2Type = typeof STYLE_V2_TYPE
-
-type KeyedContainer = GroupType | ShapeType
-type MultiValueContainer = ListType | StyleV2Type
+type ContainerKindOf<Def> =
+  ContainerType<Def> extends { kind: infer Kind } ? Kind : never
 
 type KeyDefsOf<Def> =
-  ConfigType<Def> extends { props: infer R }
-    ? R
-    : ConfigType<Def> extends { type: infer R }
-      ? R
-      : never
+  ContainerType<Def> extends KeyedContainer<infer Defs> ? Defs : never
 
-type ItemDefOf<Def> = ConfigType<Def> extends { type: infer I } ? I : never
+type ItemDefOf<Def> =
+  ContainerType<Def> extends MultiValueContainer<infer Item> ? Item : never
 
 export type ProvidedIds<Def> = Def extends unknown
   ? ProvidedIdsImpl<Def>
   : never
 type ProvidedIdsImpl<Def> =
-  ControlType<Def> extends KeyedContainer
+  ContainerKindOf<Def> extends 'keyed'
     ? {
         [K in keyof KeyDefsOf<Def>]: ProvidedIds<KeyDefsOf<Def>[K]>
       }[keyof KeyDefsOf<Def>]
-    : ControlType<Def> extends MultiValueContainer
+    : ContainerKindOf<Def> extends 'multivalue'
       ? never
       : ProvidedContextId<Def>
 
@@ -107,11 +95,11 @@ export type RequiredIds<Def> = Def extends unknown
   ? RequiredIdsImpl<Def>
   : never
 type RequiredIdsImpl<Def> =
-  ControlType<Def> extends KeyedContainer
+  ContainerKindOf<Def> extends 'keyed'
     ? {
         [K in keyof KeyDefsOf<Def>]: RequiredIds<KeyDefsOf<Def>[K]>
       }[keyof KeyDefsOf<Def>]
-    : ControlType<Def> extends MultiValueContainer
+    : ContainerKindOf<Def> extends 'multivalue'
       ? RequiredIds<ItemDefOf<Def>>
       : ContextDependencyIds<Def>
 
@@ -120,11 +108,11 @@ export type MultiValueProvidedIds<Def> = Def extends unknown
   ? MultiValueProvidedIdsImpl<Def>
   : never
 type MultiValueProvidedIdsImpl<Def> =
-  ControlType<Def> extends KeyedContainer
+  ContainerKindOf<Def> extends 'keyed'
     ? {
         [K in keyof KeyDefsOf<Def>]: MultiValueProvidedIds<KeyDefsOf<Def>[K]>
       }[keyof KeyDefsOf<Def>]
-    : ControlType<Def> extends MultiValueContainer
+    : ContainerKindOf<Def> extends 'multivalue'
       ? ProvidedIds<ItemDefOf<Def>> | MultiValueProvidedIds<ItemDefOf<Def>>
       : never
 
@@ -144,11 +132,11 @@ export type MismatchedProvidedIds<Def> = Def extends unknown
   ? MismatchedProvidedIdsOf<Def>
   : never
 type MismatchedProvidedIdsOf<Def> =
-  ControlType<Def> extends KeyedContainer
+  ContainerKindOf<Def> extends 'keyed'
     ? {
         [K in keyof KeyDefsOf<Def>]: MismatchedProvidedIds<KeyDefsOf<Def>[K]>
       }[keyof KeyDefsOf<Def>]
-    : ControlType<Def> extends MultiValueContainer
+    : ContainerKindOf<Def> extends 'multivalue'
       ? MismatchedProvidedIds<ItemDefOf<Def>>
       : [ProvidedContext<Def>] extends [never]
         ? never
@@ -172,9 +160,9 @@ type DuplicateIdsWithin<Def> = Def extends unknown
   ? DuplicateIdsWithinImpl<Def>
   : never
 type DuplicateIdsWithinImpl<Def> =
-  ControlType<Def> extends KeyedContainer
+  ContainerKindOf<Def> extends 'keyed'
     ? DuplicateIds<KeyDefsOf<Def>>
-    : ControlType<Def> extends MultiValueContainer
+    : ContainerKindOf<Def> extends 'multivalue'
       ? // a provider in here is already a `ProviderInMultiValue` error
         DuplicateIdsWithin<ItemDefOf<Def>>
       : never
