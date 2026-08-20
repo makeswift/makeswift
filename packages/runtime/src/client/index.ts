@@ -928,6 +928,30 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     })
   }
 
+  async createTableRecord(
+    tableId: string,
+    columns: { columnId: string; data: unknown }[],
+  ): Promise<void> {
+    const response = await this.fetch('v1/table-records', null, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ tableId, columns }),
+    })
+
+    if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
+
+      throw new RestApiClientError(
+        `Failed to create table record for table '${tableId}'`,
+        response,
+        {
+          body: failedBody,
+          tableId,
+        },
+      )
+    }
+  }
+
   async getTable(tableId: string): Promise<Table | null> {
     return this.graphqlClient.getTable(tableId)
   }
