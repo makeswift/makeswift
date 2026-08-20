@@ -154,6 +154,27 @@ exports[`correctly renders image component 1`] = `
   }
 }
 
+@media only screen and (min-width: 769px) {
+  .emotion-8 {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .emotion-8 {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .emotion-8 {
+    width: 100%;
+    height: auto;
+  }
+}
+
 <a
   class="emotion-0 emotion-1 emotion-2 emotion-3 emotion-4 emotion-5 emotion-6 emotion-7"
   href="https://www.makeswift.com/"
@@ -162,13 +183,14 @@ exports[`correctly renders image component 1`] = `
 >
   <img
     alt="Hill chart"
+    class="emotion-8"
     data-nimg="1"
     decoding="async"
     height="1119"
     sizes="100vw"
     src="/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=3840&q=75"
     srcset="/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=640&q=75 640w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=750&q=75 750w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=828&q=75 828w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1080&q=75 1080w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1200&q=75 1200w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=1920&q=75 1920w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=2048&q=75 2048w, /_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fs.mkswft.com%2FRmlsZTplMGJlNzVmMC01MjhmLTRiM2EtYTY4YS1kNjhlMTJjODMwZDI%3D%2FHill%2520Chart.png&w=3840&q=75 3840w"
-    style="color: transparent; width: 100%; height: auto;"
+    style="color: transparent;"
     width="2700"
   />
 </a>
