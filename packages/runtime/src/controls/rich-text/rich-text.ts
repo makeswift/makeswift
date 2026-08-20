@@ -25,10 +25,6 @@ class Definition extends BaseDefinition {
     return new (class RichTextV1 extends Definition {})()
   }
 
-  resolveValueFromData(): undefined {
-    return undefined
-  }
-
   resolveValue(
     data: DataType<BaseDefinition> | undefined,
     _resolver: ResourceResolver,
