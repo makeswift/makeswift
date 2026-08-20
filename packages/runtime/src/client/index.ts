@@ -7,7 +7,6 @@ import {
 
 import {
   APIResourceType,
-  type File,
   type GlobalElement,
   type LocalizedGlobalElement,
   type Swatch,
@@ -927,10 +926,6 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
         meta: { allowLocaleFallback, requestedLocale: locale ?? null },
       }
     })
-  }
-
-  async getFile(fileId: string): Promise<File | null> {
-    return this.graphqlClient.getFile(fileId)
   }
 
   async getTable(tableId: string): Promise<Table | null> {

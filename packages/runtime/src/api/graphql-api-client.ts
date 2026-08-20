@@ -2,7 +2,6 @@ import { GraphQLClient } from './graphql/client'
 
 import {
   CreateTableRecordMutation,
-  FileQuery,
   TableQuery,
   UnversionedResourcesQuery,
 } from './graphql/documents'
@@ -10,15 +9,13 @@ import {
 import {
   type CreateTableRecordMutationResult,
   type CreateTableRecordMutationVariables,
-  type FileQueryResult,
-  type FileQueryVariables,
   type TableQueryResult,
   type TableQueryVariables,
   type UnversionedResourcesQueryResult,
   type UnversionedResourcesQueryVariables,
 } from './graphql/generated/types'
 
-import { type File, type Table } from './types'
+import { type Table } from './types'
 
 export class MakeswiftGraphQLApiClient {
   readonly graphqlClient: GraphQLClient
@@ -44,15 +41,6 @@ export class MakeswiftGraphQLApiClient {
       UnversionedResourcesQueryResult,
       UnversionedResourcesQueryVariables
     >(UnversionedResourcesQuery, { fileIds, tableIds })
-  }
-
-  async getFile(fileId: string): Promise<File | null> {
-    const result = await this.graphqlClient.request<FileQueryResult, FileQueryVariables>(
-      FileQuery,
-      { fileId },
-    )
-
-    return result.file
   }
 
   async getTable(tableId: string): Promise<Table | null> {

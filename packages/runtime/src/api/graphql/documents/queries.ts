@@ -31,16 +31,6 @@ export const SwatchQuery = /* GraphQL */ `
   ${SwatchFragment}
 `
 
-export const FileQuery = /* GraphQL */ `
-  query File($fileId: ID!) {
-    file(id: $fileId) {
-      ...File
-    }
-  }
-
-  ${FileFragment}
-`
-
 export const TypographyQuery = /* GraphQL */ `
   query Typography($typographyId: ID!) {
     typography(id: $typographyId) {
