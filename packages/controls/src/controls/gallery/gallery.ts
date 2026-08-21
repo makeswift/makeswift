@@ -7,6 +7,16 @@ import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  contextValuesSchema,
+  dependsOnSchema,
+  providesSchema,
+  type AnyContextValue,
+  type ContextValueDependencies,
+  type ContextValues,
+  type DependsOnConfig,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -24,24 +34,34 @@ export type GalleryPage<T extends Data = Data> = {
   options: GalleryOption<T>[]
 }
 
-type GetOptionsType<T extends Data> = () =>
-  | GalleryPage<T>
-  | Promise<GalleryPage<T>>
+type GetOptionsType<T extends Data, D extends ContextValueDependencies> = (
+  context: ContextValues<D>,
+) => GalleryPage<T> | Promise<GalleryPage<T>>
 
-type Config<T extends Data = Data> = {
-  label?: string
-  description?: string
-  getOptions: GetOptionsType<T>
-}
+type Config<
+  T extends Data = Data,
+  D extends ContextValueDependencies = {},
+  P extends AnyContextValue = AnyContextValue,
+> = ProvidesConfig<P> &
+  DependsOnConfig<D> & {
+    label?: string
+    description?: string
+    getOptions: GetOptionsType<T, D>
+  }
 
-type ItemType<C extends Config> = C extends Config<infer Item> ? Item : never
-type DataType<C extends Config> = GalleryOption<ItemType<C>>
-type ValueType<C extends Config> = DataType<C>
-type ResolvedValueType<C extends Config> =
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyConfig = Config<any, any, any>
+
+type ItemType<C extends AnyConfig> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  C extends Config<infer Item, any, any> ? Item : never
+type DataType<C extends AnyConfig> = GalleryOption<ItemType<C>>
+type ValueType<C extends AnyConfig> = DataType<C>
+type ResolvedValueType<C extends AnyConfig> =
   | GalleryOption<ItemType<C>>['value']
   | undefined
 
-class Definition<C extends Config> extends ControlDefinition<
+class Definition<C extends AnyConfig> extends ControlDefinition<
   typeof Definition.type,
   C,
   DataType<C>,
@@ -70,8 +90,10 @@ class Definition<C extends Config> extends ControlDefinition<
     const config = z.object({
       getOptions: z
         .function()
-        .args()
+        .args(contextValuesSchema)
         .returns(z.union([page, z.promise(page)])),
+      provides: providesSchema.optional(),
+      dependsOn: dependsOnSchema.optional(),
       label: z.string().optional(),
       description: z.string().optional(),
     })
@@ -157,22 +179,26 @@ class Definition<C extends Config> extends ControlDefinition<
 }
 
 export class unstable_GalleryDefinition<
-  C extends Config = Config,
+  C extends AnyConfig = Config,
 > extends Definition<C> {}
 
 type NormedConfig<
   T extends Data,
-  GetOptions extends GetOptionsType<T>,
-> = Config<T> & {
+  D extends ContextValueDependencies,
+  P extends AnyContextValue,
+  GetOptions extends GetOptionsType<T, D>,
+> = Config<T, D, P> & {
   getOptions: GetOptions
 }
 
 export function unstable_Gallery<
   T extends Data,
-  GetOptions extends GetOptionsType<T>,
+  D extends ContextValueDependencies = {},
+  P extends AnyContextValue = never,
+  GetOptions extends GetOptionsType<T, D> = GetOptionsType<T, D>,
 >(
-  config: Config<T> & { getOptions: GetOptions },
-): unstable_GalleryDefinition<NormedConfig<T, GetOptions>> {
+  config: Config<T, D, P> & { getOptions: GetOptions },
+): unstable_GalleryDefinition<NormedConfig<T, D, P, GetOptions>> {
   return new unstable_GalleryDefinition(config)
 }
 

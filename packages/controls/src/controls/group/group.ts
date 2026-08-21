@@ -21,6 +21,7 @@ import {
 } from '../associated-types'
 import {
   ControlDefinition,
+  KeyedContainer,
   type Resolvable,
   type SchemaType,
 } from '../definition'
@@ -77,7 +78,8 @@ class Definition<C extends Config> extends ControlDefinition<
   DataType<C>,
   ValueType<C>,
   ResolvedValueType<C>,
-  InstanceType<C>
+  InstanceType<C>,
+  KeyedContainer<C['props']>
 > {
   static readonly type = 'makeswift::controls::group' as const
   static readonly v1DataType = 'group::v1' as const

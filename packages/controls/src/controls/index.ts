@@ -23,5 +23,6 @@ export * from './typography'
 export * from './associated-types'
 export * from './definition'
 export * from './instance'
+export * from './context-value'
 
 export * from './visitor'

@@ -1,4 +1,7 @@
-import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
+import {
+  ControlDefinition as UnifiedControlDefinition,
+  type PropsWithValidContextUsage,
+} from '@makeswift/controls'
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 
@@ -64,7 +67,7 @@ export class ReactRuntimeCore extends RuntimeCore {
        */
       unstable_migration?: { replacementType: string }
       server?: boolean
-      props?: P
+      props?: P & PropsWithValidContextUsage<P>
     },
   ): () => void {
     validateComponentType(
