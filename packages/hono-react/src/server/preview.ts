@@ -10,8 +10,9 @@ import {
   SearchParams,
   secondsUntilSiteVersionExpiration,
   serializeSiteVersion,
-  ReactRuntime,
 } from '@makeswift/runtime/unstable-framework-support'
+
+import { ReactRuntimeCore } from '@makeswift/runtime/react/core'
 
 import { Makeswift as MakeswiftClient } from '../client'
 
@@ -40,7 +41,7 @@ export function createPreviewMiddleware<E extends Env>({
   runtime,
 }: {
   apiKey: string
-  runtime: ReactRuntime
+  runtime: ReactRuntimeCore
 }): MiddlewareHandler {
   return async function apiHandler(c: Context<E>, next: Next): Promise<Response | void> {
     const { pathname, searchParams } = new URL(c.req.url, `https://example.com`)
