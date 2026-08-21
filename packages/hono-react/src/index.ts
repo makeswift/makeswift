@@ -10,4 +10,4 @@ export {
 } from '@makeswift/runtime/unstable-framework-support'
 
 export { Makeswift } from './client'
-export { HonoReactRuntime as ReactRuntime } from './runtime'
+export { ReactRuntime } from './runtime'
