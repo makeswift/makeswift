@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.22-canary.0
+
+### Patch Changes
+
+- 0bdb44a: Implement resolveValueFromData method on ControlDefinition
+
 ## 0.1.21
 
 ### Patch Changes
