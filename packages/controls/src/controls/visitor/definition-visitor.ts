@@ -1,3 +1,4 @@
+import { CascadeDefinition } from '../cascade'
 import { CheckboxDefinition } from '../checkbox'
 import { CodeDefinition } from '../code'
 import { ColorDefinition } from '../color'
@@ -25,6 +26,7 @@ import { TextInputDefinition } from '../text-input'
 import { unstable_TypographyDefinition } from '../typography'
 
 abstract class ControlDefinitionVisitor<R> {
+  abstract visitCascade(def: CascadeDefinition, ...args: unknown[]): R
   abstract visitCode(def: CodeDefinition, ...args: unknown[]): R
   abstract visitCheckbox(def: CheckboxDefinition, ...args: unknown[]): R
   abstract visitColor(def: ColorDefinition, ...args: unknown[]): R
