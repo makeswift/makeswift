@@ -1,5 +1,11 @@
 # @makeswift/hono-react
 
+## 0.3.0-canary.4
+
+### Minor Changes
+
+- eb46b49: BREAKING CHANGE: `ReactRuntime` no longer registers built-in components, allows passing of `apiKey`
+
 ## 0.2.3-canary.3
 
 ### Patch Changes
