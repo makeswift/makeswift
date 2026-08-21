@@ -1,19 +1,16 @@
-import {
-  type Breakpoints,
-  type StoreKey,
-  ReactRuntime,
-} from '@makeswift/runtime/unstable-framework-support'
+import { ReactRuntimeCore } from '@makeswift/runtime/react/core'
 
-export class HonoReactRuntime extends ReactRuntime {
-  constructor(args: {
-    requestKey?: StoreKey
-    appOrigin?: string
-    apiOrigin?: string
-    breakpoints?: Breakpoints
-  }) {
+type Args = Omit<ConstructorParameters<typeof ReactRuntimeCore>[0], 'fetch'>
+
+/**
+ * Note that this runtime class does not automatically register Makeswift's
+ * built-in components.
+ */
+export class ReactRuntime extends ReactRuntimeCore {
+  constructor(args: Args = {}) {
     super({
       ...args,
-      fetch: (url, init) => fetch(url, init), // TODO: revalidation support
+      fetch: (url, init) => fetch(url, init), // TODO: revalidation support?
     })
   }
 }
