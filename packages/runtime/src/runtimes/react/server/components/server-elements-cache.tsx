@@ -3,6 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useState, useMemo } from 'react'
 
 import { type ElementsMap } from '../collect-server-elements'
+import { ClientCSSProvider } from '../css/client-css'
 
 type ContextValue = {
   getElement: (elementKey: string) => ReactNode
@@ -67,5 +68,17 @@ export const ServerElementsCache = ({
 
   return <Context.Provider value={cache}>{children}</Context.Provider>
 }
+
+export const ServerElementsProvider = ({
+  children,
+  elements,
+}: {
+  children: ReactNode
+  elements: ElementsMap
+}) => (
+  <ServerElementsCache value={elements}>
+    <ClientCSSProvider>{children}</ClientCSSProvider>
+  </ServerElementsCache>
+)
 
 export const useServerElementsCache = () => useContext(Context)
