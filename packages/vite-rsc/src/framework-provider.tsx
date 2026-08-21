@@ -5,6 +5,7 @@ import { type PropsWithChildren, type ReactNode } from 'react'
 import {
   FrameworkContextProvider,
   type RenderElementPayload,
+  ServerElementsProvider,
 } from '@makeswift/runtime/unstable-framework-support'
 
 const renderRSCElement = async ({
@@ -28,6 +29,18 @@ const context = {
   renderRSCElement,
 }
 
-export function ViteRSCFrameworkProvider({ children }: PropsWithChildren) {
-  return <FrameworkContextProvider value={context}>{children}</FrameworkContextProvider>
+/** Server-rendered nodes keyed by Makeswift element key. */
+type ServerElements = Map<string, ReactNode>
+
+const emptyServerElements: ServerElements = new Map()
+
+export function ViteRSCFrameworkProvider({
+  children,
+  serverElements = emptyServerElements,
+}: PropsWithChildren<{ serverElements?: ServerElements }>) {
+  return (
+    <FrameworkContextProvider value={context}>
+      <ServerElementsProvider elements={serverElements}>{children}</ServerElementsProvider>
+    </FrameworkContextProvider>
+  )
 }

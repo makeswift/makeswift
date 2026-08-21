@@ -3,6 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useState, useMemo } from 'react'
 
 import { type ElementsMap } from '../collect-server-elements'
+import { ClientCSSProvider } from '../css/client-css'
 
 type ContextValue = {
   getElement: (elementKey: string) => ReactNode
@@ -67,5 +68,23 @@ export const ServerElementsCache = ({
 
   return <Context.Provider value={cache}>{children}</Context.Provider>
 }
+
+/**
+ * Wraps `children` in the two providers that a document containing server elements needs:
+ * the server elements cache, and the client CSS provider that lets the builder restyle
+ * those elements without a server round trip. Prefer this over composing the two by hand,
+ * so that hosts cannot mount one and forget the other.
+ */
+export const ServerElementsProvider = ({
+  children,
+  elements,
+}: {
+  children: ReactNode
+  elements: ElementsMap
+}) => (
+  <ServerElementsCache value={elements}>
+    <ClientCSSProvider>{children}</ClientCSSProvider>
+  </ServerElementsCache>
+)
 
 export const useServerElementsCache = () => useContext(Context)

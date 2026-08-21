@@ -64,7 +64,10 @@ export async function ServerElementData({
     <>
       {/* Make the component the first child so that `findDOMNode` resolves to its first
         rendered DOM node (if any) rather than the component's `<style>` element */}
-      <Component key={elementData.key} {...props} />
+      {/* Server components cannot read the element key from context, so pass it as a prop.
+        Hosts that render a server component into non-React markup need the key to derive a
+        stable DOM id for it. */}
+      <Component key={elementData.key} {...props} unstable_elementKey={elementData.key} />
       <InjectServerCSS collector={cssCollector} elementKey={elementData.key} />
     </>
   )

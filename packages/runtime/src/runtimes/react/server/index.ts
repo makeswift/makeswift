@@ -1,3 +1,4 @@
+export { type ElementsMap, collectServerElements } from './collect-server-elements'
 export { ServerElement } from './components/element'
 export { MakeswiftComponent } from './components/makeswift-component'
 export { Slot } from './components/slot'

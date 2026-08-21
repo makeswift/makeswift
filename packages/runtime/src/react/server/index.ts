@@ -1,5 +1,7 @@
 export {
   type ServerRenderContext,
+  type ElementsMap,
+  collectServerElements,
   RenderElementPayload,
   RenderContext as MakeswiftRenderContext,
   setRenderContext,
