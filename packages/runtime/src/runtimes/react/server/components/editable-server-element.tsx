@@ -13,7 +13,6 @@ import {
 import { useServerElementRefresh } from '../../hooks/use-server-element-refresh'
 import { useElementData } from '../../hooks/use-element-data'
 import { useControlDefs } from '../../hooks/use-control-defs'
-import { useEditableElementStylesheetFactory } from '../../hooks/use-editable-element-stylesheet-factory'
 import { useResolvedProps } from '../../hooks/use-resolved-props'
 import { useControlInstances } from '../../components/control-instances-context'
 import { useDispatch } from '../../hooks/use-dispatch'
@@ -21,6 +20,7 @@ import { useDocumentKey } from '../../hooks/use-document-context'
 
 import { getProp } from '../../../../utils/prop-by-path'
 import { setUnion, setDifference } from '../../../../utils/set'
+import { useControlledStyles } from '../../css-runtime/hooks/use-controlled-styles'
 
 export const EditableServerElement = ({
   initialElementData,
@@ -56,7 +56,7 @@ const EditableServerElementWrapper = ({
   const documentKey = useDocumentKey()
 
   const [_legacyDefs, definitions] = useControlDefs({ elementType: initialElementData.type })
-  const stylesheetFactory = useEditableElementStylesheetFactory({ elementKey })
+  const { getStylesheet, styleElements } = useControlledStyles({ namespace: elementKey })
 
   const controlInstances = useControlInstances(elementKey)
   const resolvedProps = useResolvedProps({
@@ -64,7 +64,7 @@ const EditableServerElementWrapper = ({
     propDefs: definitions,
     propData: elementData.props,
     controlInstances,
-    stylesheetFactory,
+    getStylesheet,
   })
 
   const prevPropsRef = useRef(resolvedProps)
@@ -125,8 +125,9 @@ const EditableServerElementWrapper = ({
       // a server refresh.
       //
       // Note that style props have stable class names and updating a style prop will not result
-      // in a change to the resolved value, which is what we want. The stylesheet engine takes
-      // care of updating the client CSS on style prop updates through the `useResolvedProps` call.
+      // in a change to the resolved value, which is what we want. Dynamic style updates are handled
+      // through a subscription mechanism that listens for changes to controlled style data in the
+      // styles registry.
       const { needsRefresh, leafInstances, leafProps, reactNodeInstances } = needsServerRefresh({
         resolvedProps,
         controlInstances,
@@ -153,7 +154,12 @@ const EditableServerElementWrapper = ({
     applyResolvedValueOverrides,
   ])
 
-  return children
+  return (
+    <>
+      {children}
+      {styleElements}
+    </>
+  )
 }
 
 /**

@@ -5,6 +5,7 @@ import { type Store } from '../../../state/store'
 
 import { type SiteVersion } from '../../../api/site-version'
 import { MakeswiftClient } from '../../../client'
+import { type RootStyleProps } from '../root-style-registry'
 
 /**
  * Request-scoped dependencies used to render Makeswift server elements.
@@ -21,6 +22,7 @@ export type ServerRenderContext = {
   client: MakeswiftClient
   siteVersion: SiteVersion | null
   locale: string | undefined
+  rootStyleProps: RootStyleProps
 }
 
 const requestContext = cache((): { current?: ServerRenderContext } => ({}))
