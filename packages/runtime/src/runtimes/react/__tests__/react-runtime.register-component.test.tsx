@@ -1,5 +1,5 @@
 /** @jest-environment jsdom */
-import { type MouseEvent } from 'react'
+import { forwardRef, type ForwardedRef, type MouseEvent } from 'react'
 import {
   Checkbox,
   Combobox,
@@ -32,74 +32,134 @@ type Entity = {
   name: string
 }
 
-function Sandbox(props: {
+type SandboxProps = {
   cards: Card[]
   entityId?: Entity['id']
   theme: 'light' | 'dark'
   background: string
   boolean: boolean
   number?: number
-}) {
+}
+
+function Sandbox(props: SandboxProps) {
+  return <div>{JSON.stringify(props)}</div>
+}
+
+const SandboxWithRef = forwardRef(function SandboxWithRef(
+  props: SandboxProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  return <div ref={ref}>{JSON.stringify(props)}</div>
+})
+
+function SandboxWithIncorrectRef(props: SandboxProps & { ref?: number }) {
+  return <div>{JSON.stringify(props)}</div>
+}
+
+function ServerSandbox(props: SandboxProps & { widgetId: string }) {
   return <div>{JSON.stringify(props)}</div>
 }
 
 const runtime = createReactRuntime()
+
+const sandboxProps = {
+  cards: List({
+    label: 'Cards',
+    type: Shape({
+      type: {
+        imageSrc: Image({ label: 'Image' }),
+        imageAlt: TextInput({
+          label: 'Alt text',
+          defaultValue: 'Image',
+        }),
+        title: TextInput({
+          label: 'Title',
+          defaultValue: 'This is a title',
+        }),
+        text: TextArea({
+          label: 'Text',
+          defaultValue: 'Lorem ipsum',
+        }),
+        link: Link({ label: 'On click' }),
+      },
+    }),
+    getItemLabel(item) {
+      return item?.title ?? 'This is a title'
+    },
+  }),
+  entityId: Combobox({
+    async getOptions() {
+      return fetch(`/api/entities`)
+        .then(r => r.json())
+        .then((entities: Entity[]) =>
+          entities.map(entity => ({
+            id: entity.id.toString(),
+            label: entity.name,
+            value: entity.id,
+          })),
+        )
+    },
+    label: 'Entity',
+  }),
+  theme: Select({
+    label: 'Text color',
+    options: [
+      { value: 'light', label: 'Light' },
+      { value: 'dark', label: 'Dark' },
+    ],
+    defaultValue: 'light',
+  }),
+  background: Color({ label: 'Background color', defaultValue: '#fff' }),
+  boolean: Checkbox({ label: 'Boolean', defaultValue: true }),
+  number: Number({ label: 'Number' }),
+  text: TextInput({ label: 'Text' }),
+}
 
 describe('registerComponent', () => {
   test("correctly deduces control definitions' resolved value types", () => {
     runtime.registerComponent(Sandbox, {
       type: 'sandbox',
       label: 'Sandbox',
-      props: {
-        cards: List({
-          label: 'Cards',
-          type: Shape({
-            type: {
-              imageSrc: Image({ label: 'Image' }),
-              imageAlt: TextInput({
-                label: 'Alt text',
-                defaultValue: 'Image',
-              }),
-              title: TextInput({
-                label: 'Title',
-                defaultValue: 'This is a title',
-              }),
-              text: TextArea({
-                label: 'Text',
-                defaultValue: 'Lorem ipsum',
-              }),
-              link: Link({ label: 'On click' }),
-            },
-          }),
-          getItemLabel(item) {
-            return item?.title ?? 'This is a title'
-          },
-        }),
-        entityId: Combobox({
-          async getOptions() {
-            return fetch(`/api/entities`)
-              .then(r => r.json())
-              .then((entities: Entity[]) =>
-                entities.map(entity => ({
-                  id: entity.id.toString(),
-                  label: entity.name,
-                  value: entity.id,
-                })),
-              )
-          },
-          label: 'Entity',
-        }),
-        theme: Select({
-          label: 'Text color',
-          options: [
-            { value: 'light', label: 'Light' },
-            { value: 'dark', label: 'Dark' },
-          ],
-          defaultValue: 'light',
-        }),
-        background: Color({ label: 'Background color', defaultValue: '#fff' }),
-        boolean: Checkbox({ label: 'Boolean', defaultValue: true }),
-        number: Number({ label: 'Number' }),
+      props: sandboxProps,
+    })
+
+    runtime.registerComponent(SandboxWithRef, {
+      type: 'sandbox-with-ref',
+      label: 'SandboxWithRef',
+      props: sandboxProps,
+    })
+  })
+
+  test('rejects registration of a component with a React-incompatible `ref` prop', () => {
+    // @ts-expect-error Types of property ref are incompatible
+    runtime.registerComponent(SandboxWithIncorrectRef, {
+      type: 'sandbox-with-ref',
+      label: 'SandboxWithRef',
+      props: sandboxProps,
+    })
+  })
+
+  test('specified injected server props are type-checked against the component props', () => {
+    runtime.registerComponent(ServerSandbox, {
+      type: 'server-sandbox',
+      label: 'ServerSandbox',
+      props: sandboxProps,
+      server: {
+        unstable_injectedProps: {
+          widgetId: 'elementKey',
+        },
+      },
+    })
+
+    // @ts-expect-error Property widgetId is missing in type
+    runtime.registerComponent(ServerSandbox, {
+      type: 'invalid-server-sandbox',
+      label: 'InvalidServerSandbox',
+      props: sandboxProps,
+      server: {
+        unstable_injectedProps: {
+          gadgetId: 'elementKey',
+        },
       },
     })
   })
