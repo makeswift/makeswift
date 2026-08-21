@@ -14,7 +14,8 @@
     "@makeswift/react-router": "0.0.0",
     "@makeswift/hono-react": "0.0.0",
     "eslint-config": "0.0.0",
-    "@makeswift/vite-rsc": "0.0.0"
+    "@makeswift/vite-rsc": "0.0.0",
+    "vite-rsc-hono-react-cloudflare": "0.0.1"
   },
   "changesets": [
     "dark-items-drive",
