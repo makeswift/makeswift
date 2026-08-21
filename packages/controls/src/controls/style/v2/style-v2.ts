@@ -136,6 +136,10 @@ class Definition<
     )
   }
 
+  resolveValueFromData(): undefined {
+    return undefined
+  }
+
   resolveValue(
     data: DataType<Prop> | undefined,
     resolver: ResourceResolver,

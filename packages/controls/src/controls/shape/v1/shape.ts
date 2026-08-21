@@ -157,6 +157,14 @@ class Definition<C extends Config> extends ControlDefinition<
     })
   }
 
+  resolveValueFromData(
+    data: DataType<C> | undefined,
+  ): ResolvedValueType<C> | undefined {
+    return mapValues(this.keyDefs, (def, key) =>
+      def.resolveValueFromData(data?.[key]),
+    ) as ResolvedValueType<C>
+  }
+
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,

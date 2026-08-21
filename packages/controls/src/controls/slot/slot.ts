@@ -160,6 +160,10 @@ abstract class Definition<
 
     return []
   }
+
+  resolveValueFromData(): undefined {
+    return undefined
+  }
 }
 
 export { Definition as SlotDefinition }
