@@ -2,6 +2,7 @@ export * from './control'
 
 export {
   ControlDefinition,
+  ControlDefinitionVisitor,
   Checkbox,
   CheckboxDefinition,
   Code,
