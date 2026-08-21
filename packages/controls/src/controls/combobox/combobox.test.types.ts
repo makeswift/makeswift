@@ -53,6 +53,7 @@ describe('Combobox Types', () => {
       expectTypeOf<Config>().branded.toEqualTypeOf<{
         label?: string
         description?: string
+        requiredOptionsContext?: Record<string, string>
         getOptions: (q: string) => OptionListItem[]
       }>
 

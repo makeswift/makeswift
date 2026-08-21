@@ -12,16 +12,19 @@ import {
   type SchemaType,
 } from '../definition'
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
+import { PropsQuery } from '../options-context'
 import { ControlDefinitionVisitor } from '../visitor'
 
 type Option<T extends Data> = { id: string; value: T; label: string }
 type GetOptionsType<T extends Data> = (
   query: string,
+  context: any,
 ) => Option<T>[] | Promise<Option<T>[]>
 
 type Config<T extends Data = Data> = {
   label?: string
   description?: string
+  requiredOptionsContext?: PropsQuery
   getOptions: GetOptionsType<T>
 }
 
@@ -60,6 +63,7 @@ class Definition<C extends Config> extends ControlDefinition<
         .function()
         .args(z.string())
         .returns(z.union([options, z.promise(options)])),
+      requiredOptionsContext: z.record(z.string()).optional(),
       label: z.string().optional(),
       description: z.string().optional(),
     })
