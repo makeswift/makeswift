@@ -166,7 +166,9 @@ export const textStyle = z
  * `'100px'`.
  */
 
-export const width = z.union([pixelLength, percentageLength])
+export const autoLength = z.literal('auto')
+
+export const width = z.union([pixelLength, percentageLength, autoLength])
 
 const marginValue = z
   .union([pixelLength, z.literal('auto')])
