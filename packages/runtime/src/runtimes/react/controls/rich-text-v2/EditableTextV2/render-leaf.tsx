@@ -2,18 +2,17 @@ import { ReactNode } from 'react'
 import { RenderLeafProps } from 'slate-react'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
 import { ControlValue } from '../../control'
-import { Stylesheet } from '@makeswift/controls'
 
 type RichTextV2LeafProps = RenderLeafProps & {
   plugins: RichTextV2Plugin[]
   pathComponents: string[]
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
 }
 
 export function RichTextV2Leaf({
   plugins,
   pathComponents,
-  parentStylesheet,
+  parentStylesheetKey,
   ...props
 }: RichTextV2LeafProps) {
   function initialRenderLeaf({ attributes, children, leaf }: RenderLeafProps): ReactNode {
@@ -34,7 +33,7 @@ export function RichTextV2Leaf({
         if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
         // @ts-expect-error - this is a property that is added by a custom Slate decorator and is used by the css runtime
         const slatePath = props.leaf._makeswiftLeafPath ?? ''
-        const pseudoElementKey = parentStylesheet.key()
+        const pseudoElementKey = parentStylesheetKey
         const leafPathComponents = [
           ...pathComponents,
           `editable`,

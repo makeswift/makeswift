@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react'
 import { useStylesContext } from '../hooks/use-styles-context'
-import { ControlledStyleData, MakeswiftStylePrecedence } from '../types'
-import { MakeswiftStyle } from './makeswift-style'
+import { ControlledStyleData } from '../types'
+import { ControlledStyle } from './controlled-styles'
 
 type Props = {
   namespace: string
@@ -21,11 +21,5 @@ export function RSCEmittedStyle({ namespace, serializableData }: Props) {
     })
   }, [stylesRegistry, namespace, serializableData.className, serializableData.contentHash])
 
-  return (
-    <MakeswiftStyle
-      href={serializableData.className}
-      css={serializableData.css}
-      precedence={MakeswiftStylePrecedence.MEDIUM}
-    />
-  )
+  return <ControlledStyle className={serializableData.className} styleData={serializableData} />
 }

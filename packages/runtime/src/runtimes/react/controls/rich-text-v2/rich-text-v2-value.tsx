@@ -2,7 +2,7 @@
 
 import { lazy } from 'react'
 
-import { type ControlInstanceKey, Stylesheet, type ConfigType } from '@makeswift/controls'
+import { type ControlInstanceKey, type ConfigType } from '@makeswift/controls'
 
 import { type RichTextDataV2, RichTextV2Definition } from '../../../../controls/rich-text-v2'
 
@@ -15,21 +15,21 @@ export function RichTextV2Value({
   data,
   config,
   instanceKey,
-  parentStylesheet,
+  parentStylesheetKey,
 }: {
   data: RichTextDataV2 | undefined
   config: ConfigType<RichTextV2Definition>
   instanceKey: ControlInstanceKey | undefined
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
 }) {
   return useIsReadOnly() ? (
-    <ReadOnlyText text={data} config={config} parentStylesheet={parentStylesheet} />
+    <ReadOnlyText text={data} config={config} parentStylesheetKey={parentStylesheetKey} />
   ) : (
     <EditableText
       text={data}
       config={config}
       instanceKey={instanceKey}
-      parentStylesheet={parentStylesheet}
+      parentStylesheetKey={parentStylesheetKey}
     />
   )
 }

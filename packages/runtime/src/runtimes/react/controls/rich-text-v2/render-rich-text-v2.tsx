@@ -27,7 +27,7 @@ export function renderRichTextV2({
       data={data}
       config={config}
       instanceKey={control?.instanceKey}
-      parentStylesheet={stylesheet}
+      parentStylesheetKey={stylesheet.key()}
     />
   )
 }

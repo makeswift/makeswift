@@ -3,18 +3,17 @@ import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
 
 import { ControlValue } from '../../control'
-import { Stylesheet } from '@makeswift/controls'
 
 type RichTextV2ElementProps = RenderElementProps & {
   plugins: RichTextV2Plugin[]
   pathComponents: string[]
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
 }
 
 export function RichTextV2Element({
   plugins,
   pathComponents,
-  parentStylesheet,
+  parentStylesheetKey,
   ...props
 }: RichTextV2ElementProps) {
   const slateEditor = useSlateStatic()
@@ -41,7 +40,7 @@ export function RichTextV2Element({
         if (control == null || control.getElementValue == null)
           return renderElement(renderFn, undefined)(props)
 
-        const pseudoElementKey = parentStylesheet.key()
+        const pseudoElementKey = parentStylesheetKey
         const elementPathComponents = [
           ...pathComponents,
           `editable`,

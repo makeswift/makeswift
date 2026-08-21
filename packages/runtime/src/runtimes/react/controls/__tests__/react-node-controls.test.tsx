@@ -81,7 +81,7 @@ jest.mock('../rich-text-v2/render-rich-text-v2', () => ({
           config={{
             defaultValue: 'One fish, two fish',
           }}
-          parentStylesheet={noOpStylesheet}
+          parentStylesheetKey={noOpStylesheet.key()}
         />
       </NodeValueWrapper>
     )

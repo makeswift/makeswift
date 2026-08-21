@@ -45,13 +45,12 @@ import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
-import { Stylesheet } from '@makeswift/controls'
 
 type Props = {
   text?: RichTextDataV2
   config: ConfigType<RichTextV2Definition>
   instanceKey: ControlInstanceKey | undefined
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
 }
 
 export const EditableTextV2Value = memo(function EditableTextV2Value({
@@ -65,7 +64,7 @@ export const EditableTextV2Value = memo(function EditableTextV2Value({
   )
 })
 
-function EditableTextV2({ text, config, instanceKey, parentStylesheet }: Props) {
+function EditableTextV2({ text, config, instanceKey, parentStylesheetKey }: Props) {
   const plugins = useMemo(() => new RichTextV2Definition(config).plugins, [config])
   const control = useControlInstance(instanceKey, RichTextV2Control)
 
@@ -165,11 +164,11 @@ function EditableTextV2({ text, config, instanceKey, parentStylesheet }: Props) 
           {...props}
           plugins={plugins}
           pathComponents={[]}
-          parentStylesheet={parentStylesheet}
+          parentStylesheetKey={parentStylesheetKey}
         />
       )
     },
-    [plugins, parentStylesheet],
+    [plugins, parentStylesheetKey],
   )
 
   const renderLeaf = useCallback(
@@ -179,11 +178,11 @@ function EditableTextV2({ text, config, instanceKey, parentStylesheet }: Props) 
           {...props}
           plugins={plugins}
           pathComponents={[]}
-          parentStylesheet={parentStylesheet}
+          parentStylesheetKey={parentStylesheetKey}
         />
       )
     },
-    [plugins, parentStylesheet],
+    [plugins, parentStylesheetKey],
   )
 
   // ------ Event handlers ------

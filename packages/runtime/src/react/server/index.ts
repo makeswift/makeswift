@@ -5,7 +5,6 @@ export {
   RenderContext as MakeswiftRenderContext,
   setRenderContext,
   getRenderContext,
-  ServerCSSCollector,
   ServerElement,
   RSCElementRenderer,
   MakeswiftComponent,

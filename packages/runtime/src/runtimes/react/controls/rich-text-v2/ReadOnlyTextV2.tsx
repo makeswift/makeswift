@@ -14,16 +14,15 @@ import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
 
 import { ControlValue } from '../control'
 import { useStyle } from '../../css-runtime/hooks/use-style'
-import { Stylesheet } from '@makeswift/controls'
 
 type Props = {
   text: RichTextDataV2 | undefined
   config: ConfigType<RichTextV2Definition> | undefined
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
-  { text, config, parentStylesheet }: Props,
+  { text, config, parentStylesheetKey }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const descendants = useMemo(() => text?.descendants ?? [], [text?.descendants])
@@ -49,7 +48,7 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
       ) : (
         <Descendants
           pathComponents={[]}
-          parentStylesheet={parentStylesheet}
+          parentStylesheetKey={parentStylesheetKey}
           plugins={plugins}
           descendants={descendants}
         />
@@ -79,12 +78,17 @@ function Placeholder({ text = 'Write some text...' }: { text?: string }) {
 
 type LeafProps = {
   pathComponents: string[]
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
   leaf: Text
   plugins: RichTextV2Plugin[]
 }
 
-export function LeafComponent({ plugins, pathComponents, parentStylesheet, ...props }: LeafProps) {
+export function LeafComponent({
+  plugins,
+  pathComponents,
+  parentStylesheetKey,
+  ...props
+}: LeafProps) {
   function initialRenderLeaf({ leaf }: RenderLeafProps): ReactNode {
     return <span className={leaf.className}>{leaf.text === '' ? '\uFEFF' : leaf.text}</span>
   }
@@ -98,7 +102,7 @@ export function LeafComponent({ plugins, pathComponents, parentStylesheet, ...pr
 
         if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
 
-        const pseudoElementKey = parentStylesheet.key()
+        const pseudoElementKey = parentStylesheetKey
         const leafPathComponents = [...pathComponents, `plugins`, `${index}`, `leaf`]
 
         return (
@@ -120,19 +124,24 @@ export function LeafComponent({ plugins, pathComponents, parentStylesheet, ...pr
 
 type ElementProps = {
   pathComponents: string[]
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
   descendant: Element
   plugins: RichTextV2Plugin[]
 }
 
-function ElementComponent({ plugins, pathComponents, parentStylesheet, ...props }: ElementProps) {
+function ElementComponent({
+  plugins,
+  pathComponents,
+  parentStylesheetKey,
+  ...props
+}: ElementProps) {
   function initialRenderElement(props: RenderElementProps): ReactNode {
     return (
       <Descendants
         descendants={props.element.children}
         plugins={plugins}
         pathComponents={pathComponents}
-        parentStylesheet={parentStylesheet}
+        parentStylesheetKey={parentStylesheetKey}
       />
     )
   }
@@ -146,7 +155,7 @@ function ElementComponent({ plugins, pathComponents, parentStylesheet, ...props 
 
         if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
 
-        const pseudoElementKey = parentStylesheet.key()
+        const pseudoElementKey = parentStylesheetKey
         const elementPathComponents = [...pathComponents, `plugins`, `${index}`, `element`]
 
         return (
@@ -175,12 +184,12 @@ function isText(node: Descendant): node is Text {
 
 function Descendants({
   pathComponents,
-  parentStylesheet,
+  parentStylesheetKey,
   descendants,
   plugins,
 }: {
   pathComponents: string[]
-  parentStylesheet: Stylesheet
+  parentStylesheetKey: string
   plugins: RichTextV2Plugin[]
   descendants: Descendant[]
 }) {
@@ -194,7 +203,7 @@ function Descendants({
               key={index}
               plugins={plugins}
               leaf={descendant}
-              parentStylesheet={parentStylesheet}
+              parentStylesheetKey={parentStylesheetKey}
               pathComponents={descendantPathComponents}
             />
           )
@@ -206,7 +215,7 @@ function Descendants({
             descendant={descendant}
             plugins={plugins}
             pathComponents={descendantPathComponents}
-            parentStylesheet={parentStylesheet}
+            parentStylesheetKey={parentStylesheetKey}
           />
         )
       })}

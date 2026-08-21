@@ -96,7 +96,6 @@ const ElementDataClient = forwardRef(function ElementDataClient(
     return <FallbackComponent ref={ref as Ref<HTMLDivElement>} text="Component not found" />
   }
 
-
   return (
     <ActivityOrFallback suspenseFallback={builtinSuspense}>
       <ResolveProps element={elementData}>{renderChildren}</ResolveProps>
