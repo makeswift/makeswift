@@ -230,6 +230,10 @@ class Definition<C extends Config> extends ControlDefinition<
     }
   }
 
+  resolveValueFromData(): undefined {
+    return undefined
+  }
+
   resolveValue(
     data: DataType<C> | undefined,
     resolver: ResourceResolver,

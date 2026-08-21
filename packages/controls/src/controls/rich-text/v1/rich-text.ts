@@ -116,6 +116,10 @@ abstract class Definition<
   static dataToSelection(data: DataType): Selection {
     return richTextDTOtoSelection(data)
   }
+
+  resolveValueFromData(): undefined {
+    return undefined
+  }
 }
 
 export type RichTextValue = DataType
