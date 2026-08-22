@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.7
+
+### Patch Changes
+
+- 4aef9ec: Fix comment typo on the rich text control instance editor onchange handler
+
 ## 0.28.10-canary.6
 
 ### Patch Changes
