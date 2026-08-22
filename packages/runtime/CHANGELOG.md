@@ -1,5 +1,20 @@
 # @makeswift/runtime
 
+## 0.28.10
+
+### Patch Changes
+
+- d2f7e6b: feat: core runtime infrastructure for React Server Components support
+- e99744f: Exports `collectServerElements` and `ServerElementsProvider` for frameworks that have separate collection and rendering steps.
+- 4aef9ec: Fix comment typo on the rich text control instance editor onchange handler
+- 899684f: fix: host CSS targeting `span` elements no longer overrides Makeswift text styles in the builder.
+- 12403b9: Add `unstable_injectedProps` option to server component registration to enable injection of `elementKey` et al into component props.
+- 76d508e: The built-in Form component now creates table records via the Makeswift Host API REST endpoint (proxied through the host's `/api/makeswift` route) instead of the GraphQL API, so Form submissions no longer require hitting the GraphQL/Builder API.
+- 25a7e1c: File fetching now goes through the Host API's `GET v1/files/:id` REST endpoint instead of the GraphQL `file` query.
+- Updated dependencies [0bdb44a]
+  - @makeswift/controls@0.1.22
+  - @makeswift/prop-controllers@0.4.16
+
 ## 0.28.9
 
 ### Patch Changes

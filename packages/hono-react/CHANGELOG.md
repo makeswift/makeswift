@@ -1,5 +1,22 @@
 # @makeswift/hono-react
 
+## 0.3.0
+
+### Minor Changes
+
+- eb46b49: BREAKING CHANGE: `ReactRuntime` no longer registers built-in components, allows passing of `apiKey`
+
+### Patch Changes
+
+- Updated dependencies [d2f7e6b]
+- Updated dependencies [e99744f]
+- Updated dependencies [4aef9ec]
+- Updated dependencies [899684f]
+- Updated dependencies [12403b9]
+- Updated dependencies [76d508e]
+- Updated dependencies [25a7e1c]
+  - @makeswift/runtime@0.28.10
+
 ## 0.2.2
 
 ### Patch Changes
