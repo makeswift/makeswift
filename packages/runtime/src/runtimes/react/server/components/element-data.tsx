@@ -25,10 +25,12 @@ export async function ServerElementData({
   documentKey,
   context,
   elementData,
+  injectedProps,
 }: {
   documentKey: string
   context: ServerRenderContext
   elementData: ElementData
+  injectedProps: Record<string, unknown>
 }): Promise<ReactNode> {
   const state = getStore(context).getState()
 
@@ -58,7 +60,10 @@ export async function ServerElementData({
     elementData.key,
   )
 
-  const props = await resolveProps(context, elementData, documentKey, definitions, stylesheet)
+  const props = {
+    ...(await resolveProps(context, elementData, documentKey, definitions, stylesheet)),
+    ...injectedProps,
+  }
 
   return (
     <>

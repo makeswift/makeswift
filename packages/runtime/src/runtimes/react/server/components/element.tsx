@@ -1,5 +1,7 @@
 import { ReactNode } from 'react'
 
+import { mapValues } from '@makeswift/controls'
+
 import {
   isElementReference,
   getComponentsMeta,
@@ -11,6 +13,7 @@ import { FallbackComponent } from '../../../../components/shared/FallbackCompone
 import { Element as ClientElement } from '../../components/Element'
 
 import { type ServerRenderContext, getStore } from '../render-context'
+import { type InjectableProps } from '../injectable-props'
 
 import { ServerElementData } from './element-data'
 
@@ -39,10 +42,28 @@ export function ServerElement({
     )
   }
 
+  const elementKey = element.key
   const isRSC = elementMeta.server ?? false
   if (!isRSC) {
-    return <ClientElement key={element.key} element={element} />
+    return <ClientElement key={elementKey} element={element} />
   }
 
-  return <ServerElementData documentKey={documentKey} context={context} elementData={element} />
+  const injectableProps: InjectableProps = {
+    elementKey,
+    documentKey,
+  }
+
+  const injectedProps = mapValues(
+    elementMeta.injectedProps ?? {},
+    propName => injectableProps[propName],
+  )
+
+  return (
+    <ServerElementData
+      documentKey={documentKey}
+      context={context}
+      elementData={element}
+      injectedProps={injectedProps}
+    />
+  )
 }

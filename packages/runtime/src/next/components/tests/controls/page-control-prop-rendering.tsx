@@ -1,5 +1,4 @@
 import { type ReactNode, Fragment, forwardRef, useRef, isValidElement, act } from 'react'
-import { renderToReadableStream } from 'react-dom/server'
 import { JSDOM } from 'jsdom'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
@@ -14,6 +13,8 @@ import { ReactRuntime } from '../../../../runtimes/react/react-runtime'
 import { MakeswiftComponent } from '../../../../runtimes/react/components/MakeswiftComponent'
 import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
+
+import { renderToString } from '../../../../runtimes/react/testing/render-to-string'
 import * as Testing from '../../../testing'
 
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
@@ -26,25 +27,6 @@ const propSnapshot = (prop: HTMLElement | null) =>
   prop?.childElementCount ? prop.childNodes : parseStringifiedProp(prop?.textContent ?? '')
 
 const parseStringifiedProp = (prop: string) => (prop === 'undefined' ? undefined : JSON.parse(prop))
-
-async function streamToString(stream: ReadableStream) {
-  const reader = stream.getReader()
-  const decoder = new TextDecoder()
-
-  let result = ''
-
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) break
-    result += decoder.decode(value, { stream: true })
-  }
-
-  return result
-}
-
-async function renderToString(element: ReactNode) {
-  return await streamToString(await renderToReadableStream(element))
-}
 
 async function serverSideRender(children: ReactNode) {
   // wrap the children in a context provider to capture server-inserted HTML, see
