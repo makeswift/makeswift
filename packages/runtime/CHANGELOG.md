@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.5
+
+### Patch Changes
+
+- e99744f: Exports `collectServerElements` and `ServerElementsProvider` for frameworks that have separate collection and rendering steps.
+
 ## 0.28.10-canary.4
 
 ### Patch Changes
