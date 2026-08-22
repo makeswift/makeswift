@@ -2,13 +2,21 @@ import { type Context } from 'hono'
 
 import { getSiteVersion } from '@makeswift/hono-react/server'
 
+import { type HonoEnv } from '../lib/hono'
+
 export const createRenderContext = async (
-  c: Context,
+  c: Context<HonoEnv>,
   { request, locale }: { request: Request; locale: string | undefined },
-) => ({
-  request,
-  runtime: c.var.makeswiftRuntime,
-  client: c.var.makeswiftClient,
-  siteVersion: await getSiteVersion(c),
-  locale,
-})
+) => {
+  const runtime = c.var.makeswiftRuntime
+  const siteVersion = await getSiteVersion(c)
+
+  return {
+    request,
+    runtime,
+    client: c.var.makeswiftClient,
+    siteVersion,
+    locale,
+    store: runtime.getOrCreateStore({ siteVersion, locale }),
+  }
+}

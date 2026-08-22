@@ -21,6 +21,7 @@ export type ServerRenderContext = {
   client: MakeswiftClient
   siteVersion: SiteVersion | null
   locale: string | undefined
+  store: Store
 }
 
 const requestContext = cache((): { current?: ServerRenderContext } => ({}))
@@ -35,13 +36,7 @@ export const getRenderContext = (): ServerRenderContext => {
   return context
 }
 
-export const getStore = ({ runtime, siteVersion, locale }: ServerRenderContext): Store => {
-  if (runtime.requestKey == null) {
-    throw Error('Expected a runtime instance that is bound to a specific request key')
-  }
-
-  return runtime.getOrCreateStore({ siteVersion, locale })
-}
+export const getStore = ({ store }: ServerRenderContext): Store => store
 
 export const RenderContext = ({
   context,
