@@ -1,9 +1,8 @@
 import { createFromReadableStream } from '@vitejs/plugin-rsc/ssr'
 
 import {
-  createRootStyleCache,
+  createMakeswiftStylesRegistry,
   RootStyleRegistry,
-  styleTagHtml,
 } from '@makeswift/runtime/unstable-framework-support'
 
 import React from 'react'
@@ -39,7 +38,7 @@ export async function renderHTML(
   }
 
   // render html (traditional SSR)
-  const styleCache = createRootStyleCache()
+  const stylesRegistry = createMakeswiftStylesRegistry()
   const bootstrapScriptContent =
     await import.meta.viteRsc.loadBootstrapScriptContent('index')
 
@@ -47,7 +46,10 @@ export async function renderHTML(
   let status: number | undefined
   try {
     htmlStream = await renderToReadableStream(
-      <RootStyleRegistry cache={styleCache}>
+      <RootStyleRegistry
+        stylesRegistry={stylesRegistry}
+        shouldRenderStyleElements={false}
+      >
         <SsrRoot />
       </RootStyleRegistry>,
       {
@@ -88,13 +90,9 @@ export async function renderHTML(
   }
 
   // consume the stream to ensure that all components have rendered and populated
-  // the Emotion cache before flushing; we might be able to incrementally stream
-  // here with our new CSS engine...
+  // the styles registry before flushing;
   const html = await new Response(responseStream).text()
-  const styles = styleTagHtml({
-    cacheKey: styleCache.key,
-    ...styleCache.flush(),
-  })
+  const styles = stylesRegistry.serializeToHtmlStyleTags()
 
   // inject Makeswift client component styles right before head's close tag
   return new Response(html.replace('</head>', `${styles}</head>`), {
