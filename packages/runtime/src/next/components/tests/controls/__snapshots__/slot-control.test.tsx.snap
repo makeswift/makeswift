@@ -1,63 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Page Slot placeholder rendering builderOnly config hides placeholder when builderOnly is true and not in builder: resolvedValue 1`] = `
+.ms-rcowec {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+}
+
+.ms-1078wkp {
+  overflow: visible;
+  padding: 8px;
+}
+
+
 NodeList [
-  .emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-<div
-    class="emotion-0"
+  <div
+    class="ms-rcowec"
     style="height: 0px; visibility: hidden;"
   >
     <svg
-      class="emotion-1"
+      class="ms-1078wkp"
       height="100%"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
@@ -134,53 +95,24 @@ exports[`Page Slot placeholder rendering builderOnly config hides placeholder wh
 `;
 
 exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is false and in builder: resolvedValue 1`] = `
+.ms-rcowec {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+}
+
+.ms-1078wkp {
+  overflow: visible;
+  padding: 8px;
+}
+
+
 NodeList [
-  .emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-<div
-    class="emotion-0"
+  <div
+    class="ms-rcowec"
     style="height: 80px;"
   >
     <svg
-      class="emotion-1"
+      class="ms-1078wkp"
       height="100%"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
@@ -257,43 +189,24 @@ exports[`Page Slot placeholder rendering builderOnly config shows placeholder wh
 `;
 
 exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is false and not in builder: resolvedValue 1`] = `
+.ms-rcowec {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+}
+
+.ms-1078wkp {
+  overflow: visible;
+  padding: 8px;
+}
+
+
 NodeList [
-  .emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-<div
-    class="emotion-0"
+  <div
+    class="ms-rcowec"
     style="height: 80px;"
   >
     <svg
-      class="emotion-1"
+      class="ms-1078wkp"
       height="100%"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
@@ -370,73 +283,24 @@ exports[`Page Slot placeholder rendering builderOnly config shows placeholder wh
 `;
 
 exports[`Page Slot placeholder rendering builderOnly config shows placeholder when builderOnly is true and in builder: resolvedValue 1`] = `
+.ms-rcowec {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+}
+
+.ms-1078wkp {
+  overflow: visible;
+  padding: 8px;
+}
+
+
 NodeList [
-  .emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-<div
-    class="emotion-0"
+  <div
+    class="ms-rcowec"
     style="height: 80px;"
   >
     <svg
-      class="emotion-1"
+      class="ms-1078wkp"
       height="100%"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
@@ -513,33 +377,24 @@ exports[`Page Slot placeholder rendering builderOnly config shows placeholder wh
 `;
 
 exports[`Page Slot placeholder rendering renders a placeholder when empty slot is in the builder: resolvedValue 1`] = `
+.ms-rcowec {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+}
+
+.ms-1078wkp {
+  overflow: visible;
+  padding: 8px;
+}
+
+
 NodeList [
-  .emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-0 {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-.emotion-1 {
-  overflow: visible;
-  padding: 8px;
-}
-
-<div
-    class="emotion-0"
+  <div
+    class="ms-rcowec"
     style="height: 80px;"
   >
     <svg
-      class="emotion-1"
+      class="ms-1078wkp"
       height="100%"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
@@ -616,23 +471,24 @@ exports[`Page Slot placeholder rendering renders a placeholder when empty slot i
 `;
 
 exports[`Page Slot placeholder rendering renders a placeholder when empty slot is not in the builder: resolvedValue 1`] = `
-NodeList [
-  .emotion-0 {
+.ms-rcowec {
   width: 100%;
   background: rgba(161, 168, 194, 0.18);
 }
 
-.emotion-1 {
+.ms-1078wkp {
   overflow: visible;
   padding: 8px;
 }
 
-<div
-    class="emotion-0"
+
+NodeList [
+  <div
+    class="ms-rcowec"
     style="height: 80px;"
   >
     <svg
-      class="emotion-1"
+      class="ms-1078wkp"
       height="100%"
       width="100%"
       xmlns="http://www.w3.org/2000/svg"
@@ -709,8 +565,7 @@ exports[`Page Slot placeholder rendering renders a placeholder when empty slot i
 `;
 
 exports[`Page Slot renders a slot with a clickable button: resolvedValue 1`] = `
-NodeList [
-  .emotion-0 {
+.ms-12226a4 {
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -719,96 +574,44 @@ NodeList [
   width: 100%;
 }
 
-.emotion-0 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.emotion-0 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.emotion-0 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.emotion-0 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.emotion-0 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.emotion-0 {
-  display: flex;
-  -webkit-box-flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.emotion-1 {
+.ms-v6iyjh {
   display: flex;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-1 {
-    -webkit-flex-basis: calc(100% * 1.00000);
-    -ms-flex-preferred-size: calc(100% * 1.00000);
-    flex-basis: calc(100% * 1.00000);
-    min-width: calc(100% * 1.00000);
+  .ms-v6iyjh {
+    -webkit-flex-basis: calc(100% * 1);
+    -ms-flex-preferred-size: calc(100% * 1);
+    flex-basis: calc(100% * 1);
+    min-width: calc(100% * 1);
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-1 {
-    -webkit-flex-basis: calc(100% * 1.00000);
-    -ms-flex-preferred-size: calc(100% * 1.00000);
-    flex-basis: calc(100% * 1.00000);
-    min-width: calc(100% * 1.00000);
+  .ms-v6iyjh {
+    -webkit-flex-basis: calc(100% * 1);
+    -ms-flex-preferred-size: calc(100% * 1);
+    flex-basis: calc(100% * 1);
+    min-width: calc(100% * 1);
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-1 {
-    -webkit-flex-basis: calc(100% * 1.00000);
-    -ms-flex-preferred-size: calc(100% * 1.00000);
-    flex-basis: calc(100% * 1.00000);
-    min-width: calc(100% * 1.00000);
+  .ms-v6iyjh {
+    -webkit-flex-basis: calc(100% * 1);
+    -ms-flex-preferred-size: calc(100% * 1);
+    flex-basis: calc(100% * 1);
+    min-width: calc(100% * 1);
   }
 }
 
-<div
-    class="emotion-0"
+
+NodeList [
+  <div
+    class="ms-12226a4"
   >
     <div
-      class="emotion-1"
+      class="ms-v6iyjh"
     >
       <button
         data-click-count="1"

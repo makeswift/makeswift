@@ -6,6 +6,7 @@ import { type HonoEnv } from '../../hono'
 
 import { createRuntime } from '../runtime'
 import { MAKESWIFT_SITE_API_KEY } from '../env'
+import type { RootStyleProps } from '@makeswift/runtime/unstable-framework-support'
 
 /**
  * A new runtime is created for each request to isolate Redux store state
@@ -19,6 +20,7 @@ export function withMakeswift() {
       requestKey: { siteVersion, locale: undefined },
       apiKey: MAKESWIFT_SITE_API_KEY,
     })
+    const rootStyleProps: RootStyleProps = {}
 
     c.set('makeswiftRuntime', runtime)
     c.set(
@@ -27,7 +29,7 @@ export function withMakeswift() {
     )
 
     c.set('siteVersion', siteVersion)
-
+    c.set('rootStyleProps', rootStyleProps)
     return next()
   }
 }

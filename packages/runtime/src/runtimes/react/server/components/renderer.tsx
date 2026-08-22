@@ -3,8 +3,6 @@ import { type PropsWithChildren } from 'react'
 import { type CacheData } from '../../../../api/api-resources-client'
 import { type Document } from '../../../../state/modules/read-only-documents'
 
-import { ClientCSSProvider } from '../css/client-css'
-
 import { type ServerRenderContext, getStore } from '../render-context'
 import { collectServerElements } from '../collect-server-elements'
 import { updateApiResourceCache } from '../update-api-resource-cache'
@@ -24,11 +22,7 @@ export function RSCRenderer({
 }: PropsWithChildren<{ context: ServerRenderContext; document: Document; cacheData: CacheData }>) {
   const serverElements = collectServerElements(context, document, cacheData)
 
-  return (
-    <ServerElementsCache value={serverElements}>
-      <ClientCSSProvider>{children}</ClientCSSProvider>
-    </ServerElementsCache>
-  )
+  return <ServerElementsCache value={serverElements}>{children}</ServerElementsCache>
 }
 
 /**

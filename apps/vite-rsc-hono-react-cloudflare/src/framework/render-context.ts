@@ -11,4 +11,5 @@ export const createRenderContext = async (
   client: c.var.makeswiftClient,
   siteVersion: await getSiteVersion(c),
   locale,
+  rootStyleProps: c.var.rootStyleProps,
 })

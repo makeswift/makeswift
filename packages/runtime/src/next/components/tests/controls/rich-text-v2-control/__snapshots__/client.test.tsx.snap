@@ -1,82 +1,146 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`editable text reverts host styles on slate-internal text spans: resolvedValue 1`] = `
+.ms-18jqvbb [data-slate-string],
+.ms-18jqvbb [data-slate-zero-width] {
+  all: revert !important;
+}
+
+.ms-1azh6ix {
+  margin: 0;
+}
+
+.ms-1fa0n4z {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-1r721yj {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-1r721yj {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-1r721yj {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-1l868b8 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-1l868b8 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-1l868b8 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-19g7itq {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-19g7itq {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-19g7itq {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-32ma74 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-32ma74 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-32ma74 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-smjku0 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-smjku0 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-smjku0 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+
 NodeList [
-  .emotion-0 [data-slate-string],
-.emotion-0 [data-slate-zero-width] {
-  all: revert!important;
-}
-
-.emotion-1 {
-  margin: 0;
-}
-
-.emotion-1 {
-  margin: 0;
-}
-
-.emotion-4 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.emotion-4 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-5 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-5 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-5 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .emotion-5 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-5 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .emotion-5 {
-    color: hsla(238,87%,49%,1);
-    font-family: Lato;
-    font-size: 16px;
-  }
-}
-
-<div
+  <div
     autocapitalize="false"
     autocorrect="false"
-    class="emotion-0"
+    class="ms-18jqvbb"
     contenteditable="false"
     data-slate-editor="true"
     data-slate-node="value"
@@ -85,14 +149,14 @@ NodeList [
     zindex="-1"
   >
     <p
-      class="emotion-1 emotion-2"
+      class="ms-1azh6ix ms-19xpzf7"
       data-slate-node="element"
     >
       <span
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-1qp1ks7"
           data-slate-leaf="true"
         >
           <span
@@ -104,7 +168,7 @@ NodeList [
         </span>
       </span>
       <a
-        class="emotion-4"
+        class="ms-1fa0n4z"
         data-slate-inline="true"
         data-slate-node="element"
         href="https://www.bigcommerce.com/adyen"
@@ -114,7 +178,7 @@ NodeList [
           data-slate-node="text"
         >
           <span
-            class="emotion-5"
+            class="ms-1r721yj"
             data-slate-leaf="true"
           >
             <span
@@ -129,7 +193,7 @@ NodeList [
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-oglrrk"
           data-slate-leaf="true"
         >
           <span
@@ -142,14 +206,14 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-1 emotion-2"
+      class="ms-1azh6ix ms-1f9sy12"
       data-slate-node="element"
     >
       <span
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-nrtlmy"
           data-slate-leaf="true"
         >
           <span
@@ -161,7 +225,7 @@ NodeList [
         </span>
       </span>
       <a
-        class="emotion-4"
+        class="ms-1fa0n4z"
         data-slate-inline="true"
         data-slate-node="element"
         href="http://www.authorize.net/"
@@ -171,7 +235,7 @@ NodeList [
           data-slate-node="text"
         >
           <span
-            class="emotion-5"
+            class="ms-1l868b8"
             data-slate-leaf="true"
           >
             <span
@@ -186,7 +250,7 @@ NodeList [
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-u8uh79"
           data-slate-leaf="true"
         >
           <span
@@ -199,14 +263,14 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-1 emotion-2"
+      class="ms-1azh6ix ms-hrv0h4"
       data-slate-node="element"
     >
       <span
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-pxqjj2"
           data-slate-leaf="true"
         >
           <span
@@ -218,7 +282,7 @@ NodeList [
         </span>
       </span>
       <a
-        class="emotion-4"
+        class="ms-1fa0n4z"
         data-slate-inline="true"
         data-slate-node="element"
         href="https://www.bigcommerce.com/bluesnap/"
@@ -228,7 +292,7 @@ NodeList [
           data-slate-node="text"
         >
           <span
-            class="emotion-5"
+            class="ms-19g7itq"
             data-slate-leaf="true"
           >
             <span
@@ -243,7 +307,7 @@ NodeList [
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-ir9tkj"
           data-slate-leaf="true"
         >
           <span
@@ -256,14 +320,14 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-1 emotion-2"
+      class="ms-1azh6ix ms-16qgx5l"
       data-slate-node="element"
     >
       <span
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-1qpujjz"
           data-slate-leaf="true"
         >
           <span
@@ -275,7 +339,7 @@ NodeList [
         </span>
       </span>
       <a
-        class="emotion-4"
+        class="ms-1fa0n4z"
         data-slate-inline="true"
         data-slate-node="element"
         href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
@@ -285,7 +349,7 @@ NodeList [
           data-slate-node="text"
         >
           <span
-            class="emotion-5"
+            class="ms-32ma74"
             data-slate-leaf="true"
           >
             <span
@@ -300,7 +364,7 @@ NodeList [
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-bkzgbg"
           data-slate-leaf="true"
         >
           <span
@@ -313,14 +377,14 @@ NodeList [
       </span>
     </p>
     <p
-      class="emotion-1 emotion-2"
+      class="ms-1azh6ix ms-1hdsugh"
       data-slate-node="element"
     >
       <span
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-7676sh"
           data-slate-leaf="true"
         >
           <span
@@ -332,7 +396,7 @@ NodeList [
         </span>
       </span>
       <a
-        class="emotion-4"
+        class="ms-1fa0n4z"
         data-slate-inline="true"
         data-slate-node="element"
         href="http://www.cybersource.com/"
@@ -342,7 +406,7 @@ NodeList [
           data-slate-node="text"
         >
           <span
-            class="emotion-5"
+            class="ms-smjku0"
             data-slate-leaf="true"
           >
             <span
@@ -357,7 +421,7 @@ NodeList [
         data-slate-node="text"
       >
         <span
-          class="emotion-2"
+          class="ms-1sy3y8r"
           data-slate-leaf="true"
         >
           <span
@@ -675,30 +739,22 @@ exports[`editable text reverts host styles on slate-internal text spans: snapsho
 `;
 
 exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder when empty: resolvedValue 1`] = `
+.ms-1uc9xwq {
+  display: inline-block;
+  width: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  opacity: 0.333;
+  vertical-align: text-top;
+}
+
+
 NodeList [
-  .emotion-0 {
-  display: inline-block;
-  width: 0;
-  max-width: 100%;
-  white-space: nowrap;
-  opacity: 0.333;
-  vertical-align: text-top;
-}
-
-.emotion-0 {
-  display: inline-block;
-  width: 0;
-  max-width: 100%;
-  white-space: nowrap;
-  opacity: 0.333;
-  vertical-align: text-top;
-}
-
-<div
+  <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <span
-      class="emotion-0"
+      class="ms-1uc9xwq"
     >
       Write some text...
     </span>
@@ -758,8 +814,7 @@ exports[`renders a makeswift::controls::rich-text-v2::mode::block placeholder wh
 `;
 
 exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder when empty: resolvedValue 1`] = `
-NodeList [
-  .emotion-0 {
+.ms-1uc9xwq {
   display: inline-block;
   width: 0;
   max-width: 100%;
@@ -768,11 +823,13 @@ NodeList [
   vertical-align: text-top;
 }
 
-<div
+
+NodeList [
+  <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <span
-      class="emotion-0"
+      class="ms-1uc9xwq"
     >
       Write some text...
     </span>
@@ -832,164 +889,261 @@ exports[`renders a makeswift::controls::rich-text-v2::mode::inline placeholder w
 `;
 
 exports[`renders provided text content: resolvedValue 1`] = `
-NodeList [
-  .emotion-0 {
+.ms-1azh6ix {
   margin: 0;
 }
 
-.emotion-3 {
+.ms-1fa0n4z {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
 @media only screen and (min-width: 769px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
+  .ms-n781qb {
+    color: hsla(238, 87%, 49%, 1);
     font-family: Lato;
     font-size: 16px;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
+  .ms-n781qb {
+    color: hsla(238, 87%, 49%, 1);
     font-family: Lato;
     font-size: 16px;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .emotion-4 {
-    color: hsla(238,87%,49%,1);
+  .ms-n781qb {
+    color: hsla(238, 87%, 49%, 1);
     font-family: Lato;
     font-size: 16px;
   }
 }
 
-<div
+@media only screen and (min-width: 769px) {
+  .ms-1fauesv {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-1fauesv {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-1fauesv {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-bief52 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-bief52 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-bief52 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-1h9dqf4 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-1h9dqf4 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-1h9dqf4 {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-w85jpg {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-w85jpg {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-w85jpg {
+    color: hsla(238, 87%, 49%, 1);
+    font-family: Lato;
+    font-size: 16px;
+  }
+}
+
+
+NodeList [
+  <div
     style="position: relative; white-space: pre-wrap; word-wrap: break-word;"
   >
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-1vl0m1z"
     >
       <span
-        class="emotion-1"
+        class="ms-18v3n4"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="https://www.bigcommerce.com/adyen"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-n781qb"
         >
           Adyen
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-yx9ut1"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-7sp1fb"
     >
       <span
-        class="emotion-1"
+        class="ms-x2jgjk"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="http://www.authorize.net/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-1fauesv"
         >
           Authorize.net
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-1sznzvr"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-yfx664"
     >
       <span
-        class="emotion-1"
+        class="ms-iu2st7"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="https://www.bigcommerce.com/bluesnap/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-bief52"
         >
           BlueSnap
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-1m7n7l1"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-38a7ff"
     >
       <span
-        class="emotion-1"
+        class="ms-z755i9"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="https://support.bigcommerce.com/s/article/Connecting-with-Checkoutcom/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-1h9dqf4"
         >
           Checkout.com
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-12lsqie"
       >
         ﻿
       </span>
     </p>
     <p
-      class="emotion-0 emotion-1"
+      class="ms-1azh6ix ms-17mp2tr"
     >
       <span
-        class="emotion-1"
+        class="ms-15abrgq"
       >
         ﻿
       </span>
       <a
-        class="emotion-3"
+        class="ms-1fa0n4z"
         href="http://www.cybersource.com/"
         target="_blank"
       >
         <span
-          class="emotion-4"
+          class="ms-w85jpg"
         >
           CyberSource Direct
         </span>
       </a>
       <span
-        class="emotion-1"
+        class="ms-gkh62q"
       >
         ﻿
       </span>

@@ -1,6 +1,5 @@
 'use client'
 
-import { cx } from '@emotion/css'
 import { getBox } from 'css-box-model'
 import isHotkey from 'is-hotkey'
 import {
@@ -31,6 +30,7 @@ import { Element, Leaf } from '../components'
 import { Descriptors } from '../rich-text'
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { useSyncWithBuilder } from './useSyncWithBuilder'
+import clsx from 'clsx'
 
 type Props = {
   id?: string
@@ -103,7 +103,7 @@ export const EditableText = forwardRef(function EditableText(
     [controller, editor],
   )
 
-  const slateReset = useSlateReset()
+  const { className: slateResetClass, styleElement: slateResetStyleElement } = useSlateReset()
 
   const handleBlur = useCallback((e: FocusEvent) => {
     // When clicking outside of the iframe (`relatedTarget` is null) we want to preserve the DOM selection.
@@ -114,19 +114,22 @@ export const EditableText = forwardRef(function EditableText(
   }, [])
 
   return (
-    <SlateReact editor={editor} value={initialValue} onChange={delaySync}>
-      <Editable
-        id={id}
-        renderLeaf={Leaf}
-        renderElement={Element}
-        onFocus={handleFocus}
-        onKeyDown={handleKeyDown}
-        onBlur={handleBlur}
-        className={cx(slateReset, width, margin)}
-        readOnly={editMode !== BuilderEditMode.CONTENT}
-        placeholder="Write some text..."
-      />
-    </SlateReact>
+    <>
+      {slateResetStyleElement}
+      <SlateReact editor={editor} value={initialValue} onChange={delaySync}>
+        <Editable
+          id={id}
+          renderLeaf={Leaf}
+          renderElement={Element}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          onBlur={handleBlur}
+          className={clsx(slateResetClass, width, margin)}
+          readOnly={editMode !== BuilderEditMode.CONTENT}
+          placeholder="Write some text..."
+        />
+      </SlateReact>
+    </>
   )
 })
 
