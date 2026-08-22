@@ -46,6 +46,7 @@ describe('ServerElement', () => {
       client: new MakeswiftClient('test-api-key', { runtime }),
       siteVersion,
       locale,
+      store: runtime.getOrCreateStore({ siteVersion, locale }),
     }
 
     return { renderContext }
