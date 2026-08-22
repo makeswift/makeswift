@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.6
+
+### Patch Changes
+
+- 12403b9: Add `unstable_injectedProps` option to server component registration to enable injection of `elementKey` et al into component props.
+
 ## 0.28.10-canary.5
 
 ### Patch Changes
