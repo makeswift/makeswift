@@ -7,6 +7,7 @@
     "clean": "rm -rf .wrangler",
     "dev": "vite",
     "build": "vite build",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "release": "wrangler deploy"
   },
@@ -17,7 +18,8 @@
     "hono": "^4.12.21",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.33.1",
@@ -26,6 +28,7 @@
     "@vitejs/plugin-react": "latest",
     "@vitejs/plugin-rsc": "latest",
     "rsc-html-stream": "^0.0.7",
+    "typescript": "^5.9.2",
     "vite": "^8.0.10",
     "wrangler": "^4.84.1"
   }
