@@ -122,7 +122,7 @@ export class RichTextControl extends ControlInstance<Message> {
 
       // if onChange is local then it will include an operation(s)
       // that is the only case in which we want to push updates
-      // this prevent infinite loops that can occur when collaborating
+      // this prevents infinite loops that can occur when collaborating
       if (options?.operation != null) {
         this.sendMessage({
           type: RichTextControl.CHANGE_EDITOR_VALUE,
