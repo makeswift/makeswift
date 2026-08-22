@@ -1,3 +1,4 @@
+import { InjectableProps } from '../../runtimes/react/server/injectable-props'
 import { type Action, type UnknownAction, isKnownAction } from '../actions'
 import { ReadOnlyActionTypes } from '../actions/internal/read-only-action-types'
 
@@ -47,6 +48,7 @@ export type ComponentMeta = {
     replacementType: string
   }
   server?: boolean
+  injectedProps?: Record<string, keyof InjectableProps>
 }
 
 export type State = Map<string, ComponentMeta>
