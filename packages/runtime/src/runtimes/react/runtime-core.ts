@@ -161,7 +161,6 @@ export class RuntimeCore {
         fetch: this.fetch,
         apiKey: this.apiKey,
         apiOrigin: this.apiOrigin,
-        graphqlApiEndpoint: this.graphqlApiEndpoint,
         preloadedState,
       })
     }

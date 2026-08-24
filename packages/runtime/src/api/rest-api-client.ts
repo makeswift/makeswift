@@ -6,6 +6,7 @@ import {
   type LocalizedGlobalElement,
   type PagePathnameSlice,
   type Swatch,
+  type Table,
   type Typography,
   type HttpFetch,
 } from './types'
@@ -162,6 +163,23 @@ export class MakeswiftRestAPIClient {
     const localizedGlobalElement = await response.json()
 
     return localizedGlobalElement
+  }
+
+  async getTable(tableId: string): Promise<Table | null> {
+    const response = await this.fetch(`v1/tables/${tableId}`, null)
+
+    if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
+      if (response.status === 404) return null
+
+      throw new RestApiClientError(`Failed to get table '${tableId}'`, response, {
+        body: failedBody,
+      })
+    }
+
+    const table = await response.json()
+
+    return table
   }
 
   async getPagePathnameSlices(

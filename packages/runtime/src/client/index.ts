@@ -10,7 +10,6 @@ import {
   type GlobalElement,
   type LocalizedGlobalElement,
   type Swatch,
-  type Table,
   type Typography,
 } from '../api/types'
 
@@ -950,10 +949,6 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
         },
       )
     }
-  }
-
-  async getTable(tableId: string): Promise<Table | null> {
-    return this.graphqlClient.getTable(tableId)
   }
 
   getTranslatableData(elementTree: ElementData): Record<string, Data> {

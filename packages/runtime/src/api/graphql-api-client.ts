@@ -1,15 +1,11 @@
 import { GraphQLClient } from './graphql/client'
 
-import { TableQuery, UnversionedResourcesQuery } from './graphql/documents'
+import { UnversionedResourcesQuery } from './graphql/documents'
 
 import {
-  type TableQueryResult,
-  type TableQueryVariables,
   type UnversionedResourcesQueryResult,
   type UnversionedResourcesQueryVariables,
 } from './graphql/generated/types'
-
-import { type Table } from './types'
 
 export class MakeswiftGraphQLApiClient {
   readonly graphqlClient: GraphQLClient
@@ -28,14 +24,5 @@ export class MakeswiftGraphQLApiClient {
       UnversionedResourcesQueryResult,
       UnversionedResourcesQueryVariables
     >(UnversionedResourcesQuery, { fileIds, tableIds })
-  }
-
-  async getTable(tableId: string): Promise<Table | null> {
-    const result = await this.graphqlClient.request<TableQueryResult, TableQueryVariables>(
-      TableQuery,
-      { tableId },
-    )
-
-    return result.table
   }
 }
