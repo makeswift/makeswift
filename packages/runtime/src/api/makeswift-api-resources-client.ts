@@ -16,7 +16,6 @@ import { ApiResourcesClient } from './api-resources-client'
 import { type SiteVersion } from './site-version'
 
 // see the comment in `MakeswiftApiResourcesClient` constructor below
-import { type MakeswiftGraphQLApiClient } from './graphql-api-client'
 import { type MakeswiftRestAPIClient } from './rest-api-client'
 
 /**
@@ -28,19 +27,16 @@ import { type MakeswiftRestAPIClient } from './rest-api-client'
  */
 export class MakeswiftApiResourcesClient extends ApiResourcesClient {
   private restApiClient: Promise<MakeswiftRestAPIClient>
-  private graphQlClient: Promise<MakeswiftGraphQLApiClient>
 
   constructor({
     fetch,
     apiKey,
     apiOrigin,
-    graphqlApiEndpoint,
     preloadedState,
   }: {
     fetch: HttpFetch
     apiKey: string
     apiOrigin: string
-    graphqlApiEndpoint: string
     preloadedState: Partial<ApiClientState>
   }) {
     super({
@@ -48,8 +44,8 @@ export class MakeswiftApiResourcesClient extends ApiResourcesClient {
     })
 
     // `MakeswiftApiResourcesClient` is used by the runtime and therefore will be imported
-    // on the client; lazy import server-side REST/GraphQL clients to avoid unnecessarily
-    // pulling their code into a client bundle.
+    // on the client; lazy import the server-side REST client to avoid unnecessarily
+    // pulling its code into a client bundle.
     //
     // (we can't easily lazy-load `MakeswiftApiResourcesClient` itself, at it will make its
     // construction async, but because it shares most of its implementation with
@@ -57,11 +53,6 @@ export class MakeswiftApiResourcesClient extends ApiResourcesClient {
     this.restApiClient = (async () => {
       const { MakeswiftRestAPIClient } = await import('./rest-api-client')
       return new MakeswiftRestAPIClient({ fetch, apiKey, apiOrigin })
-    })()
-
-    this.graphQlClient = (async () => {
-      const { MakeswiftGraphQLApiClient } = await import('./graphql-api-client')
-      return new MakeswiftGraphQLApiClient({ endpoint: graphqlApiEndpoint })
     })()
   }
 
@@ -106,6 +97,6 @@ export class MakeswiftApiResourcesClient extends ApiResourcesClient {
 
   protected async fetchTableImpl(id: string, _version: SiteVersion | null): Promise<Table | null> {
     // tables are unversioned
-    return (await this.graphQlClient).getTable(id)
+    return (await this.restApiClient).getTable(id)
   }
 }

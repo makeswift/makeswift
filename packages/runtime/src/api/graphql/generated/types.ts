@@ -234,39 +234,6 @@ export type TypographyQueryResult = {
   } | null
 }
 
-export type TableQueryVariables = Exact<{
-  tableId: Scalars['ID']
-}>
-
-export type TableQueryResult = {
-  table: {
-    __typename: 'Table'
-    id: string
-    name: string
-    columns: Array<
-      | { __typename: 'CheckboxTableColumn'; id: string; name: string }
-      | { __typename: 'EmailTableColumn'; id: string; name: string }
-      | { __typename: 'LongTextTableColumn'; id: string; name: string }
-      | {
-          __typename: 'MultipleSelectTableColumn'
-          id: string
-          name: string
-          options: Array<{ id: string; name: string }>
-        }
-      | { __typename: 'NumberTableColumn'; id: string; name: string }
-      | { __typename: 'PhoneNumberTableColumn'; id: string; name: string }
-      | { __typename: 'SingleLineTextTableColumn'; id: string; name: string }
-      | {
-          __typename: 'SingleSelectTableColumn'
-          id: string
-          name: string
-          options: Array<{ id: string; name: string }>
-        }
-      | { __typename: 'URLTableColumn'; id: string; name: string }
-    >
-  } | null
-}
-
 export type TypographiesQueryVariables = Exact<{
   typographyIds: Array<Scalars['ID']> | Scalars['ID']
 }>
