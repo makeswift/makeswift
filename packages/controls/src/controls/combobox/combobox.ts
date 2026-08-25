@@ -9,8 +9,8 @@ import { type DeserializedRecord } from '../../serialization'
 import {
   ContextValueSchema,
   type AnyContextValue,
+  type ContextParam,
   type ContextValueDependencies,
-  type ContextValues,
   type DependsOnConfig,
   type ProvidesConfig,
 } from '../context-value'
@@ -25,7 +25,7 @@ import { ControlDefinitionVisitor } from '../visitor'
 type Option<T extends Data> = { id: string; value: T; label: string }
 type GetOptionsType<T extends Data, D extends ContextValueDependencies> = (
   query: string,
-  context: ContextValues<D>,
+  ...context: ContextParam<D>
 ) => Option<T>[] | Promise<Option<T>[]>
 
 type Config<
@@ -109,7 +109,7 @@ class Definition<C extends AnyConfig> extends ControlDefinition<
 
     const { config } = Definition.schema(Schema.data).definition.parse(data)
 
-    return Combobox(config)
+    return Combobox(config as Config)
   }
 
   get controlType() {

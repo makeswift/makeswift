@@ -9,8 +9,8 @@ import { type DeserializedRecord } from '../../serialization'
 import {
   ContextValueSchema,
   type AnyContextValue,
+  type ContextParam,
   type ContextValueDependencies,
-  type ContextValues,
   type DependsOnConfig,
   type ProvidesConfig,
 } from '../context-value'
@@ -33,7 +33,7 @@ export type GalleryPage<T extends Data = Data> = {
 }
 
 type GetOptionsType<T extends Data, D extends ContextValueDependencies> = (
-  context: ContextValues<D>,
+  ...context: ContextParam<D>
 ) => GalleryPage<T> | Promise<GalleryPage<T>>
 
 type Config<
