@@ -7,9 +7,7 @@ import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
-  contextValuesSchema,
-  dependsOnSchema,
-  providesSchema,
+  ContextValueSchema,
   type AnyContextValue,
   type ContextValueDependencies,
   type ContextValues,
@@ -90,10 +88,10 @@ class Definition<C extends AnyConfig> extends ControlDefinition<
     const config = z.object({
       getOptions: z
         .function()
-        .args(contextValuesSchema)
+        .args(ContextValueSchema.contextValues)
         .returns(z.union([page, z.promise(page)])),
-      provides: providesSchema.optional(),
-      dependsOn: dependsOnSchema.optional(),
+      provides: ContextValueSchema.provides.optional(),
+      dependsOn: ContextValueSchema.dependsOn.optional(),
       label: z.string().optional(),
       description: z.string().optional(),
     })

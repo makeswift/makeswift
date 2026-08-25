@@ -2,7 +2,7 @@ import type { ContextValue, ContextValueBuilder } from './types'
 
 export * from './predicates'
 export * from './types'
-export * from './schemas'
+export * as ContextValueSchema from './schemas'
 
 /**
  * Declares a value one control makes available to others in the same component.

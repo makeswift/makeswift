@@ -1,4 +1,4 @@
-import { contextValueSchema, dependsOnSchema, providesSchema } from './schemas'
+import * as Schema from './schemas'
 import type {
   AnyContextValue,
   ContextValue,
@@ -8,7 +8,7 @@ import type {
 } from './types'
 
 export function isContextValue(val: unknown): val is ContextValue {
-  return contextValueSchema.safeParse(val).success
+  return Schema.contextValue.safeParse(val).success
 }
 
 export function isProvidesConfig<T>(
@@ -18,7 +18,7 @@ export function isProvidesConfig<T>(
     typeof config === 'object' &&
     config != null &&
     'provides' in config &&
-    providesSchema.safeParse(config.provides).success
+    Schema.provides.safeParse(config.provides).success
   )
 }
 
@@ -29,6 +29,6 @@ export function isDependsOnConfig<T>(
     typeof config === 'object' &&
     config != null &&
     'dependsOn' in config &&
-    dependsOnSchema.safeParse(config.dependsOn).success
+    Schema.dependsOn.safeParse(config.dependsOn).success
   )
 }
