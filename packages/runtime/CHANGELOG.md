@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.9
+
+### Patch Changes
+
+- 7f04c54: The runtime now fetches table schemas via the Makeswift Host API REST endpoint instead of the GraphQL API, continuing the migration away from GraphQL/Builder API dependencies.
+
 ## 0.28.10-canary.8
 
 ### Patch Changes
