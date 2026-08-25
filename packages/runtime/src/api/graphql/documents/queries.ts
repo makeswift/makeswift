@@ -41,16 +41,6 @@ export const TypographyQuery = /* GraphQL */ `
   ${TypographyFragment}
 `
 
-export const TableQuery = /* GraphQL */ `
-  query Table($tableId: ID!) {
-    table(id: $tableId) {
-      ...Table
-    }
-  }
-
-  ${TableFragment}
-`
-
 export const TypographiesQuery = /* GraphQL */ `
   query Typographies($typographyIds: [ID!]!) {
     typographies(ids: $typographyIds) {
