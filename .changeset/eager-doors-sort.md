@@ -1,6 +1,6 @@
 ---
-'@makeswift/controls': minor
-'@makeswift/runtime': minor
+'@makeswift/controls': patch
+'@makeswift/runtime': patch
 ---
 
 Implement unstable context value API
