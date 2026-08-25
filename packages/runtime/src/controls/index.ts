@@ -2,6 +2,7 @@ export * from './control'
 
 export {
   ControlDefinition,
+  ControlDefinitionVisitor,
   Checkbox,
   CheckboxDefinition,
   Code,
@@ -10,6 +11,15 @@ export {
   ColorDefinition,
   Combobox,
   ComboboxDefinition,
+  isDependsOnConfig,
+  isProvidesConfig,
+  isContextValue,
+  unstable_ContextValue,
+  type ProvidesConfig,
+  type DependsOnConfig,
+  type AnyContextValue,
+  type ContextValueDependencies,
+  type ContextValues,
   Font,
   FontDefinition,
   unstable_Gallery,
