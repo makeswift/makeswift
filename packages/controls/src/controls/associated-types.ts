@@ -17,3 +17,4 @@ export type DataType<D> = AssociatedType<D, 'DataType'>
 export type ValueType<D> = AssociatedType<D, 'ValueType'>
 export type ResolvedValueType<D> = AssociatedType<D, 'ResolvedValueType'>
 export type InstanceType<D> = AssociatedType<D, 'InstanceType'>
+export type ContainerType<D> = AssociatedType<D, 'ContainerType'>

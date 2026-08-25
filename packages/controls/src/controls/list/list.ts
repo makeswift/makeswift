@@ -22,6 +22,7 @@ import {
 } from '../associated-types'
 import {
   ControlDefinition,
+  MultiValueContainer,
   type Resolvable,
   type SchemaType,
   type SchemaTypeAny,
@@ -70,7 +71,8 @@ class Definition<C extends Config> extends ControlDefinition<
   DataType<C>,
   ValueType<C>,
   ResolvedValueType<C>,
-  InstanceType<C>
+  InstanceType<C>,
+  MultiValueContainer<C['type']>
 > {
   static readonly type = 'makeswift::controls::list' as const
 
