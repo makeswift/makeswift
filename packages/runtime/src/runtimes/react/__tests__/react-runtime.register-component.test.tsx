@@ -8,6 +8,7 @@ import {
   Link,
   List,
   Number,
+  unstable_ContextValue,
   Select,
   Shape,
   TextArea,
@@ -161,6 +162,69 @@ describe('registerComponent', () => {
           gadgetId: 'elementKey',
         },
       },
+    })
+  })
+})
+
+describe('options context validation', () => {
+  // Enforced entirely by `ValidComponentProps` on `registerComponent`'s `props`,
+  // so these assert compile-time behaviour: the bodies only have to run.
+  const stateNameContext = unstable_ContextValue('stateName').ofType<string>()
+
+  const stateCombobox = () =>
+    Combobox({
+      provides: stateNameContext,
+      getOptions: (query: string) => [{ id: query, value: query, label: query }],
+    })
+
+  const cityCombobox = () =>
+    Combobox({
+      dependsOn: { selectedState: stateNameContext },
+      getOptions: (_query, _context) => [],
+    })
+
+  function Noop() {
+    return <div />
+  }
+
+  test('accepts a provider and a consumer in the same component', () => {
+    createReactRuntime().registerComponent(Noop, {
+      type: 'valid-wiring',
+      label: 'Valid',
+      props: { stateName: stateCombobox(), cityName: cityCombobox() },
+    })
+  })
+
+  test('rejects a context with more than one provider', () => {
+    createReactRuntime().registerComponent(Noop, {
+      type: 'duplicate-providers',
+      label: 'Duplicate',
+      props: {
+        // @ts-expect-error — `stateName` is provided twice
+        stateName: stateCombobox(),
+        // @ts-expect-error — `stateName` is provided twice
+        alsoStateName: stateCombobox(),
+      },
+    })
+  })
+
+  test('rejects a provider inside a List', () => {
+    createReactRuntime().registerComponent(Noop, {
+      type: 'fan-out-provider',
+      label: 'Fan out',
+      props: {
+        // @ts-expect-error — a List provider has one value per item
+        stops: List({ type: stateCombobox() }),
+      },
+    })
+  })
+
+  test('rejects a context with no provider', () => {
+    createReactRuntime().registerComponent(Noop, {
+      type: 'unprovided-context',
+      label: 'Unprovided',
+      // @ts-expect-error — nothing provides `stateName`
+      props: { cityName: cityCombobox() },
     })
   })
 })

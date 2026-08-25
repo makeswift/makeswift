@@ -1,6 +1,9 @@
 import { type Component, type PropsWithoutRef, type ReactNode, type RefAttributes } from 'react'
 
-import { ControlDefinition as UnifiedControlDefinition } from '@makeswift/controls'
+import {
+  ControlDefinition as UnifiedControlDefinition,
+  type PropsWithValidContextUsage,
+} from '@makeswift/controls'
 
 import { type LegacyDescriptor, type DescriptorValueType } from '../../prop-controllers/descriptors'
 
@@ -105,7 +108,7 @@ export class ReactRuntimeCore extends RuntimeCore {
        */
       unstable_migration?: { replacementType: string }
       server?: ServerComponentConfig<I>
-      props?: P
+      props?: P & PropsWithValidContextUsage<P>
     },
   ): () => void {
     const isServerComponent = server !== false
