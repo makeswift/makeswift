@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.22-canary.1
+
+### Patch Changes
+
+- 335fe80: Implement unstable context value API
+
 ## 0.1.22-canary.0
 
 ### Patch Changes
