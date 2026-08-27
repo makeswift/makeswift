@@ -200,19 +200,22 @@ exports[`correctly renders button component with link 1`] = `
 
 @media only screen and (min-width: 769px) {
   .emotion-1 {
-    width: auto;
+    width: fit-content;
+    min-width: 20px;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .emotion-1 {
-    width: auto;
+    width: fit-content;
+    min-width: 20px;
   }
 }
 
 @media only screen and (max-width: 575px) {
   .emotion-1 {
-    width: auto;
+    width: fit-content;
+    min-width: 20px;
   }
 }
 

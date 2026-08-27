@@ -28,17 +28,12 @@ describe('Style Types', () => {
 
     type Data = DataType<typeof def>
 
-    expectTypeOf<Data['width']>().toEqualTypeOf<
+    expectTypeOf<Data['width']>().branded.toEqualTypeOf<
       | {
           value:
-            | {
-                value: number
-                unit: 'px'
-              }
-            | {
-                value: number
-                unit: '%'
-              }
+            | { value: number; unit: 'px' }
+            | { value: number; unit: '%' }
+            | 'auto'
           deviceId: string
         }[]
       | undefined

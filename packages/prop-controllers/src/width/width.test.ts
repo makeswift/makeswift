@@ -1,6 +1,7 @@
 import { ControlDataTypeKey, Types } from '../prop-controllers'
 import { ResponsiveLengthData } from '../responsive-length'
 import {
+  ResponsiveWidthLengthData,
   WidthDescriptor,
   WidthPropControllerDataV0,
   WidthPropControllerDataV1,
@@ -115,6 +116,56 @@ describe('WidthPropController', () => {
 
       // Assert
       expect(result).toBe(data)
+    })
+  })
+
+  describe('auto unit support', () => {
+    test('parses width data with auto in V1 format', () => {
+      // Arrange
+      const data: WidthPropControllerDataV1 = {
+        [ControlDataTypeKey]: WidthPropControllerDataV1Type,
+        value: [
+          {
+            deviceId: 'desktop',
+            value: 'auto',
+          },
+        ],
+      }
+
+      // Act
+      const result = getWidthPropControllerDataResponsiveLengthData(data)
+
+      // Assert
+      expect(result).toEqual([
+        { deviceId: 'desktop', value: 'auto' },
+      ])
+    })
+
+    test('creates V1 data with auto', () => {
+      // Arrange
+      const data: ResponsiveWidthLengthData = [
+        {
+          deviceId: 'desktop',
+          value: 'auto',
+        },
+      ]
+      const definition: WidthDescriptor = {
+        type: Types.Width,
+        version: 1,
+        options: {},
+      }
+
+      // Act
+      const result = createWidthPropControllerDataFromResponsiveLengthData(
+        data,
+        definition,
+      )
+
+      // Assert
+      expect(result).toEqual({
+        [ControlDataTypeKey]: WidthPropControllerDataV1Type,
+        value: data,
+      })
     })
   })
 })

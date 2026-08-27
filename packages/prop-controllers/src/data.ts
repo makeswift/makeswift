@@ -15,6 +15,13 @@ export const lengthDataSchema = z.object({
 
 export type LengthData = z.infer<typeof lengthDataSchema>
 
+export const widthLengthDataSchema = z.union([
+  z.object({ value: z.number(), unit: z.enum(['px', '%']) }),
+  z.literal('auto'),
+])
+
+export type WidthLengthData = z.infer<typeof widthLengthDataSchema>
+
 export const gapDataSchema = z.object({
   value: z.number(),
   unit: z.literal('px'),
