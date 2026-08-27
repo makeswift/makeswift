@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.10
+
+### Patch Changes
+
+- 4499e95: fix: builder style edits to RSC when the host SSRs a subtree that does not include `<head>`
+
 ## 0.28.10-canary.9
 
 ### Patch Changes
