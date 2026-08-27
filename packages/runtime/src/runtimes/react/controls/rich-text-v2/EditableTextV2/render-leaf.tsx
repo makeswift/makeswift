@@ -19,19 +19,20 @@ export function RichTextV2Leaf({ definition, plugins, ...props }: RichTextV2Leaf
   }
 
   const renderLeaf = plugins.reduce(
-    (renderFn, plugin) => (props: RenderLeafProps) => {
-      const { control, renderLeaf } = plugin
+    (renderFn, plugin) =>
+      function RenderLeafPlugin(props: RenderLeafProps) {
+        const { control, renderLeaf } = plugin
 
-      if (control?.definition == null || renderLeaf == null) return renderFn(props)
+        if (control?.definition == null || renderLeaf == null) return renderFn(props)
 
-      if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
+        if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
 
-      return (
-        <ControlValue definition={control.definition} data={control.getLeafValue(props.leaf)}>
-          {value => renderLeaf(renderFn, value)(props)}
-        </ControlValue>
-      )
-    },
+        return (
+          <ControlValue definition={control.definition} data={control.getLeafValue(props.leaf)}>
+            {value => renderLeaf(renderFn, value)(props)}
+          </ControlValue>
+        )
+      },
     initialRenderLeaf,
   )
 
