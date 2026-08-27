@@ -4,7 +4,6 @@ import {
   FocusEvent,
   KeyboardEvent,
   MouseEvent,
-  ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -39,10 +38,6 @@ import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
 import { useSyncRemoteChanges } from './useRemoteChanges'
 import { defaultValue, usePresetValue } from './usePresetValue'
-
-export type RichTextV2ControlValue = ReactNode
-
-export type Descriptors = { text?: RichTextV2Definition }
 
 type Props = {
   text?: RichTextDataV2
