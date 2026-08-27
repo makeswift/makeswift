@@ -2,6 +2,8 @@
 
 import { lazy } from 'react'
 
+import { type ConfigType } from '@makeswift/controls'
+
 import {
   type RichTextDataV2,
   RichTextV2Definition,
@@ -15,16 +17,16 @@ const ReadOnlyText = lazy(() => import('./ReadOnlyTextV2'))
 
 export function RichTextV2Value({
   data,
-  definition,
+  config,
   control,
 }: {
   data: RichTextDataV2 | undefined
-  definition: RichTextV2Definition
+  config: ConfigType<RichTextV2Definition>
   control: RichTextV2Control | null
 }) {
   return useIsReadOnly() ? (
-    <ReadOnlyText text={data} definition={definition} />
+    <ReadOnlyText text={data} config={config} />
   ) : (
-    <EditableText text={data} definition={definition} control={control} />
+    <EditableText text={data} config={config} control={control} />
   )
 }
