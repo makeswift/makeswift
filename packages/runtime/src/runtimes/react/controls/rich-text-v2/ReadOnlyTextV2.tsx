@@ -80,19 +80,20 @@ export function LeafComponent({ plugins, ...props }: LeafProps) {
   }
 
   const renderLeaf = plugins.reduce(
-    (renderFn, plugin) => (props: RenderLeafProps) => {
-      const { control, renderLeaf } = plugin
+    (renderFn, plugin) =>
+      function RenderLeafPlugin(props: RenderLeafProps) {
+        const { control, renderLeaf } = plugin
 
-      if (control?.definition == null || renderLeaf == null) return renderFn(props)
+        if (control?.definition == null || renderLeaf == null) return renderFn(props)
 
-      if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
+        if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
 
-      return (
-        <ControlValue definition={control.definition} data={control.getLeafValue(props.leaf)}>
-          {value => renderLeaf(renderFn, value)(props)}
-        </ControlValue>
-      )
-    },
+        return (
+          <ControlValue definition={control.definition} data={control.getLeafValue(props.leaf)}>
+            {value => renderLeaf(renderFn, value)(props)}
+          </ControlValue>
+        )
+      },
     initialRenderLeaf,
   )
 
@@ -110,19 +111,23 @@ function ElementComponent({ plugins, ...props }: ElementProps) {
   }
 
   const renderElement = plugins.reduce(
-    (renderFn, plugin) => (props: RenderElementProps) => {
-      const { control, renderElement } = plugin
+    (renderFn, plugin) =>
+      function RenderElementPlugin(props: RenderElementProps) {
+        const { control, renderElement } = plugin
 
-      if (control?.definition == null || renderElement == null) return renderFn(props)
+        if (control?.definition == null || renderElement == null) return renderFn(props)
 
-      if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
+        if (control.getElementValue == null) return renderElement(renderFn, undefined)(props)
 
-      return (
-        <ControlValue definition={control.definition} data={control.getElementValue(props.element)}>
-          {value => renderElement(renderFn, value)(props)}
-        </ControlValue>
-      )
-    },
+        return (
+          <ControlValue
+            definition={control.definition}
+            data={control.getElementValue(props.element)}
+          >
+            {value => renderElement(renderFn, value)(props)}
+          </ControlValue>
+        )
+      },
     initialRenderElement,
   )
 
