@@ -1,6 +1,6 @@
 {
   "name": "vite-rsc-hono-react-cloudflare",
-  "version": "0.0.2-canary.6",
+  "version": "0.0.2-canary.7",
   "private": true,
   "type": "module",
   "scripts": {

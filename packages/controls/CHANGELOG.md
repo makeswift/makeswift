@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.22-canary.2
+
+### Patch Changes
+
+- 4420803: Improve ergonomics for context value validation of unconstrained definitions. Context is now a required parameter for getOptions calls.
+
 ## 0.1.22-canary.1
 
 ### Patch Changes
