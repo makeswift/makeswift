@@ -1,2 +1,2 @@
-import { EditableTextV2 } from './editable-text-v2'
-export default EditableTextV2
+import { EditableTextV2Value } from './editable-text-v2'
+export default EditableTextV2Value

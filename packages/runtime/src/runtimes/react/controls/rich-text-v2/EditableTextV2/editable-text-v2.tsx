@@ -4,6 +4,8 @@ import {
   type FocusEvent,
   type KeyboardEvent,
   type MouseEvent,
+  type ReactNode,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -21,7 +23,7 @@ import {
   Editable,
 } from 'slate-react'
 
-import { type ConfigType } from '@makeswift/controls'
+import { type ControlInstanceKey, type ConfigType } from '@makeswift/controls'
 
 import {
   RichTextV2Definition,
@@ -31,10 +33,12 @@ import {
 } from '../../../../../controls/rich-text-v2'
 
 import { useBuilderEditMode } from '../../../hooks/use-builder-edit-mode'
+import { useControlInstance } from '../../../hooks/use-control-instance'
 import { useSlateReset } from '../../use-slate-reset'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
+import { NodeValue } from '../../node-value'
 
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
@@ -45,11 +49,23 @@ import { defaultValue, usePresetValue } from './usePresetValue'
 type Props = {
   text?: RichTextDataV2
   config: ConfigType<RichTextV2Definition>
-  control: RichTextV2Control | null
+  instanceKey: ControlInstanceKey | undefined
 }
 
-export function EditableTextV2({ text, config, control }: Props) {
+export const EditableTextV2Value = memo(function EditableTextV2Value({
+  instanceKey,
+  ...props
+}: Props): ReactNode {
+  return (
+    <NodeValue instanceKey={instanceKey}>
+      <EditableTextV2 instanceKey={instanceKey} {...props} />
+    </NodeValue>
+  )
+})
+
+function EditableTextV2({ text, config, instanceKey }: Props) {
   const plugins = useMemo(() => new RichTextV2Definition(config).plugins, [config])
+  const control = useControlInstance(instanceKey, RichTextV2Control)
 
   const [editor] = useState(() =>
     plugins.reduceRight(
