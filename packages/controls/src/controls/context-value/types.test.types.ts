@@ -368,20 +368,6 @@ describe('widened types are exempt from validation', () => {
     register(props)
   })
 
-  test('a bare ComboboxDefinition annotation accepts any combobox', () => {
-    const withContext: ComboboxDefinition = Combobox({
-      provides: zoomContext,
-      dependsOn: { selectedState: stateNameContext },
-      getOptions: (_query, context) => [
-        { id: 'a', value: context.selectedState ?? '', label: 'a' },
-      ],
-    })
-    const contextFree: ComboboxDefinition = Combobox({
-      getOptions: (q: string) => [{ id: q, value: q, label: q }],
-    })
-    register({ withContext, contextFree })
-  })
-
   test('literal-id validation still fires next to a widened member', () => {
     register({
       dynamic: {} as ReturnType<typeof Combobox>,

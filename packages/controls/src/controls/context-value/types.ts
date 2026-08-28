@@ -27,9 +27,6 @@ export type ContextValues<D extends ContextValueDependencies> = {
   [K in keyof D]: ContextValueOf<D[K]> | undefined
 }
 
-export type ContextParam<D extends ContextValueDependencies> =
-  keyof D extends never ? [] : [context: ContextValues<D>]
-
 export type ContextIdOf<C> =
   C extends ContextValue<infer Id, unknown> ? Id : never
 export type ContextValueOf<C> =

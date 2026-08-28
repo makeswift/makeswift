@@ -9,8 +9,8 @@ import { type DeserializedRecord } from '../../serialization'
 import {
   ContextValueSchema,
   type AnyContextValue,
-  type ContextParam,
   type ContextValueDependencies,
+  type ContextValues,
   type DependsOnConfig,
   type ProvidesConfig,
 } from '../context-value'
@@ -25,7 +25,7 @@ import { ControlDefinitionVisitor } from '../visitor'
 type Option<T extends Data> = { id: string; value: T; label: string }
 type GetOptionsType<T extends Data, D extends ContextValueDependencies> = (
   query: string,
-  ...context: ContextParam<D>
+  context: ContextValues<D>,
 ) => Option<T>[] | Promise<Option<T>[]>
 
 type Config<
@@ -36,7 +36,14 @@ type Config<
   DependsOnConfig<D> & {
     label?: string
     description?: string
-    getOptions: GetOptionsType<T, D>
+    // Method syntax to exempt from `strictFunctionTypes` contravariance,
+    // so a concrete combobox (whose `getOptions` takes its own narrow context)
+    // stays assignable to the widened default config while the widened side
+    // remains callable with `ContextValues<ContextValueDependencies>`.
+    getOptions(
+      query: string,
+      context: ContextValues<D>,
+    ): Option<T>[] | Promise<Option<T>[]>
   }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

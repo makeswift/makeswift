@@ -9,8 +9,8 @@ import { type DeserializedRecord } from '../../serialization'
 import {
   ContextValueSchema,
   type AnyContextValue,
-  type ContextParam,
   type ContextValueDependencies,
+  type ContextValues,
   type DependsOnConfig,
   type ProvidesConfig,
 } from '../context-value'
@@ -33,7 +33,7 @@ export type GalleryPage<T extends Data = Data> = {
 }
 
 type GetOptionsType<T extends Data, D extends ContextValueDependencies> = (
-  ...context: ContextParam<D>
+  context: ContextValues<D>,
 ) => GalleryPage<T> | Promise<GalleryPage<T>>
 
 type Config<
@@ -44,7 +44,13 @@ type Config<
   DependsOnConfig<D> & {
     label?: string
     description?: string
-    getOptions: GetOptionsType<T, D>
+    // Method syntax to exempt from `strictFunctionTypes` contravariance,
+    // so a concrete gallery (whose `getOptions` takes its own narrow context)
+    // stays assignable to the widened default config while the widened side
+    // remains callable with `ContextValues<ContextValueDependencies>`.
+    getOptions(
+      context: ContextValues<D>,
+    ): GalleryPage<T> | Promise<GalleryPage<T>>
   }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
