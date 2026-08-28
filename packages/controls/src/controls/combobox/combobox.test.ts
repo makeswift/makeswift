@@ -1,6 +1,7 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
 import { type ResolvedValueType, type ValueType } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { Combobox, ComboboxDefinition } from './combobox'
 
@@ -79,8 +80,19 @@ describe('Combobox', () => {
       },
     ]
 
+    const withContext: ComboboxDefinition = Combobox({
+      provides: unstable_ContextValue('zoom').ofType<number>(),
+      dependsOn: {
+        selectedState: unstable_ContextValue('stateName').ofType<string>(),
+      },
+      getOptions: (_query, context) => [
+        { id: 'a', value: context.selectedState ?? '', label: 'a' },
+      ],
+    })
+
     assignTest(Combobox({ label: 'location', getOptions }))
     assignTest(Combobox({ label: undefined, getOptions }))
+    assignTest(withContext)
   })
 })
 
