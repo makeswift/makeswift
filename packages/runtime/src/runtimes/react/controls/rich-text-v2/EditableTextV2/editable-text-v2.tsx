@@ -49,7 +49,7 @@ type Props = {
 }
 
 export function EditableTextV2({ text, config, control }: Props) {
-  const plugins = useMemo(() => config.plugins, [config])
+  const plugins = useMemo(() => new RichTextV2Definition(config).plugins, [config])
 
   const [editor] = useState(() =>
     plugins.reduceRight(

@@ -5,141 +5,141 @@ RichTextV2Definition {
   "config": {
     "defaultValue": "[generated random text]",
     "mode": undefined,
-    "plugins": [
-      {
-        "control": {
-          "definition": SelectDefinition {
-            "config": {
-              "defaultValue": "paragraph",
-              "label": "Block",
-              "labelOrientation": "horizontal",
-              "options": [
-                {
-                  "label": "Paragraph",
-                  "value": "paragraph",
-                },
-                {
-                  "label": "Heading 1",
-                  "value": "heading-one",
-                },
-                {
-                  "label": "Heading 2",
-                  "value": "heading-two",
-                },
-                {
-                  "label": "Heading 3",
-                  "value": "heading-three",
-                },
-                {
-                  "label": "Heading 4",
-                  "value": "heading-four",
-                },
-                {
-                  "label": "Heading 5",
-                  "value": "heading-five",
-                },
-                {
-                  "label": "Heading 6",
-                  "value": "heading-six",
-                },
-                {
-                  "label": "Bulleted list",
-                  "value": "unordered-list",
-                },
-                {
-                  "label": "Numbered list",
-                  "value": "ordered-list",
-                },
-                {
-                  "label": "Quote",
-                  "value": "blockquote",
-                },
-              ],
-            },
+  },
+  "plugins": [
+    {
+      "control": {
+        "definition": SelectDefinition {
+          "config": {
+            "defaultValue": "paragraph",
+            "label": "Block",
+            "labelOrientation": "horizontal",
+            "options": [
+              {
+                "label": "Paragraph",
+                "value": "paragraph",
+              },
+              {
+                "label": "Heading 1",
+                "value": "heading-one",
+              },
+              {
+                "label": "Heading 2",
+                "value": "heading-two",
+              },
+              {
+                "label": "Heading 3",
+                "value": "heading-three",
+              },
+              {
+                "label": "Heading 4",
+                "value": "heading-four",
+              },
+              {
+                "label": "Heading 5",
+                "value": "heading-five",
+              },
+              {
+                "label": "Heading 6",
+                "value": "heading-six",
+              },
+              {
+                "label": "Bulleted list",
+                "value": "unordered-list",
+              },
+              {
+                "label": "Numbered list",
+                "value": "ordered-list",
+              },
+              {
+                "label": "Quote",
+                "value": "blockquote",
+              },
+            ],
           },
         },
       },
-      {
-        "control": {
-          "definition": Typography {
-            "config": {},
-          },
+    },
+    {
+      "control": {
+        "definition": Typography {
+          "config": {},
         },
       },
-      {
-        "control": {
-          "definition": StyleV2Definition {
-            "config": {
-              "getStyle": [Function],
-              "type": IconRadioGroupDefinition {
-                "config": {
-                  "defaultValue": "left",
-                  "label": "Alignment",
-                  "options": [
-                    {
-                      "icon": "text-align-left",
-                      "label": "Left Align",
-                      "value": "left",
-                    },
-                    {
-                      "icon": "text-align-center",
-                      "label": "Center Align",
-                      "value": "center",
-                    },
-                    {
-                      "icon": "text-align-right",
-                      "label": "Right Align",
-                      "value": "right",
-                    },
-                    {
-                      "icon": "text-align-justify",
-                      "label": "Justify",
-                      "value": "justify",
-                    },
-                  ],
-                },
+    },
+    {
+      "control": {
+        "definition": StyleV2Definition {
+          "config": {
+            "getStyle": [Function],
+            "type": IconRadioGroupDefinition {
+              "config": {
+                "defaultValue": "left",
+                "label": "Alignment",
+                "options": [
+                  {
+                    "icon": "text-align-left",
+                    "label": "Left Align",
+                    "value": "left",
+                  },
+                  {
+                    "icon": "text-align-center",
+                    "label": "Center Align",
+                    "value": "center",
+                  },
+                  {
+                    "icon": "text-align-right",
+                    "label": "Right Align",
+                    "value": "right",
+                  },
+                  {
+                    "icon": "text-align-justify",
+                    "label": "Justify",
+                    "value": "justify",
+                  },
+                ],
               },
             },
           },
         },
       },
-      {
-        "control": {
-          "definition": IconRadioGroupDefinition {
-            "config": {
-              "label": "Inline",
-              "options": [
-                {
-                  "icon": "superscript",
-                  "label": "Superscript",
-                  "value": "superscript",
-                },
-                {
-                  "icon": "subscript",
-                  "label": "Subscript",
-                  "value": "subscript",
-                },
-                {
-                  "icon": "code",
-                  "label": "Code",
-                  "value": "code",
-                },
-              ],
-            },
+    },
+    {
+      "control": {
+        "definition": IconRadioGroupDefinition {
+          "config": {
+            "label": "Inline",
+            "options": [
+              {
+                "icon": "superscript",
+                "label": "Superscript",
+                "value": "superscript",
+              },
+              {
+                "icon": "subscript",
+                "label": "Subscript",
+                "value": "subscript",
+              },
+              {
+                "icon": "code",
+                "label": "Code",
+                "value": "code",
+              },
+            ],
           },
         },
       },
-      {
-        "control": {
-          "definition": LinkDefinition {
-            "config": {
-              "label": "On Click",
-            },
+    },
+    {
+      "control": {
+        "definition": LinkDefinition {
+          "config": {
+            "label": "On Click",
           },
         },
       },
-    ],
-  },
+    },
+  ],
 }
 `;
 
@@ -310,10 +310,10 @@ RichTextV2Definition {
   "config": {
     "defaultValue": "Edit this text",
     "mode": "makeswift::controls::rich-text-v2::mode::inline",
-    "plugins": [
-      {},
-    ],
   },
+  "plugins": [
+    {},
+  ],
 }
 `;
 
