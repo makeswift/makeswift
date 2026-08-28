@@ -25,7 +25,7 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const descendants = useMemo(() => text?.descendants ?? [], [text?.descendants])
-  const plugins = useMemo(() => config?.plugins ?? [], [config])
+  const plugins = useMemo(() => (config ? new RichTextV2Definition(config).plugins : []), [config])
   const descendantsAsString = toText(descendants, config?.mode ?? RichText.Mode.Block)
 
   return (

@@ -41,22 +41,31 @@ type InstanceType = RichTextV2Control
 type UserConfig = z.infer<typeof Definition.schema.userConfig>
 type Config = UserConfig & {
   defaultValue: string
-  plugins: RichTextV2Plugin[]
 }
 
 class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType> {
+  readonly plugins: RichTextV2Plugin[]
+
   constructor({ mode, defaultValue }: UserConfig, plugins?: RichTextV2Plugin[]) {
     super({
       mode,
       defaultValue:
         defaultValue ??
         (mode === Definition.Mode.Inline ? 'Edit this text' : Definition.generateParagraph()),
-      plugins:
-        plugins ??
-        (mode === Definition.Mode.Inline
-          ? [InlineModePlugin()]
-          : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()]),
     })
+
+    // The built-in plugin set is currently determined entirely by `mode` and
+    // has remained stable across runtime versions, so it does not need to be
+    // stored in the internal config. When that changes, we should:
+    //  - introduce a plugin registry
+    //  - have the config carry the IDs of selected plugins
+    //  - use the current inline and block plugin sets as defaults when
+    //    deserializing a legacy config that does not include plugin IDs
+    this.plugins =
+      plugins ??
+      (mode === Definition.Mode.Inline
+        ? [InlineModePlugin()]
+        : [BlockPlugin(), TypographyPlugin(), TextAlignPlugin(), InlinePlugin(), LinkPlugin()])
   }
 
   static generateParagraph(): string {
@@ -71,15 +80,15 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
       throw new Error(`RichText: expected type ${Definition.type}, got ${data.type}`)
     }
 
-    const { config } = Definition.fullSchema({
+    const { config, plugins } = Definition.fullSchema({
       pluginDef: SerializationSchema.deserializedRecord,
     }).definition.parse(data)
 
-    const { plugins, ...userConfig } = config
+    const { plugins: configPlugins, ...userConfig } = config
 
     return new RichTextV2Definition(
       userConfig,
-      plugins.map(({ control }) =>
+      (plugins ?? configPlugins ?? []).map(({ control }) =>
         control ? { control: { definition: deserializeCallback(control?.definition) } } : {},
       ),
     )
@@ -95,9 +104,13 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
         .optional(),
     })
 
-    const config = baseSchema.userConfig.extend({
-      defaultValue: z.string(),
-      plugins: z.array(plugin),
+    const plugins = z.array(plugin)
+
+    const config = Definition.configSchema().extend({
+      // plugins have been moved from config to the definition itself; keeping
+      // the field here as optional so we can deserialize definitions coming from
+      // older runtimes
+      plugins: plugins.optional(),
     })
 
     return {
@@ -105,13 +118,21 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
       config,
       definition: z.object({
         type: baseSchema.type,
+        // marked as optional for backward compatibility with older runtimes
+        plugins: plugins.optional(),
         config,
       }),
     }
   }
 
+  static configSchema() {
+    return super.schema.userConfig.extend({
+      defaultValue: z.string(),
+    })
+  }
+
   get configSchema(): SchemaType<Config> {
-    return Definition.fullSchema({ pluginDef: z.any() as SchemaType<ControlDefinition> }).config
+    return Definition.configSchema()
   }
 
   createInstance(args: ControlInstanceArgs) {
@@ -137,11 +158,11 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
 
   getTranslatableData(data: DataType | undefined): Data {
     if (data == null) return null
-    return getTranslatableData(Definition.dataToNodes(data), this.config.plugins)
+    return getTranslatableData(Definition.dataToNodes(data), this.plugins)
   }
 
   get pluginControls(): RichTextPluginControl[] {
-    return this.config.plugins.map(plugin => plugin.control).filter(isNotNil)
+    return this.plugins.map(plugin => plugin.control).filter(isNotNil)
   }
 
   pluginControlAt(index: number): RichTextPluginControl | undefined {
