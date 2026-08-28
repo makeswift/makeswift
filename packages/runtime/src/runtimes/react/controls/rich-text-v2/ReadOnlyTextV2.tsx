@@ -1,28 +1,32 @@
-import { ForwardedRef, forwardRef, ReactNode } from 'react'
-import { Descendant, Element, Text } from 'slate'
-import { RenderElementProps, RenderLeafProps } from 'slate-react'
+import { type ReactNode, type ForwardedRef, forwardRef, useMemo } from 'react'
+import { type Descendant, type Element, type Text } from 'slate'
+import { type RenderElementProps, type RenderLeafProps } from 'slate-react'
 
-import { RichTextV2Definition, RichText } from '../../../../controls/rich-text-v2'
+import { type ConfigType } from '@makeswift/controls'
+
+import {
+  type RichTextDataV2,
+  RichTextV2Definition,
+  RichText,
+} from '../../../../controls/rich-text-v2'
 import { useStyle } from '../../use-style'
 import { toText } from '../../../../slate/utils'
 import { RichTextV2Plugin } from '../../../../controls/rich-text-v2/plugin'
-import { RichTextDataV2 } from '../../../../controls/rich-text-v2'
 
 import { ControlValue } from '../control'
 
 type Props = {
   text: RichTextDataV2 | undefined
-  definition: RichTextV2Definition | undefined
+  config: ConfigType<RichTextV2Definition> | undefined
 }
 
 const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
-  { text, definition }: Props,
+  { text, config }: Props,
   ref: ForwardedRef<HTMLDivElement>,
 ) {
-  const descendantsAsString = toText(
-    text?.descendants ?? [],
-    definition?.config.mode ?? RichText.Mode.Block,
-  )
+  const descendants = useMemo(() => text?.descendants ?? [], [text?.descendants])
+  const plugins = useMemo(() => config?.plugins ?? [], [config])
+  const descendantsAsString = toText(descendants, config?.mode ?? RichText.Mode.Block)
 
   return (
     <div
@@ -41,10 +45,7 @@ const ReadOnlyTextV2 = forwardRef(function ReadOnlyText(
       {descendantsAsString === '' ? (
         <Placeholder />
       ) : (
-        <Descendants
-          plugins={definition?.config.plugins ?? []}
-          descendants={text?.descendants ?? []}
-        />
+        <Descendants plugins={plugins} descendants={descendants} />
       )}
     </div>
   )

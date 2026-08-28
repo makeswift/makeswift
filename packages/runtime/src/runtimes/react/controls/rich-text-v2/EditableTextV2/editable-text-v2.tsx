@@ -1,9 +1,9 @@
 'use client'
 
 import {
-  FocusEvent,
-  KeyboardEvent,
-  MouseEvent,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -21,6 +21,8 @@ import {
   Editable,
 } from 'slate-react'
 
+import { type ConfigType } from '@makeswift/controls'
+
 import {
   RichTextV2Definition,
   RichText,
@@ -28,11 +30,12 @@ import {
   type RichTextDataV2,
 } from '../../../../../controls/rich-text-v2'
 
-import { useBuilderEditMode } from '../../..'
+import { useBuilderEditMode } from '../../../hooks/use-builder-edit-mode'
 import { useSlateReset } from '../../use-slate-reset'
 import { BuilderEditMode } from '../../../../../state/modules/builder-edit-mode'
 import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
+
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
@@ -41,12 +44,12 @@ import { defaultValue, usePresetValue } from './usePresetValue'
 
 type Props = {
   text?: RichTextDataV2
-  definition: RichTextV2Definition
+  config: ConfigType<RichTextV2Definition>
   control: RichTextV2Control | null
 }
 
-export function EditableTextV2({ text, definition, control }: Props) {
-  const plugins = useMemo(() => definition.config.plugins, [definition])
+export function EditableTextV2({ text, config, control }: Props) {
+  const plugins = useMemo(() => config.plugins, [config])
 
   const [editor] = useState(() =>
     plugins.reduceRight(
@@ -81,7 +84,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
       isPreservingFocus.current = false
       ReactEditor.deselect(editor)
     }
-  }, [editMode])
+  }, [editMode, editor])
 
   // ------ Syncing remote changes ------
 
@@ -89,7 +92,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   // ------ Default value ------
 
-  const presetValue = usePresetValue(definition)
+  const presetValue = usePresetValue(config)
 
   const initialValue = useMemo(
     () => (text && RichText.dataToNodes(text)) ?? presetValue,
@@ -114,16 +117,16 @@ export function EditableTextV2({ text, definition, control }: Props) {
 
   const renderElement = useCallback(
     (props: RenderElementProps) => {
-      return <RichTextV2Element {...props} definition={definition} plugins={plugins} />
+      return <RichTextV2Element {...props} plugins={plugins} />
     },
-    [plugins, definition],
+    [plugins],
   )
 
   const renderLeaf = useCallback(
     (props: RenderLeafProps) => {
-      return <RichTextV2Leaf {...props} definition={definition} plugins={plugins} />
+      return <RichTextV2Leaf {...props} plugins={plugins} />
     },
-    [plugins, definition],
+    [plugins],
   )
 
   // ------ Event handlers ------
@@ -159,7 +162,7 @@ export function EditableTextV2({ text, definition, control }: Props) {
         e.preventDefault()
       }
     },
-    [control, editor, editMode],
+    [editMode],
   )
 
   const handleClick = useCallback(
@@ -199,5 +202,3 @@ export function EditableTextV2({ text, definition, control }: Props) {
     </Slate>
   )
 }
-
-export default EditableTextV2
