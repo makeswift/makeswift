@@ -20,6 +20,7 @@ export {
   type AnyContextValue,
   type ContextValueDependencies,
   type ContextValues,
+  type ContextValue,
   Font,
   FontDefinition,
   unstable_Gallery,

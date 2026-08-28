@@ -38,7 +38,7 @@ type GetOptionsType<T extends Data, D extends ContextValueDependencies> = (
 
 type Config<
   T extends Data = Data,
-  D extends ContextValueDependencies = {},
+  D extends ContextValueDependencies = ContextValueDependencies,
   P extends AnyContextValue = AnyContextValue,
 > = ProvidesConfig<P> &
   DependsOnConfig<D> & {

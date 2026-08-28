@@ -48,6 +48,13 @@ export type DependsOnConfig<D extends ContextValueDependencies> =
   DependsOnConfigUnconstrained<D>
 
 // Validation
+
+// A widened `string` id arises from constraint-instantiated generics
+// (e.g. `ReturnType<typeof Combobox>` or a bare `ComboboxDefinition`).
+// To improve ergonomics when dynamically creating definitions, only literal
+// ids are validated.
+type LiteralId<Id extends string> = string extends Id ? never : Id
+
 type HasConfig<Def> = [ConfigType<Def>] extends [never] ? false : true
 
 export type ProvidedContext<Def> =
@@ -57,7 +64,9 @@ export type ProvidedContext<Def> =
       ? NonNullable<P>
       : never
 
-export type ProvidedContextId<Def> = ContextIdOf<ProvidedContext<Def>>
+export type ProvidedContextId<Def> = LiteralId<
+  ContextIdOf<ProvidedContext<Def>>
+>
 
 export type ContextDependencies<Def> =
   HasConfig<Def> extends false
@@ -70,7 +79,7 @@ export type ContextDependencyIds<Def> =
   HasConfig<Def> extends false
     ? never
     : ConfigType<Def> extends DependsOnConfigUnconstrained<infer D>
-      ? ContextIdOf<NonNullable<D>[keyof NonNullable<D>]>
+      ? LiteralId<ContextIdOf<NonNullable<D>[keyof NonNullable<D>]>>
       : never
 
 export type ProvidedIds<Def> = Def extends unknown

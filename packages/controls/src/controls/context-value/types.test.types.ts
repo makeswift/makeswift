@@ -1,7 +1,7 @@
 import { expectTypeOf } from 'expect-type'
 
 import { Checkbox } from '../checkbox'
-import { Combobox } from '../combobox'
+import { Combobox, ComboboxDefinition } from '../combobox'
 import { unstable_Gallery } from '../gallery'
 import { Group } from '../group'
 import { List } from '../list'
@@ -340,6 +340,53 @@ describe('duplicate provider detection', () => {
       stateName: stateCombobox(),
       // @ts-expect-error — `stateName` is provided twice
       alsoStateName: stateCombobox(),
+    })
+  })
+})
+
+describe('widened types are exempt from validation', () => {
+  test('a widened combobox provides and requires nothing', () => {
+    expectTypeOf<[ProvidedIds<ReturnType<typeof Combobox>>]>().toEqualTypeOf<
+      [never]
+    >()
+    expectTypeOf<[RequiredIds<ReturnType<typeof Combobox>>]>().toEqualTypeOf<
+      [never]
+    >()
+    expectTypeOf<[ProvidedIds<ComboboxDefinition>]>().toEqualTypeOf<[never]>()
+    expectTypeOf<[RequiredIds<ComboboxDefinition>]>().toEqualTypeOf<[never]>()
+    expectTypeOf<
+      [MismatchedProvidedIds<ReturnType<typeof Combobox>>]
+    >().toEqualTypeOf<[never]>()
+  })
+
+  test('runtime-built prop records validate', () => {
+    // The shape a runtime-generated registry passes to `registerComponent`.
+    const props = {} as Record<
+      string,
+      ReturnType<typeof Combobox> | ReturnType<typeof Checkbox>
+    >
+    register(props)
+  })
+
+  test('a bare ComboboxDefinition annotation accepts any combobox', () => {
+    const withContext: ComboboxDefinition = Combobox({
+      provides: zoomContext,
+      dependsOn: { selectedState: stateNameContext },
+      getOptions: (_query, context) => [
+        { id: 'a', value: context.selectedState ?? '', label: 'a' },
+      ],
+    })
+    const contextFree: ComboboxDefinition = Combobox({
+      getOptions: (q: string) => [{ id: q, value: q, label: q }],
+    })
+    register({ withContext, contextFree })
+  })
+
+  test('literal-id validation still fires next to a widened member', () => {
+    register({
+      dynamic: {} as ReturnType<typeof Combobox>,
+      // @ts-expect-error — nothing provides `stateName`
+      cityName: cityCombobox(),
     })
   })
 })
