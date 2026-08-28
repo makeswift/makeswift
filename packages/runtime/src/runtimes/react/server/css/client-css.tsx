@@ -67,13 +67,14 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     // initialize style elements map and capture server styles for existing
     // RSC-rendered elements, if any
-    document.head
+    // Query document because some hosts SSR a subtree that does not include `<head>`
+    document
       .querySelectorAll<HTMLStyleElement>(
         `style[data-href^="${MAKESWIFT_RSC_STYLE_TAG_ID_PREFIX}"]`,
       )
       .forEach(registerStyleElement)
 
-    // set up a `document.head` observer to capture dynamically added RSC `<style>` nodes
+    // set up a document observer to capture dynamically added RSC `<style>` nodes
     const observer = new MutationObserver(mutationList => {
       for (const mutation of mutationList) {
         for (const node of mutation.addedNodes) {
@@ -82,7 +83,7 @@ export function ClientCSSProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    observer.observe(document.head, { childList: true })
+    observer.observe(document, { childList: true, subtree: true })
 
     return () => {
       observer.disconnect()
