@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.13
+
+### Patch Changes
+
+- 4c20df9: feat: add an "Aspect ratio" control to the builtin Image component with Original, 16:9, 4:3, and 1:1 options. Original preserves the image's intrinsic dimensions (existing images are unaffected); fixed ratios crop to fill.
+
 ## 0.28.10-canary.12
 
 ### Patch Changes
