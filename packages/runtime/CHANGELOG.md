@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.12
+
+### Patch Changes
+
+- 4ca6840: feat: RSC-enabled `RichText` prop rendering
+
 ## 0.28.10-canary.11
 
 ### Patch Changes
