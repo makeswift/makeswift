@@ -13,6 +13,7 @@ import {
   ElementID,
   Image,
   ResponsiveOpacity,
+  ResponsiveSelect,
   TextInput,
 } from '@makeswift/prop-controllers'
 
@@ -28,6 +29,17 @@ export function registerComponent(runtime: ReactRuntimeCore) {
         altText: TextInput({ label: 'Alt text' }),
         link: Link({ label: 'On click' }),
         width: Width(),
+        aspectRatio: ResponsiveSelect({
+          label: 'Aspect ratio',
+          labelOrientation: 'vertical',
+          options: [
+            { value: 'original', label: 'Original' },
+            { value: '16:9', label: '16:9' },
+            { value: '4:3', label: '4:3' },
+            { value: '1:1', label: '1:1' },
+          ],
+          defaultValue: 'original',
+        }),
         margin: Margin({ format: Margin.Format.ClassName }),
         padding: Padding({ format: Padding.Format.ClassName }),
         border: Border({ format: Border.Format.ClassName }),

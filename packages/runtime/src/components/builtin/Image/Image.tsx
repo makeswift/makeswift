@@ -7,6 +7,7 @@ import {
   ResponsiveLengthData,
   ImageData,
   ResponsiveOpacityValue,
+  ResponsiveSelectValue,
 } from '@makeswift/prop-controllers'
 import { type Breakpoints, findBreakpointOverride } from '@makeswift/controls'
 
@@ -20,12 +21,21 @@ import { useBreakpoints } from '../../../runtimes/react/hooks/use-breakpoints'
 import { useFrameworkContext } from '../../../runtimes/react/components/hooks/use-framework-context'
 import { match, P } from 'ts-pattern'
 
+type AspectRatio = 'original' | '16:9' | '4:3' | '1:1'
+
+const aspectRatioValues: Record<Exclude<AspectRatio, 'original'>, string> = {
+  '16:9': '16 / 9',
+  '4:3': '4 / 3',
+  '1:1': '1 / 1',
+}
+
 type Props = {
   id?: string
   file?: ImageData
   altText?: string
   link?: LinkData
   width?: ResponsiveLengthData
+  aspectRatio?: ResponsiveSelectValue<AspectRatio>
   margin?: string
   padding?: string
   border?: string
@@ -88,6 +98,7 @@ const ImageComponent = forwardRef(function Image(
     link,
     opacity,
     boxShadow,
+    aspectRatio,
     placeholder = placeholders.image,
     className,
     priority,
@@ -148,6 +159,17 @@ const ImageComponent = forwardRef(function Image(
 
   const { Image } = useFrameworkContext()
 
+  const imageClassName = useStyle(
+    useResponsiveStyle([aspectRatio] as const, ([aspectRatio = 'original']) => ({
+      width: '100%',
+      height: 'auto',
+      ...(aspectRatio !== 'original' && {
+        aspectRatio: aspectRatioValues[aspectRatio],
+        objectFit: 'cover',
+      }),
+    })),
+  )
+
   if (!dimensions) return null
 
   return (
@@ -159,10 +181,7 @@ const ImageComponent = forwardRef(function Image(
         alt={altText ?? ''}
         width={dimensions.width}
         height={dimensions.height}
-        style={{
-          width: '100%',
-          height: 'auto',
-        }}
+        className={imageClassName}
       />
     </Container>
   )

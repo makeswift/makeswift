@@ -33,6 +33,7 @@ type ImageComponent = (props: {
   priority?: boolean
   fill?: boolean
   style?: CSSProperties
+  className?: string
 }) => ReactNode
 
 type LinkProps = Omit<ComponentPropsWithoutRef<'a'>, 'onClick'> & {
