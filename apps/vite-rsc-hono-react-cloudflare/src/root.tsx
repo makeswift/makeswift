@@ -43,8 +43,8 @@ async function App() {
   })
 
   return (
-    <div id="root">
-      <div>
+    <div id="root" className="flex flex-col gap-y-4">
+      <div className="flex items-center justify-center">
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -60,7 +60,7 @@ async function App() {
         snapshot={snapshot}
         label="Main content"
         fallback={
-          <div>
+          <div className="text-center">
             <h1>Vite + RSC</h1>
             <div className="card">
               <ClientCounter />
@@ -69,11 +69,11 @@ async function App() {
         }
       />
 
-      <div className="card">
+      <div className="text-center">
         <ServerCounter />
       </div>
 
-      <ul className="read-the-docs">
+      <ul className="text-left text-[#888]">
         <li>
           Edit <code>src/client.tsx</code> to test client HMR.
         </li>

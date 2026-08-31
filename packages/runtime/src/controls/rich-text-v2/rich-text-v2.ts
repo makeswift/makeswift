@@ -147,7 +147,7 @@ class Definition extends BaseRichTextDefinition<ReactNode, Config, InstanceType>
   ): Resolvable<ReactNode | undefined> {
     const stableValue = StableValue({
       name: Definition.type,
-      read: () => renderRichTextV2(data, this.config, control ?? null),
+      read: () => renderRichTextV2({ data, config: this.config, control: control ?? null }),
     })
 
     return {
