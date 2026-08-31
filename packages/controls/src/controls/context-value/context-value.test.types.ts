@@ -10,12 +10,12 @@ import { Shape } from '../shape/v1'
 
 import { unstable_ContextValue } from '.'
 import type {
+  AllProvidedIds,
   ContextDependencyIds,
   ContextValues,
   ContextValue as ContextValueType,
   DuplicateIds,
   MismatchedProvidedIds,
-  MultiValueProvidedIds,
   PropsWithValidContextUsage,
   ProvidedContextId,
   ProvidedIds,
@@ -136,9 +136,6 @@ describe('the prop-tree walk', () => {
 
     expectTypeOf<[ProvidedIds<typeof group>]>().toEqualTypeOf<['stateName']>()
     expectTypeOf<[RequiredIds<typeof group>]>().toEqualTypeOf<['stateName']>()
-    expectTypeOf<[MultiValueProvidedIds<typeof group>]>().toEqualTypeOf<
-      [never]
-    >()
   })
 
   test('finds them through a Shape', () => {
@@ -168,15 +165,12 @@ describe('the prop-tree walk', () => {
 
     expectTypeOf<[RequiredIds<typeof list>]>().toEqualTypeOf<['stateName']>()
     expectTypeOf<[ProvidedIds<typeof list>]>().toEqualTypeOf<[never]>()
-    expectTypeOf<[MultiValueProvidedIds<typeof list>]>().toEqualTypeOf<
-      [never]
-    >()
   })
 
-  test('a provider inside a List is flagged, however deeply nested', () => {
+  test('a provider inside a List is scoped to the item, however deeply nested', () => {
     const shallow = List({ type: stateCombobox() })
     expectTypeOf<[ProvidedIds<typeof shallow>]>().toEqualTypeOf<[never]>()
-    expectTypeOf<[MultiValueProvidedIds<typeof shallow>]>().toEqualTypeOf<
+    expectTypeOf<[AllProvidedIds<typeof shallow>]>().toEqualTypeOf<
       ['stateName']
     >()
 
@@ -185,9 +179,27 @@ describe('the prop-tree walk', () => {
         props: { inner: Group({ props: { s: stateCombobox() } }) },
       }),
     })
-    expectTypeOf<[MultiValueProvidedIds<typeof deep>]>().toEqualTypeOf<
-      ['stateName']
-    >()
+    expectTypeOf<[ProvidedIds<typeof deep>]>().toEqualTypeOf<[never]>()
+    expectTypeOf<[AllProvidedIds<typeof deep>]>().toEqualTypeOf<['stateName']>()
+  })
+
+  test('an id provided within an item satisfies that item and does not bubble out', () => {
+    const selfContained = List({
+      type: Group({ props: { s: stateCombobox(), c: cityCombobox() } }),
+    })
+
+    expectTypeOf<[RequiredIds<typeof selfContained>]>().toEqualTypeOf<[never]>()
+    expectTypeOf<[ProvidedIds<typeof selfContained>]>().toEqualTypeOf<[never]>()
+  })
+
+  test('a provider in an outer item is visible in nested item scopes', () => {
+    const nested = List({
+      type: Group({
+        props: { s: stateCombobox(), inner: List({ type: cityCombobox() }) },
+      }),
+    })
+
+    expectTypeOf<[RequiredIds<typeof nested>]>().toEqualTypeOf<[never]>()
   })
 
   test('leaf controls contribute nothing', () => {
@@ -208,6 +220,11 @@ describe('the prop-tree walk', () => {
       getOptions: (_query: string) => [{ id: 'x', value: 1, label: 'one' }],
     })
     expectTypeOf<[MismatchedProvidedIds<typeof bad>]>().toEqualTypeOf<
+      ['stateName']
+    >()
+
+    const badInItem = List({ type: bad })
+    expectTypeOf<[MismatchedProvidedIds<typeof badInItem>]>().toEqualTypeOf<
       ['stateName']
     >()
   })
@@ -251,12 +268,73 @@ describe('component props validation', () => {
     })
   })
 
-  test('rejects a provider inside a List', () => {
+  test('accepts a provider inside a List', () => {
     register({
-      // @ts-expect-error — a List provider has one value per item
       stops: List({ type: stateCombobox() }),
       noise: Number({ defaultValue: 0 }),
     })
+  })
+
+  test('accepts a provider and consumer within the same List item', () => {
+    register({
+      stops: List({
+        type: Group({ props: { s: stateCombobox(), c: cityCombobox() } }),
+      }),
+    })
+  })
+
+  test('accepts an outer-item provider consumed in a nested item scope', () => {
+    register({
+      stops: List({
+        type: Group({
+          props: { s: stateCombobox(), inner: List({ type: cityCombobox() }) },
+        }),
+      }),
+    })
+  })
+
+  test('rejects a consumer outside the List of an item-scoped provider', () => {
+    register({
+      stops: List({ type: stateCombobox() }),
+      // @ts-expect-error — the item-scoped provider is not visible outside
+      cityName: cityCombobox(),
+    })
+
+    const stops = List({ type: stateCombobox() })
+    type P = { stops: typeof stops; cityName: ReturnType<typeof cityCombobox> }
+    expectTypeOf<
+      PropsWithValidContextUsage<P>['cityName']
+    >().toEqualTypeOf<'This control depends on context (stateName) that is provided inside a multi-value control'>()
+  })
+
+  test('rejects a consumer in one List of an id provided only in a sibling List', () => {
+    register({
+      providing: List({ type: stateCombobox() }),
+      // @ts-expect-error — the sibling item scope is not visible here
+      consuming: List({ type: cityCombobox() }),
+    })
+
+    const providing = List({ type: stateCombobox() })
+    const consuming = List({ type: cityCombobox() })
+    type P = { providing: typeof providing; consuming: typeof consuming }
+    expectTypeOf<
+      PropsWithValidContextUsage<P>['consuming']
+    >().toEqualTypeOf<'This control depends on context (stateName) that is provided inside a multi-value control'>()
+  })
+
+  test('rejects a consumer inside a List with no provider in scope', () => {
+    register({
+      // @ts-expect-error — nothing provides `stateName`
+      stops: List({ type: cityCombobox() }),
+      noise: Number({ defaultValue: 0 }),
+    })
+  })
+
+  test('rejects a consumer with no provider', () => {
+    type P = { cityName: ReturnType<typeof cityCombobox> }
+    expectTypeOf<
+      PropsWithValidContextUsage<P>['cityName']
+    >().toEqualTypeOf<'This control depends on context (stateName) that nothing in this component provides'>()
   })
 
   test('rejects a provider whose resolved value type does not match', () => {
@@ -328,10 +406,33 @@ describe('duplicate provider detection', () => {
     expectTypeOf<[DuplicateIds<P>]>().toEqualTypeOf<[never]>()
   })
 
-  test('providers inside a List are not counted — already a FanOutProvider error', () => {
+  test('a List provider shadowing an outer provider is a duplicate', () => {
     const list = List({ type: stateCombobox() })
     type P = { a: ReturnType<typeof stateCombobox>; b: typeof list }
-    expectTypeOf<[DuplicateIds<P>]>().toEqualTypeOf<[never]>()
+    expectTypeOf<[DuplicateIds<P>]>().toEqualTypeOf<['stateName']>()
+  })
+
+  test('a nested-item provider shadowing an outer-item provider is a duplicate', () => {
+    const nested = List({
+      type: Group({
+        props: { s: stateCombobox(), inner: List({ type: stateCombobox() }) },
+      }),
+    })
+    expectTypeOf<[DuplicateIds<{ p: typeof nested }>]>().toEqualTypeOf<
+      ['stateName']
+    >()
+  })
+
+  test('sibling Lists may provide the same id', () => {
+    const a = List({ type: stateCombobox() })
+    const b = List({
+      type: Group({ props: { s: stateCombobox(), c: cityCombobox() } }),
+    })
+    expectTypeOf<[DuplicateIds<{ a: typeof a; b: typeof b }>]>().toEqualTypeOf<
+      [never]
+    >()
+
+    register({ a: List({ type: stateCombobox() }), b })
   })
 
   test('registerComponent rejects duplicate providers', () => {
@@ -340,6 +441,15 @@ describe('duplicate provider detection', () => {
       stateName: stateCombobox(),
       // @ts-expect-error — `stateName` is provided twice
       alsoStateName: stateCombobox(),
+    })
+  })
+
+  test('registerComponent rejects a shadowing List provider', () => {
+    register({
+      // @ts-expect-error — `stateName` is also provided inside the List
+      stateName: stateCombobox(),
+      // @ts-expect-error — `stateName` is also provided in the enclosing scope
+      stops: List({ type: stateCombobox() }),
     })
   })
 })
