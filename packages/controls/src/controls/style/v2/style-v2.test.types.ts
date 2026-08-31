@@ -1,5 +1,7 @@
 import { expectTypeOf } from 'expect-type'
 
+import { Flatten } from '../../../testing/util-types'
+
 import {
   type DataType,
   type ResolvedValueType,
@@ -19,14 +21,19 @@ describe('StyleV2 Types', () => {
     })
 
     type Config = typeof def.config
-    expectTypeOf<Config>().toEqualTypeOf<{
-      type: CheckboxDefinition<{
-        defaultValue: boolean
-        description?: string
-        label?: string
-      }>
-      getStyle: (item: boolean | undefined) => StylesObject
+    // The nested checkbox config is an intersection (`z.infer<...> &
+    // ProvidesConfig<P>`), which `toEqualTypeOf` does not consider equal to
+    // the identical flat object type, so assert its members separately.
+    expectTypeOf<Config['type']>().toMatchTypeOf<CheckboxDefinition>()
+    expectTypeOf<Flatten<Config['type']['config']>>().toEqualTypeOf<{
+      defaultValue: boolean
+      description?: string
+      label?: string
+      provides?: undefined
     }>()
+    expectTypeOf<Config['getStyle']>().toEqualTypeOf<
+      (item: boolean | undefined) => StylesObject
+    >()
 
     type Data = DataType<typeof def>
 

@@ -1,5 +1,7 @@
 import { expectTypeOf } from 'expect-type'
 
+import { Flatten } from '../../testing/util-types'
+
 import { AcceptedNumberDataTypes, ControlDataTypeKey } from '../../common'
 
 import {
@@ -23,7 +25,7 @@ describe('Number Types', () => {
       const def = Number()
 
       type Config = typeof def.config
-      expectTypeOf<Config>().toEqualTypeOf<{
+      expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
         label?: string
         labelOrientation?: 'horizontal' | 'vertical'
         description?: string
@@ -32,6 +34,7 @@ describe('Number Types', () => {
         max?: number
         step?: number
         suffix?: string
+        provides?: undefined
       }>()
 
       type Data = DataType<typeof def>
@@ -48,7 +51,7 @@ describe('Number Types', () => {
       const def = Number({ defaultValue: 4 })
 
       type Config = typeof def.config
-      expectTypeOf<Config>().toEqualTypeOf<{
+      expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
         label?: string | undefined
         labelOrientation?: 'vertical' | 'horizontal' | undefined
         description?: string
@@ -57,6 +60,7 @@ describe('Number Types', () => {
         max?: number | undefined
         step?: number | undefined
         suffix?: string | undefined
+        provides?: undefined
       }>()
 
       type Data = DataType<typeof def>

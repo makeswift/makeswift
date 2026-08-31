@@ -13,6 +13,11 @@ import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  ContextValueSchema,
+  type AnyContextValue,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -20,7 +25,10 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-type Config = z.infer<typeof Definition.schema.relaxed.config>
+type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
+  typeof Definition.schema.relaxed.config
+> &
+  ProvidesConfig<P>
 
 type SchemaByDefaultValue<D extends Config['defaultValue']> =
   undefined extends D
@@ -69,6 +77,7 @@ class Definition<C extends Config> extends ControlDefinition<
         description: z.string().optional(),
         defaultValue: value,
         selectAll: z.boolean().optional(),
+        provides: ContextValueSchema.provides.optional(),
       })
 
       const definition = z.object({
@@ -199,16 +208,21 @@ export class TextInputDefinition<
   C extends Config = Config,
 > extends Definition<C> {}
 
-type UserConfig<D extends Config['defaultValue']> = Config & {
+type UserConfig<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue,
+> = Config<P> & {
   defaultValue?: D
 }
 
-type NormedConfig<D extends Config['defaultValue']> = z.infer<
-  SchemaByDefaultValue<D>['config']
->
+type NormedConfig<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue,
+> = z.infer<SchemaByDefaultValue<D>['config']> & ProvidesConfig<P>
 
-export function TextInput<D extends Config['defaultValue']>(
-  config?: UserConfig<D>,
-): TextInputDefinition<NormedConfig<D>> {
-  return new TextInputDefinition((config ?? {}) as NormedConfig<D>, 1)
+export function TextInput<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue = never,
+>(config?: UserConfig<D, P>): TextInputDefinition<NormedConfig<D, P>> {
+  return new TextInputDefinition((config ?? {}) as NormedConfig<D, P>, 1)
 }

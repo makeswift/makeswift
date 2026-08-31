@@ -7,6 +7,11 @@ import { ControlDataTypeKey } from '../../common'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  ContextValueSchema,
+  type AnyContextValue,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -14,12 +19,13 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-type Config = z.infer<
+type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
   | typeof Definition.schema.withVariants.relaxed.config
   | typeof Definition.schema.withVariants.strict.config
   | typeof Definition.schema.withoutVariants.relaxed.config
   | typeof Definition.schema.withoutVariants.strict.config
->
+> &
+  ProvidesConfig<P>
 
 type SchemaByVariantAndDefaultValue<
   V extends Config['variant'],
@@ -107,6 +113,7 @@ class Definition<C extends Config> extends ControlDefinition<
         description: z.string().optional(),
         defaultValue: value,
         variant,
+        provides: ContextValueSchema.provides.optional(),
       })
 
       const definition = z.object({
@@ -295,23 +302,35 @@ type UserConfigOptionalDefault<V extends Config['variant']> = {
 type NormedConfig<
   V extends Config['variant'],
   D extends Config['defaultValue'],
-> = z.infer<SchemaByVariantAndDefaultValue<V, D>['config']>
+  P extends AnyContextValue,
+> = z.infer<SchemaByVariantAndDefaultValue<V, D>['config']> & ProvidesConfig<P>
 
-export function Font<V extends Config['variant'] = true>(
-  config: UserConfigRequiredDefault<V>,
-): FontDefinition<NormedConfig<V, DefaultValueByVariant<V>>>
+export function Font<
+  V extends Config['variant'] = true,
+  P extends AnyContextValue = never,
+>(
+  config: UserConfigRequiredDefault<V> & ProvidesConfig<P>,
+): FontDefinition<NormedConfig<V, DefaultValueByVariant<V>, P>>
 
-export function Font<V extends Config['variant'] = true>(
-  config?: UserConfigOptionalDefault<V>,
-): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined>>
+export function Font<
+  V extends Config['variant'] = true,
+  P extends AnyContextValue = never,
+>(
+  config?: UserConfigOptionalDefault<V> & ProvidesConfig<P>,
+): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined, P>>
 
-export function Font<V extends Config['variant']>(
-  config?: UserConfigRequiredDefault<V> | UserConfigOptionalDefault<V>,
-): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined>> {
+export function Font<
+  V extends Config['variant'],
+  P extends AnyContextValue = never,
+>(
+  config?: (UserConfigRequiredDefault<V> | UserConfigOptionalDefault<V>) &
+    ProvidesConfig<P>,
+): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined, P>> {
   return new FontDefinition(
     (config ? { variant: true, ...config } : { variant: true }) as NormedConfig<
       V,
-      DefaultValueByVariant<V> | undefined
+      DefaultValueByVariant<V> | undefined,
+      P
     >,
     1,
   )

@@ -9,6 +9,11 @@ import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  ContextValueSchema,
+  type AnyContextValue,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -16,7 +21,10 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-type Config = z.infer<typeof Definition.schema.relaxed.config>
+type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
+  typeof Definition.schema.relaxed.config
+> &
+  ProvidesConfig<P>
 
 type SchemaByDefaultValue<D extends Config['defaultValue']> =
   undefined extends D
@@ -70,6 +78,7 @@ class Definition<C extends Config> extends ControlDefinition<
         max: z.number().optional(),
         step: z.number().optional(),
         suffix: z.string().optional(),
+        provides: ContextValueSchema.provides.optional(),
       })
 
       const definition = z.object({
@@ -196,16 +205,21 @@ export class NumberDefinition<
   C extends Config = Config,
 > extends Definition<C> {}
 
-type UserConfig<D extends Config['defaultValue']> = Config & {
+type UserConfig<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue,
+> = Config<P> & {
   defaultValue?: D
 }
 
-type NormedConfig<D extends Config['defaultValue']> = z.infer<
-  SchemaByDefaultValue<D>['config']
->
+type NormedConfig<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue,
+> = z.infer<SchemaByDefaultValue<D>['config']> & ProvidesConfig<P>
 
-export function Number<D extends Config['defaultValue']>(
-  config?: UserConfig<D>,
-): NumberDefinition<NormedConfig<D>> {
-  return new NumberDefinition((config ?? {}) as NormedConfig<D>, 1)
+export function Number<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue = never,
+>(config?: UserConfig<D, P>): NumberDefinition<NormedConfig<D, P>> {
+  return new NumberDefinition((config ?? {}) as NormedConfig<D, P>, 1)
 }
