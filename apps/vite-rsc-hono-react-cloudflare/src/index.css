@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -11,21 +13,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-*,
-::backdrop,
-:after,
-:before {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-hr {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  opacity: 0.5;
 }
 
 a {
@@ -85,8 +72,6 @@ button:focus-visible {
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
 .logo {
@@ -115,13 +100,4 @@ button:focus-visible {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
-}
-
-.card {
-  padding: 1rem;
-}
-
-.read-the-docs {
-  color: #888;
-  text-align: left;
 }
