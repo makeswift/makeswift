@@ -1,7 +1,5 @@
 import { expectTypeOf } from 'expect-type'
 
-import { Flatten } from '../../testing/util-types'
-
 import { ControlDataTypeKey } from '../../common'
 
 import {
@@ -33,7 +31,7 @@ describe('Font Types', () => {
     })
 
     type Config = typeof def.config
-    expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
+    expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
       description?: string
       defaultValue: ExpectedValueWithoutVariantsType
@@ -60,7 +58,7 @@ describe('Font Types', () => {
     })
 
     type Config = typeof def.config
-    expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
+    expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
       description?: string
       defaultValue?: ExpectedValueWithoutVariantsType
@@ -100,7 +98,7 @@ describe('Font Types', () => {
     })
 
     type Config = typeof def.config
-    expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
+    expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
       description?: string
       defaultValue: ExpectedValueWithVariantsType
@@ -125,7 +123,7 @@ describe('Font Types', () => {
     const def = Font()
 
     type Config = typeof def.config
-    expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
+    expectTypeOf<Config>().toEqualTypeOf<{
       label?: string
       description?: string
       defaultValue?: ExpectedValueWithVariantsType

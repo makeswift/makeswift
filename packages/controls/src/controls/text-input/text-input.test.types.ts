@@ -1,7 +1,5 @@
 import { expectTypeOf } from 'expect-type'
 
-import { Flatten } from '../../testing/util-types'
-
 import { AcceptedTextDataTypes, ControlDataTypeKey } from '../../common'
 
 import {
@@ -25,7 +23,7 @@ describe('TextInput Types', () => {
       const def = TextInput()
 
       type Config = typeof def.config
-      expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
+      expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
         description?: string
         defaultValue?: string
@@ -49,7 +47,7 @@ describe('TextInput Types', () => {
       const def = TextInput({ defaultValue: 'test' })
 
       type Config = typeof def.config
-      expectTypeOf<Flatten<Config>>().toEqualTypeOf<{
+      expectTypeOf<Config>().toEqualTypeOf<{
         label?: string
         description?: string
         defaultValue: string

@@ -8,11 +8,7 @@ import { NumberDataTypes } from '../../common/data-types'
 import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
-import {
-  ContextValueSchema,
-  type AnyContextValue,
-  type ProvidesConfig,
-} from '../context-value'
+import { ContextValueSchema, type AnyContextValue } from '../context-value'
 import {
   ControlDefinition,
   type Resolvable,
@@ -21,15 +17,20 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
-  typeof Definition.schema.relaxed.config
-> &
-  ProvidesConfig<P>
+type DefinitionSchema<P extends AnyContextValue = AnyContextValue> = ReturnType<
+  typeof Definition.schema<P>
+>
 
-type SchemaByDefaultValue<D extends Config['defaultValue']> =
-  undefined extends D
-    ? typeof Definition.schema.relaxed
-    : typeof Definition.schema.strict
+type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
+  DefinitionSchema<P>['relaxed']['config']
+>
+
+type SchemaByDefaultValue<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue = AnyContextValue,
+> = undefined extends D
+  ? DefinitionSchema<P>['relaxed']
+  : DefinitionSchema<P>['strict']
 
 type Schema<C extends Config> = SchemaByDefaultValue<C['defaultValue']>
 type DataType<C extends Config> = z.infer<Schema<C>['data']>
@@ -37,8 +38,8 @@ type ValueType<C extends Config> = z.infer<Schema<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<Schema<C>['resolvedValue']>
 
 type ReturnedSchemaType<C extends Config> = {
-  definition: typeof Definition.schema.relaxed.definition
-  type: typeof Definition.schema.relaxed.type
+  definition: DefinitionSchema['relaxed']['definition']
+  type: DefinitionSchema['relaxed']['type']
   data: SchemaType<DataType<C>>
   value: SchemaType<ValueType<C>>
   resolvedValue: SchemaType<ResolvedValueType<C>>
@@ -61,7 +62,9 @@ class Definition<C extends Config> extends ControlDefinition<
 
   static readonly type = 'makeswift::controls::slider' as const
 
-  static get schema() {
+  static schema<P extends AnyContextValue = AnyContextValue>() {
+    const provides = ContextValueSchema.provides as SchemaType<P>
+
     const version = z.literal(1).optional()
 
     const versionedData = z.object({
@@ -80,7 +83,7 @@ class Definition<C extends Config> extends ControlDefinition<
         max: z.number().optional(),
         step: z.number().optional(),
         showInput: z.boolean().optional(),
-        provides: ContextValueSchema.provides.optional(),
+        provides: provides.optional(),
       })
 
       const definition = z.object({
@@ -118,13 +121,14 @@ class Definition<C extends Config> extends ControlDefinition<
       )
     }
 
-    const { version, config } = Definition.schema.relaxed.definition.parse(data)
+    const { version, config } =
+      Definition.schema().relaxed.definition.parse(data)
     return new SliderDefinition(config, version)
   }
 
   constructor(
     config: C,
-    readonly version: z.infer<typeof Definition.schema.relaxed.version>,
+    readonly version: z.infer<DefinitionSchema['relaxed']['version']>,
   ) {
     super(config)
   }
@@ -134,14 +138,14 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   get schema(): ReturnedSchemaType<C> {
-    return Definition.schema.relaxed
+    return Definition.schema().relaxed
   }
 
   get dataSchema() {
     return (
       (this.config.defaultValue === undefined
-        ? Definition.schema.relaxed
-        : Definition.schema.strict) as Schema<C>
+        ? Definition.schema().relaxed
+        : Definition.schema().strict) as Schema<C>
     ).data
   }
 
@@ -217,7 +221,7 @@ type UserConfig<
 type NormedConfig<
   D extends Config['defaultValue'],
   P extends AnyContextValue,
-> = z.infer<SchemaByDefaultValue<D>['config']> & ProvidesConfig<P>
+> = z.infer<SchemaByDefaultValue<D, P>['config']>
 
 export function Slider<
   D extends Config['defaultValue'],

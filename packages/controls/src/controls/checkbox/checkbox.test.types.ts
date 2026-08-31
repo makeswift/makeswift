@@ -1,7 +1,5 @@
 import { expectTypeOf } from 'expect-type'
 
-import { Flatten } from '../../testing/util-types'
-
 import { ControlDataTypeKey } from '../../common'
 
 import {
@@ -25,7 +23,7 @@ describe('Checkbox Types', () => {
 
     type ConfigType = typeof def.config
 
-    expectTypeOf<Flatten<ConfigType>>().toEqualTypeOf<{
+    expectTypeOf<ConfigType>().toEqualTypeOf<{
       label?: string
       description?: string
       defaultValue: boolean
@@ -46,7 +44,7 @@ describe('Checkbox Types', () => {
     const def = Checkbox()
 
     type ConfigType = typeof def.config
-    expectTypeOf<Flatten<ConfigType>>().toEqualTypeOf<{
+    expectTypeOf<ConfigType>().toEqualTypeOf<{
       label?: string
       description?: string
       defaultValue?: boolean
