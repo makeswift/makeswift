@@ -19,10 +19,8 @@ export class BaseControlSerializationVisitor extends ControlSerializationVisitor
   }
 
   visitRichTextV2(def: RichTextV2Definition): SerializedRecord {
-    const { plugins, ...config } = def.config
-
     // serialize only the plugin control definition, if any
-    const pluginDefs = plugins.map(({ control }) =>
+    const pluginDefs = def.plugins.map(({ control }) =>
       control
         ? {
             control: {
@@ -37,7 +35,10 @@ export class BaseControlSerializationVisitor extends ControlSerializationVisitor
     )
 
     const serialized = serializeObject(
-      { config: { ...config, plugins: pluginDefs } },
+      // Continue serializing plugins as part of the config for the time being
+      // for builder compatibility; the current runtime accept plugins either in
+      // the config or at the definition level -- see `RichTextV2Definition.fullSchema`
+      { config: { ...def.config, plugins: pluginDefs } },
       this.serializationPlugins,
     ) as SerializedRecord
 

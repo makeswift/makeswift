@@ -19,7 +19,7 @@ export class ReactMergeTranslationsVisitor extends MergeTranslationsVisitor {
       descendants: mergeTranslatedNodes(
         descendants,
         translatedData as RichTextTranslationDto,
-        def.config.plugins,
+        def.plugins,
       ),
     }
   }
