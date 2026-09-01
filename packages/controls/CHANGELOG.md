@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.22-canary.3
+
+### Patch Changes
+
+- 61a5c59: Add `provides` (context value) field to additional control configs
+
 ## 0.1.22-canary.2
 
 ### Patch Changes
