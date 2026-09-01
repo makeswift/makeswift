@@ -7,6 +7,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { TextInput } from './text-input'
 
@@ -28,6 +29,7 @@ describe('TextInput Types', () => {
         description?: string
         defaultValue?: string
         selectAll?: boolean
+        provides?: undefined
       }>()
 
       type Data = DataType<typeof def>
@@ -51,6 +53,7 @@ describe('TextInput Types', () => {
         description?: string
         defaultValue: string
         selectAll?: boolean
+        provides?: undefined
       }>()
 
       type Data = DataType<typeof def>
@@ -61,6 +64,20 @@ describe('TextInput Types', () => {
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string>
+    })
+
+    test('context provided', () => {
+      const textContext = unstable_ContextValue('text').ofType<string>()
+      const def = TextInput({ defaultValue: 'text', provides: textContext })
+
+      type Config = typeof def.config
+      expectTypeOf<Config>().toEqualTypeOf<{
+        label?: string
+        description?: string
+        defaultValue: string
+        selectAll?: boolean
+        provides?: typeof textContext
+      }>()
     })
   })
 })

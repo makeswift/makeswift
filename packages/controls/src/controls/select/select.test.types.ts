@@ -5,6 +5,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { Select } from './select'
 
@@ -80,6 +81,29 @@ describe('Select Types', () => {
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<'a' | 'b'>()
+    })
+
+    test('context provided', () => {
+      const selectionContext = unstable_ContextValue('selection').ofType<
+        'a' | 'b'
+      >()
+
+      const def = Select({
+        label: 'Nato',
+        options: [
+          { value: 'a', label: 'alpha' },
+          { value: 'b', label: 'beta' },
+        ],
+        provides: selectionContext,
+      })
+
+      type Config = typeof def.config
+      expectTypeOf<Config['provides']>().toEqualTypeOf<
+        typeof selectionContext | undefined
+      >()
+      expectTypeOf<Config['defaultValue']>().toEqualTypeOf<
+        'a' | 'b' | undefined
+      >()
     })
   })
 })

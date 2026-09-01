@@ -24,6 +24,7 @@ describe('StyleV2 Types', () => {
         defaultValue: boolean
         description?: string
         label?: string
+        provides?: undefined
       }>
       getStyle: (item: boolean | undefined) => StylesObject
     }>()

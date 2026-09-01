@@ -8,6 +8,7 @@ import { TextDataTypes } from '../../common/data-types'
 import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
+import { ContextValueSchema, type AnyContextValue } from '../context-value'
 import {
   ControlDefinition,
   type Resolvable,
@@ -16,12 +17,20 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-type Config = z.infer<typeof Definition.schema.relaxed.config>
+type DefinitionSchema<P extends AnyContextValue = AnyContextValue> = ReturnType<
+  typeof Definition.schema<P>
+>
 
-type SchemaByDefaultValue<D extends Config['defaultValue']> =
-  undefined extends D
-    ? typeof Definition.schema.relaxed
-    : typeof Definition.schema.strict
+type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
+  DefinitionSchema<P>['relaxed']['config']
+>
+
+type SchemaByDefaultValue<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue = AnyContextValue,
+> = undefined extends D
+  ? DefinitionSchema<P>['relaxed']
+  : DefinitionSchema<P>['strict']
 
 type Schema<C extends Config> = SchemaByDefaultValue<C['defaultValue']>
 type DataType<C extends Config> = z.infer<Schema<C>['data']>
@@ -29,8 +38,8 @@ type ValueType<C extends Config> = z.infer<Schema<C>['value']>
 type ResolvedValueType<C extends Config> = z.infer<Schema<C>['resolvedValue']>
 
 type ReturnedSchemaType<C extends Config> = {
-  definition: typeof Definition.schema.relaxed.definition
-  type: typeof Definition.schema.relaxed.type
+  definition: DefinitionSchema['relaxed']['definition']
+  type: DefinitionSchema['relaxed']['type']
   data: SchemaType<DataType<C>>
   value: SchemaType<ValueType<C>>
   resolvedValue: SchemaType<ResolvedValueType<C>>
@@ -50,7 +59,9 @@ class Definition<C extends Config> extends ControlDefinition<
 
   static readonly type = 'makeswift::controls::code' as const
 
-  static get schema() {
+  static schema<P extends AnyContextValue = AnyContextValue>() {
+    const provides = ContextValueSchema.provides as SchemaType<P>
+
     const version = z.literal(1)
     const versionedData = z.object({
       [ControlDataTypeKey]: z.enum(AcceptedTextDataTypes),
@@ -72,6 +83,7 @@ class Definition<C extends Config> extends ControlDefinition<
         label: z.string().optional(),
         description: z.string().optional(),
         defaultValue: value,
+        provides: provides.optional(),
       })
 
       const definition = z.object({
@@ -114,13 +126,14 @@ class Definition<C extends Config> extends ControlDefinition<
       )
     }
 
-    const { version, config } = Definition.schema.relaxed.definition.parse(data)
+    const { version, config } =
+      Definition.schema().relaxed.definition.parse(data)
     return new CodeDefinition(config, version)
   }
 
   constructor(
     config: C,
-    readonly version: z.infer<typeof Definition.schema.relaxed.version>,
+    readonly version: z.infer<DefinitionSchema['relaxed']['version']>,
   ) {
     super(config)
   }
@@ -130,14 +143,14 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   get schema(): ReturnedSchemaType<C> {
-    return Definition.schema.relaxed
+    return Definition.schema().relaxed
   }
 
   get dataSchema() {
     return (
       (this.config.defaultValue === undefined
-        ? Definition.schema.relaxed
-        : Definition.schema.strict) as Schema<C>
+        ? Definition.schema().relaxed
+        : Definition.schema().strict) as Schema<C>
     ).data
   }
 
@@ -200,16 +213,21 @@ class Definition<C extends Config> extends ControlDefinition<
 
 export class CodeDefinition<C extends Config = Config> extends Definition<C> {}
 
-type UserConfig<D extends Config['defaultValue']> = Config & {
+type UserConfig<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue,
+> = Config<P> & {
   defaultValue?: D
 }
 
-type NormedConfig<D extends Config['defaultValue']> = z.infer<
-  SchemaByDefaultValue<D>['config']
->
+type NormedConfig<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue,
+> = z.infer<SchemaByDefaultValue<D, P>['config']>
 
-export function Code<D extends Config['defaultValue']>(
-  config?: UserConfig<D>,
-): CodeDefinition<NormedConfig<D>> {
-  return new CodeDefinition((config ?? {}) as NormedConfig<D>, 1)
+export function Code<
+  D extends Config['defaultValue'],
+  P extends AnyContextValue = never,
+>(config?: UserConfig<D, P>): CodeDefinition<NormedConfig<D, P>> {
+  return new CodeDefinition((config ?? {}) as NormedConfig<D, P>, 1)
 }

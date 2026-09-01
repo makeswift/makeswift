@@ -4,6 +4,8 @@ import { TestMergeTranslationsVisitor } from '../../testing/test-merge-translati
 import { ControlDataTypeKey } from '../../common'
 import { MergeTranslatableDataContext, TranslationDto } from '../../context'
 
+import { unstable_ContextValue } from '../context-value'
+
 import { TextArea, TextAreaDefinition } from './text-area'
 
 describe('TextArea', () => {
@@ -40,6 +42,12 @@ describe('TextArea', () => {
     assignTest(TextArea({ defaultValue: undefined, rows: undefined }))
     assignTest(
       TextArea({ label: undefined, defaultValue: undefined, rows: undefined }),
+    )
+    assignTest(
+      TextArea({
+        defaultValue: 'text',
+        provides: unstable_ContextValue('text').ofType<string>(),
+      }),
     )
   })
 
