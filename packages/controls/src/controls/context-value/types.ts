@@ -98,20 +98,19 @@ type RequiredIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
 ]
   ? { [K in keyof Defs]: RequiredIds<Defs[K]> }[keyof Defs]
   : [C] extends [MultiValueContainer<infer Item>]
-    ? RequiredIds<Item>
+    ? Exclude<RequiredIds<Item>, ProvidedIds<Item>>
     : ContextDependencyIds<Def>
 
-/** Context ids provided under a multivalue container. */
-export type MultiValueProvidedIds<Def> = Def extends unknown
-  ? MultiValueProvidedIdsImpl<Def>
+export type AllProvidedIds<Def> = Def extends unknown
+  ? AllProvidedIdsImpl<Def>
   : never
-type MultiValueProvidedIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
+type AllProvidedIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
   KeyedContainer<infer Defs>,
 ]
-  ? { [K in keyof Defs]: MultiValueProvidedIds<Defs[K]> }[keyof Defs]
+  ? { [K in keyof Defs]: AllProvidedIds<Defs[K]> }[keyof Defs]
   : [C] extends [MultiValueContainer<infer Item>]
-    ? ProvidedIds<Item> | MultiValueProvidedIds<Item>
-    : never
+    ? AllProvidedIds<Item>
+    : ProvidedContextId<Def>
 
 // Non-distributive on purpose: a resolved value type is usually a union
 // (`T | undefined`), and a distributive conditional would union `unknown` in
@@ -143,25 +142,26 @@ type MismatchedProvidedIdsOf<Def, C = ContainerType<Def>> = [C] extends [
         ? never
         : ProvidedContextId<Def>
 
-/**
- * Ids provided more than once within a record of definitions.
- */
-export type DuplicateIds<R> = {
+export type DuplicateIds<R, Scoped extends string = never> = {
   [K in keyof R]:
-    | DuplicateIdsWithin<R[K]>
-    | Extract<ProvidedIds<R[K]>, ProvidedIds<R[Exclude<keyof R, K>]>>
+    | DuplicateIdsWithin<
+        R[K],
+        Scoped | Extract<ProvidedIds<R[Exclude<keyof R, K>]>, string>
+      >
+    | Extract<ProvidedIds<R[K]>, Scoped | ProvidedIds<R[Exclude<keyof R, K>]>>
 }[keyof R]
 
-type DuplicateIdsWithin<Def> = Def extends unknown
-  ? DuplicateIdsWithinImpl<Def>
+type DuplicateIdsWithin<Def, Scoped extends string> = Def extends unknown
+  ? DuplicateIdsWithinImpl<Def, Scoped>
   : never
-type DuplicateIdsWithinImpl<Def, C = ContainerType<Def>> = [C] extends [
-  KeyedContainer<infer Defs>,
-]
-  ? DuplicateIds<Defs>
+type DuplicateIdsWithinImpl<
+  Def,
+  Scoped extends string,
+  C = ContainerType<Def>,
+> = [C] extends [KeyedContainer<infer Defs>]
+  ? DuplicateIds<Defs, Scoped>
   : [C] extends [MultiValueContainer<infer Item>]
-    ? // a provider in here is already a `ProviderInMultiValue` error
-      DuplicateIdsWithin<Item>
+    ? DuplicateIdsWithin<Item, Scoped> | Extract<ProvidedIds<Item>, Scoped>
     : never
 
 // Validation errors
@@ -169,9 +169,9 @@ export type UnprovidedContext<Ids extends string> = [Ids] extends [never]
   ? never
   : `This control depends on context (${Ids}) that nothing in this component provides`
 
-export type ProviderInMultiValue<Ids extends string> = [Ids] extends [never]
+export type OutOfScopeContext<Ids extends string> = [Ids] extends [never]
   ? never
-  : `controls inside multi value controls cannot provide context (${Ids})`
+  : `This control depends on context (${Ids}) that is provided inside a multi-value control`
 
 export type ProvidesMismatch<Ids extends string> = [Ids] extends [never]
   ? never
@@ -181,20 +181,29 @@ export type DuplicateProvider<Ids extends string> = [Ids] extends [never]
   ? never
   : `more than one prop in this component provides this context (${Ids}).A context must have exactly one provider`
 
-type ErrorsFor<Def, Provided, Duplicated> =
-  | DuplicateProvider<Extract<ProvidedIds<Def>, Duplicated>>
-  | UnprovidedContext<Exclude<RequiredIds<Def>, Provided>>
-  | ProviderInMultiValue<MultiValueProvidedIds<Def>>
+type ErrorsFor<
+  Def,
+  Provided,
+  Duplicated,
+  ScopedOnly extends string,
+  Unprovided extends string = Exclude<RequiredIds<Def>, Provided>,
+> =
+  | DuplicateProvider<Extract<AllProvidedIds<Def>, Duplicated>>
+  | OutOfScopeContext<Extract<Unprovided, ScopedOnly>>
+  | UnprovidedContext<Exclude<Unprovided, ScopedOnly>>
   | ProvidesMismatch<MismatchedProvidedIds<Def>>
 
-type ValidatedAgainst<P, Provided, Duplicated> = {
-  [K in keyof P]: [ErrorsFor<P[K], Provided, Duplicated>] extends [never]
+type ValidatedAgainst<P, Provided, Duplicated, ScopedOnly extends string> = {
+  [K in keyof P]: [ErrorsFor<P[K], Provided, Duplicated, ScopedOnly>] extends [
+    never,
+  ]
     ? P[K]
-    : ErrorsFor<P[K], Provided, Duplicated>
+    : ErrorsFor<P[K], Provided, Duplicated, ScopedOnly>
 }
 
 export type PropsWithValidContextUsage<P> = ValidatedAgainst<
   P,
   ProvidedIds<P[keyof P]>,
-  DuplicateIds<P>
+  DuplicateIds<P>,
+  Extract<Exclude<AllProvidedIds<P[keyof P]>, ProvidedIds<P[keyof P]>>, string>
 >

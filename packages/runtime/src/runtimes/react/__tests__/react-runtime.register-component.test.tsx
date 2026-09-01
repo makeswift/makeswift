@@ -4,6 +4,7 @@ import {
   Checkbox,
   Combobox,
   Color,
+  Group,
   Image,
   Link,
   List,
@@ -208,13 +209,41 @@ describe('options context validation', () => {
     })
   })
 
-  test('rejects a provider inside a List', () => {
+  test('accepts an item-scoped provider inside a List', () => {
     createReactRuntime().registerComponent(Noop, {
-      type: 'fan-out-provider',
-      label: 'Fan out',
+      type: 'item-scoped-provider',
+      label: 'Item scoped',
       props: {
-        // @ts-expect-error — a List provider has one value per item
-        stops: List({ type: stateCombobox() }),
+        places: List({
+          type: Group({
+            props: { stateName: stateCombobox(), cityName: cityCombobox() },
+          }),
+        }),
+      },
+    })
+  })
+
+  test('rejects a List provider that shadows an outer provider', () => {
+    createReactRuntime().registerComponent(Noop, {
+      type: 'shadowing-provider',
+      label: 'Shadowing',
+      props: {
+        // @ts-expect-error — `stateName` is also provided inside the List
+        stateName: stateCombobox(),
+        // @ts-expect-error — `stateName` is also provided in the enclosing scope
+        stateNames: List({ type: stateCombobox() }),
+      },
+    })
+  })
+
+  test('rejects a consumer outside the List of an item-scoped provider', () => {
+    createReactRuntime().registerComponent(Noop, {
+      type: 'out-of-scope-consumer',
+      label: 'Out of scope',
+      props: {
+        stateNames: List({ type: stateCombobox() }),
+        // @ts-expect-error — the item-scoped provider is not visible outside
+        cityName: cityCombobox(),
       },
     })
   })
