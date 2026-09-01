@@ -1,5 +1,7 @@
 import { testDefinition } from '../../testing/test-definition'
 
+import { unstable_ContextValue } from '../context-value'
+
 import { Code, CodeDefinition } from './code'
 
 describe('Code', () => {
@@ -34,6 +36,12 @@ describe('Code', () => {
     assignTest(Code({ defaultValue: 'text' }))
     assignTest(Code({ label: 'Code', defaultValue: undefined }))
     assignTest(Code({ label: undefined, defaultValue: undefined }))
+    assignTest(
+      Code({
+        defaultValue: 'text',
+        provides: unstable_ContextValue('code').ofType<string>(),
+      }),
+    )
   })
 })
 

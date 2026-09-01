@@ -1,5 +1,7 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
+import { unstable_ContextValue } from '../context-value'
+
 import { Number, NumberDefinition } from './number'
 
 describe('Number', () => {
@@ -38,6 +40,12 @@ describe('Number', () => {
 
     assignTest(Number({ defaultValue: undefined, min: 0, max: 100 }))
     assignTest(Number({ label: undefined, defaultValue: undefined }))
+    assignTest(
+      Number({
+        defaultValue: 1,
+        provides: unstable_ContextValue('count').ofType<number>(),
+      }),
+    )
   })
 })
 

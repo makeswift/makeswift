@@ -7,6 +7,11 @@ import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  ContextValueSchema,
+  type AnyContextValue,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -17,7 +22,10 @@ import { ControlDefinitionVisitor } from '../visitor'
 type Option<T extends string> = { readonly value: T; readonly label: string }
 type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
 
-type Config<T extends string = string> = {
+type Config<
+  T extends string = string,
+  P extends AnyContextValue = AnyContextValue,
+> = ProvidesConfig<P> & {
   readonly options: OptionList<T>
   readonly defaultValue?: T
   readonly label?: string
@@ -60,6 +68,7 @@ class Definition<C extends Config> extends ControlDefinition<
         .union([z.literal('horizontal'), z.literal('vertical')])
         .optional(),
       description: z.string().optional(),
+      provides: ContextValueSchema.provides.optional(),
     })
 
     const definition = z.object({
@@ -179,14 +188,16 @@ export class SelectDefinition<
 type UserConfig<
   T extends string,
   D extends Config<T>['defaultValue'],
-> = Config<T> & {
+  P extends AnyContextValue,
+> = Config<T, P> & {
   defaultValue?: D
 }
 
 type NormedConfig<
   T extends string,
   D extends Config<T>['defaultValue'],
-> = Config<T> &
+  P extends AnyContextValue,
+> = Config<T, P> &
   (undefined extends D
     ? {
         readonly defaultValue?: T
@@ -196,9 +207,10 @@ type NormedConfig<
 export function Select<
   const T extends string,
   D extends Config<T>['defaultValue'],
+  P extends AnyContextValue = never,
 >(
-  config: UserConfig<T, D> & { readonly options: OptionList<T> },
-): SelectDefinition<NormedConfig<T, D>> {
-  return new SelectDefinition(config as NormedConfig<T, D>)
+  config: UserConfig<T, D, P> & { readonly options: OptionList<T> },
+): SelectDefinition<NormedConfig<T, D, P>> {
+  return new SelectDefinition(config as NormedConfig<T, D, P>)
 }
 export { type Config as SelectConfig }

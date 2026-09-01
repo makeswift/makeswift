@@ -7,6 +7,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { Number } from './number'
 
@@ -32,6 +33,7 @@ describe('Number Types', () => {
         max?: number
         step?: number
         suffix?: string
+        provides?: undefined
       }>()
 
       type Data = DataType<typeof def>
@@ -57,6 +59,7 @@ describe('Number Types', () => {
         max?: number | undefined
         step?: number | undefined
         suffix?: string | undefined
+        provides?: undefined
       }>()
 
       type Data = DataType<typeof def>
@@ -67,6 +70,24 @@ describe('Number Types', () => {
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<number>
+    })
+
+    test('context provided', () => {
+      const countContext = unstable_ContextValue('count').ofType<number>()
+      const def = Number({ defaultValue: 1, provides: countContext })
+
+      type Config = typeof def.config
+      expectTypeOf<Config>().toEqualTypeOf<{
+        label?: string
+        labelOrientation?: 'horizontal' | 'vertical'
+        description?: string
+        defaultValue: number
+        min?: number
+        max?: number
+        step?: number
+        suffix?: string
+        provides?: typeof countContext
+      }>()
     })
   })
 })

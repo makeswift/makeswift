@@ -5,6 +5,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { IconRadioGroup, IconRadioGroupIcon } from './icon-radio-group'
 
@@ -83,6 +84,28 @@ describe('IconRadioGroup Types', () => {
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<'a' | 'b'>()
+    })
+
+    test('context provided', () => {
+      const iconContext = unstable_ContextValue('icon').ofType<'a' | 'b'>()
+
+      const def = IconRadioGroup({
+        label: 'Icons',
+        options: [
+          { value: 'a', label: 'code', icon: IconRadioGroup.Icon.Code },
+          {
+            value: 'b',
+            label: 'superscript',
+            icon: IconRadioGroup.Icon.Superscript,
+          },
+        ],
+        provides: iconContext,
+      })
+
+      type Config = typeof def.config
+      expectTypeOf<Config['provides']>().toEqualTypeOf<
+        typeof iconContext | undefined
+      >()
     })
   })
 })

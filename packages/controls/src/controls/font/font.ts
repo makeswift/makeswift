@@ -7,6 +7,11 @@ import { ControlDataTypeKey } from '../../common'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  ContextValueSchema,
+  type AnyContextValue,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -14,23 +19,28 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-type Config = z.infer<
-  | typeof Definition.schema.withVariants.relaxed.config
-  | typeof Definition.schema.withVariants.strict.config
-  | typeof Definition.schema.withoutVariants.relaxed.config
-  | typeof Definition.schema.withoutVariants.strict.config
+type DefinitionSchema<P extends AnyContextValue = AnyContextValue> = ReturnType<
+  typeof Definition.schema<P>
+>
+
+type Config<P extends AnyContextValue = AnyContextValue> = z.infer<
+  | DefinitionSchema<P>['withVariants']['relaxed']['config']
+  | DefinitionSchema<P>['withVariants']['strict']['config']
+  | DefinitionSchema<P>['withoutVariants']['relaxed']['config']
+  | DefinitionSchema<P>['withoutVariants']['strict']['config']
 >
 
 type SchemaByVariantAndDefaultValue<
   V extends Config['variant'],
   D extends Config['defaultValue'],
+  P extends AnyContextValue = AnyContextValue,
 > = V extends false
   ? undefined extends D
-    ? typeof Definition.schema.withoutVariants.relaxed
-    : typeof Definition.schema.withoutVariants.strict
+    ? DefinitionSchema<P>['withoutVariants']['relaxed']
+    : DefinitionSchema<P>['withoutVariants']['strict']
   : undefined extends D
-    ? typeof Definition.schema.withVariants.relaxed
-    : typeof Definition.schema.withVariants.strict
+    ? DefinitionSchema<P>['withVariants']['relaxed']
+    : DefinitionSchema<P>['withVariants']['strict']
 
 type Schema<C extends Config> = SchemaByVariantAndDefaultValue<
   C['variant'],
@@ -63,7 +73,9 @@ class Definition<C extends Config> extends ControlDefinition<
   } as const
   static readonly type = 'makeswift::controls::font' as const
 
-  static get schema() {
+  static schema<P extends AnyContextValue = AnyContextValue>() {
+    const provides = ContextValueSchema.provides as SchemaType<P>
+
     const version = z.literal(1)
     const type = z.literal(this.type)
 
@@ -107,6 +119,7 @@ class Definition<C extends Config> extends ControlDefinition<
         description: z.string().optional(),
         defaultValue: value,
         variant,
+        provides: provides.optional(),
       })
 
       const definition = z.object({
@@ -164,8 +177,8 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const { config, version } = z
       .union([
-        Definition.schema.withVariants.relaxed.definition,
-        Definition.schema.withoutVariants.relaxed.definition,
+        Definition.schema().withVariants.relaxed.definition,
+        Definition.schema().withoutVariants.relaxed.definition,
       ])
       .parse(data)
     return new FontDefinition(config, version)
@@ -173,7 +186,7 @@ class Definition<C extends Config> extends ControlDefinition<
 
   constructor(
     config: C,
-    readonly version: z.infer<typeof Definition.schema.version>,
+    readonly version: z.infer<DefinitionSchema['version']>,
   ) {
     super(config)
   }
@@ -183,7 +196,7 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   get schema(): ReturnedSchemaType<C> {
-    const { withVariants, withoutVariants, ...baseSchema } = Definition.schema
+    const { withVariants, withoutVariants, ...baseSchema } = Definition.schema()
 
     const refinedSchema = this.refinedSchema
 
@@ -202,11 +215,11 @@ class Definition<C extends Config> extends ControlDefinition<
   get refinedSchema() {
     return this.config.variant === false
       ? this.config.defaultValue === undefined
-        ? Definition.schema.withoutVariants.relaxed
-        : Definition.schema.withoutVariants.strict
+        ? Definition.schema().withoutVariants.relaxed
+        : Definition.schema().withoutVariants.strict
       : this.config.defaultValue === undefined
-        ? Definition.schema.withVariants.relaxed
-        : Definition.schema.withVariants.strict
+        ? Definition.schema().withVariants.relaxed
+        : Definition.schema().withVariants.strict
   }
 
   get dataSchema(): Schema<C>['data'] {
@@ -274,18 +287,24 @@ export class FontDefinition<C extends Config = Config> extends Definition<C> {}
 
 type DefaultValueByVariant<V extends Config['variant']> = z.infer<
   false extends V
-    ? typeof Definition.schema.withoutVariants.strict.config
-    : typeof Definition.schema.withVariants.strict.config
+    ? DefinitionSchema['withoutVariants']['strict']['config']
+    : DefinitionSchema['withVariants']['strict']['config']
 >['defaultValue']
 
-type UserConfigRequiredDefault<V extends Config['variant']> = {
+type UserConfigRequiredDefault<
+  V extends Config['variant'],
+  P extends AnyContextValue,
+> = ProvidesConfig<P> & {
   label?: string
   description?: string
   variant?: V
   defaultValue: DefaultValueByVariant<V>
 }
 
-type UserConfigOptionalDefault<V extends Config['variant']> = {
+type UserConfigOptionalDefault<
+  V extends Config['variant'],
+  P extends AnyContextValue,
+> = ProvidesConfig<P> & {
   label?: string
   description?: string
   variant?: V
@@ -295,23 +314,34 @@ type UserConfigOptionalDefault<V extends Config['variant']> = {
 type NormedConfig<
   V extends Config['variant'],
   D extends Config['defaultValue'],
-> = z.infer<SchemaByVariantAndDefaultValue<V, D>['config']>
+  P extends AnyContextValue,
+> = z.infer<SchemaByVariantAndDefaultValue<V, D, P>['config']>
 
-export function Font<V extends Config['variant'] = true>(
-  config: UserConfigRequiredDefault<V>,
-): FontDefinition<NormedConfig<V, DefaultValueByVariant<V>>>
+export function Font<
+  V extends Config['variant'] = true,
+  P extends AnyContextValue = never,
+>(
+  config: UserConfigRequiredDefault<V, P>,
+): FontDefinition<NormedConfig<V, DefaultValueByVariant<V>, P>>
 
-export function Font<V extends Config['variant'] = true>(
-  config?: UserConfigOptionalDefault<V>,
-): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined>>
+export function Font<
+  V extends Config['variant'] = true,
+  P extends AnyContextValue = never,
+>(
+  config?: UserConfigOptionalDefault<V, P>,
+): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined, P>>
 
-export function Font<V extends Config['variant']>(
-  config?: UserConfigRequiredDefault<V> | UserConfigOptionalDefault<V>,
-): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined>> {
+export function Font<
+  V extends Config['variant'],
+  P extends AnyContextValue = never,
+>(
+  config?: UserConfigRequiredDefault<V, P> | UserConfigOptionalDefault<V, P>,
+): FontDefinition<NormedConfig<V, DefaultValueByVariant<V> | undefined, P>> {
   return new FontDefinition(
     (config ? { variant: true, ...config } : { variant: true }) as NormedConfig<
       V,
-      DefaultValueByVariant<V> | undefined
+      DefaultValueByVariant<V> | undefined,
+      P
     >,
     1,
   )

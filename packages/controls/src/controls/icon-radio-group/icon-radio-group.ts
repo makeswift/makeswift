@@ -7,6 +7,11 @@ import { type CopyContext } from '../../context'
 import { type DeserializedRecord } from '../../serialization'
 
 import {
+  ContextValueSchema,
+  type AnyContextValue,
+  type ProvidesConfig,
+} from '../context-value'
+import {
   ControlDefinition,
   type Resolvable,
   type SchemaType,
@@ -26,7 +31,10 @@ type Option<T extends string> = {
 
 type OptionList<T extends string> = readonly [Option<T>, ...Option<T>[]]
 
-type Config<T extends string = string> = {
+type Config<
+  T extends string = string,
+  P extends AnyContextValue = AnyContextValue,
+> = ProvidesConfig<P> & {
   readonly options: OptionList<T>
   readonly defaultValue?: T
   readonly label?: string
@@ -77,6 +85,7 @@ class Definition<C extends Config> extends ControlDefinition<
         )
         .nonempty(),
       defaultValue,
+      provides: ContextValueSchema.provides.optional(),
       label: z.string().optional(),
     })
 
@@ -196,14 +205,16 @@ export class IconRadioGroupDefinition<
 type UserConfig<
   T extends string,
   D extends Config<T>['defaultValue'],
-> = Config<T> & {
+  P extends AnyContextValue,
+> = Config<T, P> & {
   defaultValue?: D
 }
 
 type NormedConfig<
   T extends string,
   D extends Config<T>['defaultValue'],
-> = Config<T> &
+  P extends AnyContextValue,
+> = Config<T, P> &
   (undefined extends D
     ? {
         readonly defaultValue?: T
@@ -213,10 +224,11 @@ type NormedConfig<
 export function IconRadioGroup<
   const T extends string,
   D extends Config<T>['defaultValue'],
+  P extends AnyContextValue = never,
 >(
-  config: UserConfig<T, D> & { readonly options: OptionList<T> },
-): IconRadioGroupDefinition<NormedConfig<T, D>> {
-  return new IconRadioGroupDefinition(config as NormedConfig<T, D>)
+  config: UserConfig<T, D, P> & { readonly options: OptionList<T> },
+): IconRadioGroupDefinition<NormedConfig<T, D, P>> {
+  return new IconRadioGroupDefinition(config as NormedConfig<T, D, P>)
 }
 
 IconRadioGroup.Icon = Definition.Icon

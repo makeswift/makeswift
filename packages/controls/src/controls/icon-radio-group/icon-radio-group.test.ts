@@ -3,6 +3,8 @@ import { TestSerializationVisitor } from '../../testing/test-serialization-visit
 
 import { deserializeRecord, type SerializedRecord } from '../../serialization'
 
+import { unstable_ContextValue } from '../context-value'
+
 import {
   IconRadioGroup,
   IconRadioGroupDefinition,
@@ -163,6 +165,12 @@ describe('IconRadioGroup', () => {
     )
     assignTest(
       IconRadioGroup({ label: undefined, options, defaultValue: undefined }),
+    )
+    assignTest(
+      IconRadioGroup({
+        options,
+        provides: unstable_ContextValue('icon').ofType<string>(),
+      }),
     )
   })
 })
