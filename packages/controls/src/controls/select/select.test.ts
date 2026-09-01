@@ -52,6 +52,7 @@ describe('Select', () => {
     // assignTest(Select({ options, defaultValue: undefined }))
     // assignTest(Select({ label: 'Block type', options, defaultValue: undefined }))
     // assignTest(Select({ label: undefined, options, defaultValue: undefined }))
+    // assignTest(Select({ options, provides: unstable_ContextValue('selection').ofType<string>() }))
   })
 })
 

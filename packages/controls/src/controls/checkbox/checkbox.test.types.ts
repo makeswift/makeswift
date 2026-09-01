@@ -7,6 +7,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { Checkbox } from './checkbox'
 
@@ -60,5 +61,18 @@ describe('Checkbox Types', () => {
     type Resolved = ResolvedValueType<typeof def>
 
     expectTypeOf<Resolved>().toEqualTypeOf<boolean | undefined>()
+  })
+
+  test('infers types from control definitions (provided context)', () => {
+    const checkedContext = unstable_ContextValue('checked').ofType<boolean>()
+    const def = Checkbox({ defaultValue: true, provides: checkedContext })
+
+    type ConfigType = typeof def.config
+    expectTypeOf<ConfigType>().toEqualTypeOf<{
+      label?: string
+      description?: string
+      defaultValue: boolean
+      provides?: typeof checkedContext
+    }>()
   })
 })

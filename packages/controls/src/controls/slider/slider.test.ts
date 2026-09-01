@@ -1,5 +1,7 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
+import { unstable_ContextValue } from '../context-value'
+
 import { Slider, SliderDefinition } from './slider'
 
 describe('Slider', () => {
@@ -51,6 +53,12 @@ describe('Slider', () => {
     assignTest(Slider({ defaultValue: undefined }))
     assignTest(Slider({ min: 0, max: 100 }))
     assignTest(Slider({ min: 0, max: 100, step: 1 }))
+    assignTest(
+      Slider({
+        defaultValue: 50,
+        provides: unstable_ContextValue('volume').ofType<number>(),
+      }),
+    )
   })
 })
 

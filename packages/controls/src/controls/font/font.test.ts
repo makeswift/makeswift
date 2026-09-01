@@ -1,3 +1,5 @@
+import { unstable_ContextValue } from '../context-value'
+
 import { Font, FontDefinition } from './font'
 
 describe('Font', () => {
@@ -118,6 +120,15 @@ describe('Font', () => {
       Font({
         variant: false,
         defaultValue: { fontFamily: '' },
+      }),
+    )
+    assignTest(
+      Font({
+        variant: false,
+        defaultValue: { fontFamily: '' },
+        provides: unstable_ContextValue('font').ofType<{
+          fontFamily: string
+        }>(),
       }),
     )
   })

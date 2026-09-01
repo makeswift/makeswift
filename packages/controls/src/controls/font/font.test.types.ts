@@ -7,6 +7,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { Font, FontDefinition } from './font'
 
@@ -180,5 +181,25 @@ describe('Font Types', () => {
       | ExpectedValueWithoutVariantsType
       | undefined
     >()
+  })
+
+  test('infers types from control function (provided context)', () => {
+    const fontContext =
+      unstable_ContextValue('font').ofType<ExpectedValueWithoutVariantsType>()
+
+    const def = Font({
+      variant: false,
+      defaultValue: { fontFamily: 'Spline Sans' },
+      provides: fontContext,
+    })
+
+    type Config = typeof def.config
+    expectTypeOf<Config>().toEqualTypeOf<{
+      label?: string
+      description?: string
+      defaultValue: ExpectedValueWithoutVariantsType
+      variant: false
+      provides?: typeof fontContext
+    }>()
   })
 })

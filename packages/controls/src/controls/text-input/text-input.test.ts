@@ -4,6 +4,8 @@ import { TestMergeTranslationsVisitor } from '../../testing/test-merge-translati
 import { ControlDataTypeKey } from '../../common'
 import { MergeTranslatableDataContext, TranslationDto } from '../../context'
 
+import { unstable_ContextValue } from '../context-value'
+
 import { TextInput, TextInputDefinition } from './text-input'
 
 describe('TextInput', () => {
@@ -39,6 +41,12 @@ describe('TextInput', () => {
     assignTest(TextInput({ defaultValue: 'text' as string }))
     assignTest(TextInput({ label: 'TextInput', defaultValue: undefined }))
     assignTest(TextInput({ label: undefined, defaultValue: undefined }))
+    assignTest(
+      TextInput({
+        defaultValue: 'text',
+        provides: unstable_ContextValue('text').ofType<string>(),
+      }),
+    )
   })
 
   describe('getTranslatableData', () => {

@@ -7,6 +7,7 @@ import {
   type ResolvedValueType,
   type ValueType,
 } from '../associated-types'
+import { unstable_ContextValue } from '../context-value'
 
 import { Code } from './code'
 
@@ -59,6 +60,22 @@ describe('Code Types', () => {
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<{ value: string }>()
+    })
+
+    test('context provided', () => {
+      const codeContext = unstable_ContextValue('code').ofType<string>()
+      const def = Code({
+        defaultValue: 'console.log("hi")',
+        provides: codeContext,
+      })
+
+      type Config = typeof def.config
+      expectTypeOf<Config>().toEqualTypeOf<{
+        label?: string
+        description?: string
+        defaultValue: string
+        provides?: typeof codeContext
+      }>()
     })
   })
 })

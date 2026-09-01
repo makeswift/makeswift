@@ -1,5 +1,7 @@
 import { testDefinition, testResolveValue } from '../../testing/test-definition'
 
+import { unstable_ContextValue } from '../context-value'
+
 import { Checkbox, CheckboxDefinition } from './checkbox'
 
 describe('Checkbox', () => {
@@ -36,6 +38,12 @@ describe('Checkbox', () => {
     assignTest(Checkbox({ defaultValue: undefined }))
     assignTest(Checkbox({ label: 'visible', defaultValue: undefined }))
     assignTest(Checkbox({ label: undefined, defaultValue: undefined }))
+    assignTest(
+      Checkbox({
+        defaultValue: true,
+        provides: unstable_ContextValue('checked').ofType<boolean>(),
+      }),
+    )
   })
 })
 
