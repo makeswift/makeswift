@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.15
+
+### Patch Changes
+
+- dd297ba: Allow controls inside multi-value controls to provide context values scoped to their item's subtree.
+- Updated dependencies [dd297ba]
+  - @makeswift/controls@0.1.22-canary.4
+  - @makeswift/prop-controllers@0.4.16-canary.4
+
 ## 0.28.10-canary.14
 
 ### Patch Changes
