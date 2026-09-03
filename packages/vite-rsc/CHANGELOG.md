@@ -1,5 +1,11 @@
 # @makeswift/vite-rsc
 
+## 0.0.1-canary.13
+
+### Patch Changes
+
+- 0ddd912: Add the `serverOnly` wrapper for server component loaders and a corresponding Vite plugin removing inline server-only loaders from non-RSC module graphs.
+
 ## 0.0.1-canary.12
 
 ### Patch Changes
