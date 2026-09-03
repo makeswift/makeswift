@@ -1,5 +1,31 @@
 # @makeswift/runtime
 
+## 0.28.10
+
+### Patch Changes
+
+- d2f7e6b: feat: core runtime infrastructure for React Server Components support
+- 335fe80: Implement unstable context value API
+- dd297ba: Allow controls inside multi-value controls to provide context values scoped to their item's subtree.
+- e99744f: Exports `collectServerElements` and `ServerElementsProvider` for frameworks that have separate collection and rendering steps.
+- 4aef9ec: Fix comment typo on the rich text control instance editor onchange handler
+- 4ca6840: feat: RSC-enabled `RichText` prop rendering
+- 899684f: fix: host CSS targeting `span` elements no longer overrides Makeswift text styles in the builder.
+- 4499e95: fix: builder style edits to RSC when the host SSRs a subtree that does not include `<head>`
+- 12403b9: Add `unstable_injectedProps` option to server component registration to enable injection of `elementKey` et al into component props.
+- 7f04c54: The runtime now fetches table schemas via the Makeswift Host API REST endpoint instead of the GraphQL API, continuing the migration away from GraphQL/Builder API dependencies.
+- 76d508e: The built-in Form component now creates table records via the Makeswift Host API REST endpoint (proxied through the host's `/api/makeswift` route) instead of the GraphQL API, so Form submissions no longer require hitting the GraphQL/Builder API.
+- 25a7e1c: File fetching now goes through the Host API's `GET v1/files/:id` REST endpoint instead of the GraphQL `file` query.
+- 4420803: Improve ergonomics for context value validation of unconstrained definitions. Context is now a required parameter for getOptions calls.
+- 4c20df9: feat: add an "Aspect ratio" control to the builtin Image component with Original, 16:9, 4:3, and 1:1 options. Original preserves the image's intrinsic dimensions (existing images are unaffected); fixed ratios crop to fill.
+- Updated dependencies [335fe80]
+- Updated dependencies [dd297ba]
+- Updated dependencies [4420803]
+- Updated dependencies [0bdb44a]
+- Updated dependencies [61a5c59]
+  - @makeswift/controls@0.1.22
+  - @makeswift/prop-controllers@0.4.16
+
 ## 0.28.9
 
 ### Patch Changes
