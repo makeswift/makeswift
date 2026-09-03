@@ -1,5 +1,15 @@
 # @makeswift/controls
 
+## 0.1.22
+
+### Patch Changes
+
+- 335fe80: Implement unstable context value API
+- dd297ba: Allow controls inside multi-value controls to provide context values scoped to their item's subtree.
+- 4420803: Improve ergonomics for context value validation of unconstrained definitions. Context is now a required parameter for getOptions calls.
+- 0bdb44a: Implement resolveValueFromData method on ControlDefinition
+- 61a5c59: Add `provides` (context value) field to additional control configs
+
 ## 0.1.21
 
 ### Patch Changes
