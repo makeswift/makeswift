@@ -1,5 +1,5 @@
 import { defineConfig, Options } from 'tsup'
-import { version } from './package.json'
+import { name, version } from './package.json'
 
 export default defineConfig(() => {
   const commonOptions = {
@@ -14,6 +14,7 @@ export default defineConfig(() => {
     sourcemap: true,
     legacyOutput: true,
     define: {
+      PACKAGE_NAME: JSON.stringify(name),
       PACKAGE_VERSION: JSON.stringify(version),
     },
     esbuildOptions(options, { format }) {

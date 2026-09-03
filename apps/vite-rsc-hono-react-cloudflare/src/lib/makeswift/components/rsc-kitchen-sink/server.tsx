@@ -1,5 +1,4 @@
-// FIXME
-// import 'server-only'
+import 'server-only'
 
 import {
   Fragment,
