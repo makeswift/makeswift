@@ -8,7 +8,7 @@ const REPLACEMENT_EXPR = "() => Promise.reject(new Error('Invalid import'))"
 const transform = (code: string) =>
   replaceServerLoaders({
     code,
-    ast: parse(code, { ecmaVersion: 'latest', sourceType: 'module' }) as ESTree.Program,
+    parse: code => parse(code, { ecmaVersion: 'latest', sourceType: 'module' }) as ESTree.Program,
     replacementExpr: REPLACEMENT_EXPR,
   })
 

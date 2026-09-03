@@ -30,7 +30,7 @@ export default function makeswiftViteRSC(): Plugin {
 
         return replaceServerLoaders({
           code,
-          ast: this.parse(code),
+          parse: code => this.parse(code),
           replacementExpr:
             '() => Promise.reject(new Error("Attempt to load server component outside the RSC environment"))',
         })

@@ -19,13 +19,14 @@ export const MARKER_SYMBOL = 'serverOnly'
  */
 export function replaceServerLoaders({
   code,
-  ast,
+  parse,
   replacementExpr,
 }: {
   code: string
-  ast: ESTree.Program
+  parse: (code: string) => ESTree.Program
   replacementExpr: string
 }) {
+  const ast = parse(code)
   const markerSymbols = collectMarkerSymbols(ast)
   if (markerSymbols.size === 0) return null
 
