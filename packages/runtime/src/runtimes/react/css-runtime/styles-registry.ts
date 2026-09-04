@@ -1,4 +1,4 @@
-import { styleTagHtml } from './utils'
+import { getControlledStylePrecedence, styleTagHtml } from './utils'
 import {
   BaseStylesData,
   ClassStyleData,
@@ -27,12 +27,7 @@ export class StylesRegistry {
   // Keyed by content hash
   private baseStyles: Map<string, BaseStylesData>
 
-  /*
-    Preserve the initial controlled style data for a class name so it can be used
-    by listeners to calculate CSS reverts.
-
-    Keyed by class name
-  */
+  // Keyed by class name
   private controlledStylesInitialData: Map<string, ControlledStyleData>
   private controlledStyleWriteListeners: Set<OnControlledStyleDataWrite>
 
@@ -165,6 +160,7 @@ export class StylesRegistry {
       resetPrecedenceStylesProps,
       mediumPrecedenceStylesProps,
       highPrecedenceStylesProps,
+      ...this.getPropsForCustomPrecedenceStyles(),
     ]
     return includeEmpty
       ? perPrecedenceProps
@@ -251,7 +247,6 @@ export class StylesRegistry {
 
   private getPropsForMediumPrecedenceStyles(): ComponentProps<typeof MakeswiftStyle> {
     const styles = this.getUncontrolledClassStyles()
-    const controlledStyles = this.getAllControlledStyles()
     const keyframes = this.getKeyframes()
 
     const hrefValues = new Array<string>()
@@ -259,10 +254,6 @@ export class StylesRegistry {
     for (const [className, uncontrolledStyleData] of styles.entries()) {
       hrefValues.push(className)
       allCss.push(uncontrolledStyleData.css)
-    }
-    for (const [className, controlledStyleData] of controlledStyles.entries()) {
-      hrefValues.push(className)
-      allCss.push(controlledStyleData.css)
     }
     for (const [keyframesName, keyframesData] of keyframes.entries()) {
       hrefValues.push(keyframesName)
@@ -292,5 +283,38 @@ export class StylesRegistry {
       css: combinedCss,
       precedence: MakeswiftStylePrecedence.HIGH,
     }
+  }
+
+  private getPropsForCustomPrecedenceStyles(): Array<ComponentProps<typeof MakeswiftStyle>> {
+    const controlledStyles = this.getAllControlledStyles()
+    const customPrecedenceValues = new Set<string>()
+    const customPrecedenceToHrefValues = new Map<string, Array<string>>()
+    const customPrecedenceToCss = new Map<string, Array<string>>()
+    for (const [className, controlledStyleData] of controlledStyles.entries()) {
+      const precedence = getControlledStylePrecedence(controlledStyleData)
+      customPrecedenceValues.add(precedence)
+
+      const hrefValues = customPrecedenceToHrefValues.get(precedence) ?? []
+      const css = customPrecedenceToCss.get(precedence) ?? []
+
+      hrefValues.push(className)
+      css.push(controlledStyleData.css)
+
+      customPrecedenceToHrefValues.set(precedence, hrefValues)
+      customPrecedenceToCss.set(precedence, css)
+    }
+
+    return Array.from(customPrecedenceValues.values()).map(customPrecedenceValue => {
+      const hrefValues = customPrecedenceToHrefValues.get(customPrecedenceValue) ?? []
+      const allCss = customPrecedenceToCss.get(customPrecedenceValue) ?? []
+      const combinedHref = hrefValues.join(' ')
+      const combinedCss = allCss.join('')
+      const propsForCustomPrecedence: ComponentProps<typeof MakeswiftStyle> = {
+        href: combinedHref,
+        css: combinedCss,
+        precedence: customPrecedenceValue,
+      }
+      return propsForCustomPrecedence
+    })
   }
 }

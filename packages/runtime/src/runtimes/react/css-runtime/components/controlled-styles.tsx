@@ -4,6 +4,7 @@ import { ReactNode, useEffect } from 'react'
 import { pollBoxModel } from '../../poll-box-model'
 import { MakeswiftStyle } from './makeswift-style'
 import { ControlledStyleData } from '../types'
+import { getControlledStylePrecedence } from '../utils'
 
 type Props = {
   classNameToStyles: Map<string, ControlledStyleData>
@@ -26,11 +27,9 @@ export function ControlledStyles({ classNameToStyles }: Props): ReactNode {
 export function ControlledStyle({
   className,
   styleData,
-  options = {},
 }: {
   className: string
   styleData: ControlledStyleData
-  options?: { precedence?: string }
 }): ReactNode {
   // Do not list the style data's box model callback in dependencies, as this will lead
   // to visually jarring overlay redraws in the builder
@@ -41,5 +40,11 @@ export function ControlledStyle({
     return pollBoxModel({ element, onBoxModelChange })
   }, [className])
 
-  return <MakeswiftStyle href={className} css={styleData.css} precedence={options.precedence} />
+  return (
+    <MakeswiftStyle
+      href={className}
+      css={styleData.css}
+      precedence={getControlledStylePrecedence(styleData)}
+    />
+  )
 }
