@@ -13,13 +13,11 @@ import {
 import { FallbackComponent } from '../../../../components/shared/FallbackComponent'
 import { isLegacyDescriptor } from '../../../../prop-controllers/descriptors'
 
-import {
-  ServerCSSCollector,
-  createCollectingServerStylesheet,
-  InjectServerCSS,
-} from '../css/server-css'
 import { type ServerRenderContext, getStore } from '../render-context'
 import { resolveProps } from '../resolve-props'
+import { StylesheetEngine } from '../../css-runtime/stylesheet-engine'
+import { type ControlledStyleData } from '../../css-runtime/types'
+import { RSCEmittedStyle } from '../../css-runtime/components/rsc-emitted-style'
 
 export async function ServerElementData({
   documentKey,
@@ -53,24 +51,34 @@ export async function ServerElementData({
     })
   }
 
-  const cssCollector = new ServerCSSCollector()
-  const stylesheet = createCollectingServerStylesheet(
-    cssCollector,
-    getBreakpoints(state),
-    elementData.key,
-  )
+  const classStyleData = new Map<string, ControlledStyleData>()
+  const stylesheet = new StylesheetEngine({
+    breakpointsData: getBreakpoints(state),
+    classNamePrefix: context.rootStyleProps?.classNamePrefix,
+    documentKey,
+    elementKey: elementData.key,
+    propPathComponents: [],
+    onDefineStyle: styleData => {
+      const { onBoxModelChange, ...serializableStyleData } = styleData
+      classStyleData.set(styleData.className, serializableStyleData)
+    },
+  })
 
   const props = {
     ...(await resolveProps(context, elementData, documentKey, definitions, stylesheet)),
     ...injectedProps,
   }
 
+  const styleElements = Array.from(classStyleData, ([className, styleData]) => (
+    <RSCEmittedStyle key={className} namespace={elementData.key} serializableData={styleData} />
+  ))
+
   return (
     <>
       {/* Make the component the first child so that `findDOMNode` resolves to its first
         rendered DOM node (if any) rather than the component's `<style>` element */}
       <Component key={elementData.key} {...props} />
-      <InjectServerCSS collector={cssCollector} elementKey={elementData.key} />
+      {styleElements}
     </>
   )
 }

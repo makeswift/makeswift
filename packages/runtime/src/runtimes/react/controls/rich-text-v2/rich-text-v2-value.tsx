@@ -15,14 +15,21 @@ export function RichTextV2Value({
   data,
   config,
   instanceKey,
+  parentStylesheetKey,
 }: {
   data: RichTextDataV2 | undefined
   config: ConfigType<RichTextV2Definition>
   instanceKey: ControlInstanceKey | undefined
+  parentStylesheetKey: string
 }) {
   return useIsReadOnly() ? (
-    <ReadOnlyText text={data} config={config} />
+    <ReadOnlyText text={data} config={config} parentStylesheetKey={parentStylesheetKey} />
   ) : (
-    <EditableText text={data} config={config} instanceKey={instanceKey} />
+    <EditableText
+      text={data}
+      config={config}
+      instanceKey={instanceKey}
+      parentStylesheetKey={parentStylesheetKey}
+    />
   )
 }

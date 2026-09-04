@@ -1,4 +1,4 @@
-import { useStyle } from '../use-style'
+import { useStyle } from '../css-runtime/hooks/use-style'
 
 /**
  * `slate-react` renders read-only rich-text within a `<p>` tag containing
@@ -33,7 +33,7 @@ import { useStyle } from '../use-style'
  * restoring inheritance from Makeswift defined styles, thus matching the live
  * page where the text is a direct child of the classed leaf span.
  */
-export function useSlateReset(): string {
+export function useSlateReset() {
   return useStyle({
     // @ts-expect-error: csstype's `all` doesn't accept `!important` annotations
     '& [data-slate-string], & [data-slate-zero-width]': {
