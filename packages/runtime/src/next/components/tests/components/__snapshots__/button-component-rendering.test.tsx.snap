@@ -179,33 +179,6 @@ exports[`correctly renders button component with SEND_EMAIL link 1`] = `
 `;
 
 exports[`correctly renders button component with link 1`] = `
-@media only screen and (min-width: 769px) {
-  .ms-scsqh5 {
-    margin-top: 60px;
-    margin-right: auto;
-    margin-bottom: 80px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-scsqh5 {
-    margin-top: 60px;
-    margin-right: auto;
-    margin-bottom: 80px;
-    margin-left: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .ms-scsqh5 {
-    margin-top: 60px;
-    margin-right: auto;
-    margin-bottom: 80px;
-    margin-left: auto;
-  }
-}
-
 .ms-sybvne {
   display: table;
   border: 0;
@@ -321,6 +294,33 @@ exports[`correctly renders button component with link 1`] = `
   }
   .ms-9cfr9i:active {
     background: #000000;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-scsqh5 {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-scsqh5 {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-scsqh5 {
+    margin-top: 60px;
+    margin-right: auto;
+    margin-bottom: 80px;
+    margin-left: auto;
   }
 }
 

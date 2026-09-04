@@ -1,6 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Page correctly renders a global element 1`] = `
+.ms-1azh6ix {
+  margin: 0;
+}
+
 .ms-1sr6xt0 {
   max-width: 100%;
 }
@@ -48,10 +52,6 @@ exports[`Page correctly renders a global element 1`] = `
     margin-bottom: 20px;
     margin-left: auto;
   }
-}
-
-.ms-1azh6ix {
-  margin: 0;
 }
 
 @media only screen and (min-width: 769px) {
@@ -106,6 +106,10 @@ exports[`Page correctly renders a global element 1`] = `
 `;
 
 exports[`Page correctly renders a localized global element 1`] = `
+.ms-1azh6ix {
+  margin: 0;
+}
+
 .ms-1sr6xt0 {
   max-width: 100%;
 }
@@ -153,10 +157,6 @@ exports[`Page correctly renders a localized global element 1`] = `
     margin-bottom: 20px;
     margin-left: auto;
   }
-}
-
-.ms-1azh6ix {
-  margin: 0;
 }
 
 @media only screen and (min-width: 769px) {

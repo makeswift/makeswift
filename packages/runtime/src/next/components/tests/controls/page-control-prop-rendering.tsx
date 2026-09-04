@@ -201,9 +201,9 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
       document.querySelector(`[data-testid="${id}"]`)
 
     expect(propSnapshot(getByTestId(testId))).toMatchSnapshot('resolvedValue')
-    expect([...document.querySelectorAll('style')].map(n => n.textContent)).toMatchSnapshot(
-      'component styles',
-    )
+    expect(
+      [...document.querySelectorAll('style')].map(n => n.textContent).filter(v => v !== ''),
+    ).toMatchSnapshot('component styles')
 
     expect(Number(getByTestId(renderCountTestId)?.textContent)).toBe(1)
   }

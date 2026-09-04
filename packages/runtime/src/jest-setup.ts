@@ -7,7 +7,6 @@ beforeEach(() => {
   if (typeof document !== 'undefined') {
     clearDocumentCachedHoistedResources()
     clearDocumentStyleElements()
-    clearDocumentAdoptedStyleSheets()
   }
 })
 afterEach(() => server.resetHandlers())
@@ -47,54 +46,6 @@ if (typeof window !== 'undefined') {
       disconnect: jest.fn(),
     })),
   })
-
-  /*
-    https://github.com/jsdom/jsdom/issues/3998
-  */
-  if (!document.adoptedStyleSheets) {
-    Object.defineProperty(document, 'adoptedStyleSheets', {
-      writable: true,
-      configurable: true,
-      value: [],
-    })
-  }
-
-  /*
-    Handling the missing implementation for `replaceSync` on `CSSStyleSheet`,
-    which is needed by the css runtime.
-    
-    https://github.com/jsdom/jsdom/issues/3766 (fixed in later jsdom).
-  */
-  window.CSSStyleSheet.prototype.replace = async function (cssText) {
-    if (typeof document === 'undefined' || document == null) {
-      return this
-    }
-
-    /*
-      A workaround to go from the inputted string containing CSS statements to a
-      CSSRule array: we create a style element using the inputted string, append it to
-      the document to force the creation of a CSSStyleSheet (accessed via `tempStyle.sheet`),
-      then access that CSSStyleSheet's CSSRule array. This gives us the format we need to be
-      able to call `this.insertRule`.
-    */
-    const tempStyle = document.createElement('style')
-    tempStyle.textContent = cssText
-    document.head.appendChild(tempStyle)
-    const parsedRules = tempStyle.sheet ? Array.from(tempStyle.sheet?.cssRules) : []
-    document.head.removeChild(tempStyle)
-
-    while (this.cssRules.length > 0) {
-      this.deleteRule(0)
-    }
-    parsedRules.reverse().forEach(rule => {
-      this.insertRule(rule.cssText, 0)
-    })
-
-    return this
-  }
-  window.CSSStyleSheet.prototype.replaceSync = function (cssText) {
-    return Promise.resolve(this.replace(cssText))
-  }
 }
 
 /**
@@ -118,10 +69,6 @@ function clearDocumentStyleElements() {
   for (const styleElement of styleElements) {
     styleElement.remove()
   }
-}
-
-function clearDocumentAdoptedStyleSheets() {
-  document.adoptedStyleSheets = []
 }
 
 ;(global as any).PACKAGE_VERSION = require('../package.json').version

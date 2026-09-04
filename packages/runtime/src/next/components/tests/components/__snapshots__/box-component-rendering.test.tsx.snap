@@ -23,6 +23,107 @@ exports[`correctly renders box component with background image 1`] = `
   position: relative;
 }
 
+.ms-1vg8v23 {
+  display: flex;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-7cpjp3 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
+    align-self: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-7cpjp3 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
+    align-self: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-7cpjp3 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
+    align-self: auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ms-g6asym {
+    opacity: 1;
+    -webkit-transition: all 0ms;
+    transition: all 0ms;
+  }
+  .ms-g6asym > div > .grid-item {
+    opacity: 1;
+  }
+}
+
+.ms-187jnny {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-187jnny {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-187jnny {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-187jnny {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-m001dn {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-m001dn {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-m001dn {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+}
+
+.ms-1fqsart {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+  height: 80px;
+  padding: 8px;
+}
+
 .ms-53v5nr {
   max-width: 100%;
 }
@@ -151,107 +252,6 @@ exports[`correctly renders box component with background image 1`] = `
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
   }
-}
-
-.ms-1vg8v23 {
-  display: flex;
-}
-
-@media only screen and (min-width: 769px) {
-  .ms-7cpjp3 {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-7cpjp3 {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .ms-7cpjp3 {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .ms-g6asym {
-    opacity: 1;
-    -webkit-transition: all 0ms;
-    transition: all 0ms;
-  }
-  .ms-g6asym > div > .grid-item {
-    opacity: 1;
-  }
-}
-
-.ms-187jnny {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: inherit;
-  overflow: hidden;
-}
-
-@media only screen and (min-width: 769px) {
-  .ms-187jnny {
-    display: block;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-187jnny {
-    display: block;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .ms-187jnny {
-    display: block;
-  }
-}
-
-@media only screen and (min-width: 769px) {
-  .ms-m001dn {
-    -webkit-align-content: flex-start;
-    -ms-flex-line-pack: start;
-    align-content: flex-start;
-  }
-}
-
-@media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-m001dn {
-    -webkit-align-content: flex-start;
-    -ms-flex-line-pack: start;
-    align-content: flex-start;
-  }
-}
-
-@media only screen and (max-width: 575px) {
-  .ms-m001dn {
-    -webkit-align-content: flex-start;
-    -ms-flex-line-pack: start;
-    align-content: flex-start;
-  }
-}
-
-.ms-1fqsart {
-  width: 100%;
-  background: rgba(161, 168, 194, 0.18);
-  height: 80px;
-  padding: 8px;
 }
 
 

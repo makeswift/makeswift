@@ -166,34 +166,3 @@ export function mockApiResourceRequests({ resources }: { resources: APIResource[
 export async function drainMicrotaskQueue() {
   return await jest.advanceTimersByTimeAsync(0)
 }
-
-/*
-  In Jest snapshots we display style element content above adopted stylesheet content
-  because this matches when those styles are applied chronologically, as well as matching the
-  order of precedence in the CSS cascade (adopted stylesheets take precedence over style elements)
-*/
-export type JestSnapshotStylesSource = {
-  styleElementCss: string
-  adoptedStylesheetCss: string | undefined
-}
-
-// Formatting for jest snapshot readability
-export function formatStyleElementContent(styleElement: HTMLStyleElement): string {
-  const stylesheetForStyleElement = styleElement.sheet
-  if (!stylesheetForStyleElement) return ''
-  return formatStylesheetContent(stylesheetForStyleElement)
-}
-
-// Formatting for jest snapshot readability
-export function formatStylesheetContent(stylesheet: CSSStyleSheet): string {
-  const cssRules = Array.from(stylesheet.cssRules)
-  const formattedCssRulesText = cssRules.map(rule => `\t${rule.cssText}`).join('\n')
-  return formattedCssRulesText
-}
-
-export function getFormattedJestSnapshot(source: JestSnapshotStylesSource) {
-  if (source.adoptedStylesheetCss) {
-    return `\n\nStyle element content:\n${source.styleElementCss}\n\nAdopted stylesheet content:\n${source.adoptedStylesheetCss}\n\n`
-  }
-  return `\n\nStyle element content:\n${source.styleElementCss}\n\n`
-}

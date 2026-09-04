@@ -2,20 +2,13 @@
 
 import { screen, render as testLibraryRender } from '@testing-library/react'
 import { styleV1Samples } from './__fixtures__/sample-stylev1-data'
-import {
-  createControlledStylesTestFixtures,
-  formatStyleElementContent,
-  formatStylesheetContent,
-  getFormattedJestSnapshot,
-  JestSnapshotStylesSource,
-  mockApiResourceRequests,
-} from './utils'
+import { createControlledStylesTestFixtures, mockApiResourceRequests } from './utils'
 import { act } from 'react'
 import { TestWorkingSiteVersion } from '../../../../testing/fixtures/site-version'
 import assert from 'assert'
 import { setBreakpoints } from '../../../../state/builder-api/actions'
-import { AdoptedStylesheetApplier } from '../adopted-stylesheet-applier'
 import { styleV2Samples } from './__fixtures__/sample-stylev2-data'
+import { StyleElementUpdater } from '../style-element-updater'
 
 describe('Controlled styles integration:', () => {
   afterEach(() => {
@@ -33,7 +26,7 @@ describe('Controlled styles integration:', () => {
       })
     const registrySubscribeSpy = jest.spyOn(stylesRegistry, 'subscribeToControlledStyleWrites')
     const registryNotifyListenersSpy = jest.spyOn(stylesRegistry, 'notifyOnControlledStyleWrite')
-    const adoptedStylesheetApplierSpy = jest.spyOn(AdoptedStylesheetApplier.prototype, 'apply')
+    const styleElementUpdaterSpy = jest.spyOn(StyleElementUpdater.prototype, 'apply')
 
     if (resources.length > 0) {
       mockApiResourceRequests({ resources })
@@ -60,8 +53,6 @@ describe('Controlled styles integration:', () => {
 
     const styleData = controlledStylesByClass.get(resolvedClassName)
 
-    let jestSnapshotSource: JestSnapshotStylesSource | undefined = undefined
-
     expect(registrySubscribeSpy).toHaveBeenCalledTimes(1)
     expect(styleElementsForClass).toHaveLength(1)
     expect(styleElement).toBeDefined()
@@ -73,28 +64,13 @@ describe('Controlled styles integration:', () => {
 
     if (resources.length === 0) {
       expect(registryNotifyListenersSpy).toHaveBeenCalledTimes(1)
-      expect(adoptedStylesheetApplierSpy).not.toHaveBeenCalled()
-      expect(document.adoptedStyleSheets).toHaveLength(0)
-
-      expect(styleData.css).toBe(styleElementTextContent)
-
-      jestSnapshotSource = {
-        styleElementCss: formatStyleElementContent(styleElement),
-        adoptedStylesheetCss: undefined,
-      }
+      expect(styleElementUpdaterSpy).not.toHaveBeenCalled()
     } else {
       expect(registryNotifyListenersSpy).toHaveBeenCalledTimes(2)
-      expect(adoptedStylesheetApplierSpy).toHaveBeenCalled()
-      expect(document.adoptedStyleSheets).toHaveLength(1)
-      const adoptedStylesheet = document.adoptedStyleSheets[0]
-
-      jestSnapshotSource = {
-        styleElementCss: formatStyleElementContent(styleElement),
-        adoptedStylesheetCss: formatStylesheetContent(adoptedStylesheet),
-      }
+      expect(styleElementUpdaterSpy).toHaveBeenCalledTimes(1)
     }
 
-    const jestFormattedSnapshotContent = getFormattedJestSnapshot(jestSnapshotSource)
-    expect(jestFormattedSnapshotContent).toMatchSnapshot('css')
+    expect(styleData.css).toBe(styleElementTextContent)
+    expect(styleData.css).toMatchSnapshot('css')
   })
 })
