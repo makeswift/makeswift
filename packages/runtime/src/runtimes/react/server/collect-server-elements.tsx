@@ -4,7 +4,11 @@ import { isElementReference } from '@makeswift/controls'
 
 import { type CacheData } from '../../../api/api-resources-client'
 
-import { type Document } from '../../../state/modules/read-only-documents'
+import {
+  type Document,
+  type Element,
+  type ElementData,
+} from '../../../state/modules/read-only-documents'
 import { getComponentsMeta } from '../../../state/modules/components-meta'
 import { traverseElementTree } from '../../../state/modules/element-trees'
 import { registerDocument } from '../../../state/shared-api'
@@ -43,35 +47,46 @@ export function collectServerElements(
   const descriptors = getPropControllerDescriptors(state)
 
   const result: ElementsMap = new Map()
+  const rootElements = [document.rootElement]
+  let rootElement: Element | undefined
 
-  for (const element of traverseElementTree(document.rootElement, descriptors)) {
-    if (isElementReference(element)) {
-      // TODO: Element reference support
-      continue
-    }
+  while ((rootElement = rootElements.pop())) {
+    for (const element of traverseElementTree(rootElement, descriptors)) {
+      if (isElementReference(element)) {
+        const globalElement = store.apiResourcesClient.readGlobalElement(element.value)
+        console.log('@@ collectServerElements globalElement', element, globalElement)
+        const elementData = globalElement?.data as ElementData | undefined
+        if (elementData != null) {
+          rootElements.push(elementData)
+        } else {
+          console.warn(`collectServerElements: missing global element ${element.value}`, element)
+        }
+        continue
+      }
 
-    const meta = getComponentsMeta(state.componentsMeta).get(element.type)
+      const meta = getComponentsMeta(state.componentsMeta).get(element.type)
 
-    if (meta == null) {
-      console.warn(`collectServerElements: Component meta not found for ${element.type}`)
-      continue
-    }
+      if (meta == null) {
+        console.warn(`collectServerElements: Component meta not found for ${element.type}`)
+        continue
+      }
 
-    if (result.has(element.key)) {
-      console.warn(`collectServerElements: RSC node already exists for ${element.key}`)
-      continue
-    }
+      if (result.has(element.key)) {
+        console.warn(`collectServerElements: RSC node already exists for ${element.key}`)
+        continue
+      }
 
-    if (meta.server) {
-      result.set(
-        element.key,
-        <ServerElement
-          key={element.key}
-          context={context}
-          element={element}
-          documentKey={document.key}
-        />,
-      )
+      if (meta.server) {
+        result.set(
+          element.key,
+          <ServerElement
+            key={element.key}
+            context={context}
+            element={element}
+            documentKey={document.key}
+          />,
+        )
+      }
     }
   }
 
