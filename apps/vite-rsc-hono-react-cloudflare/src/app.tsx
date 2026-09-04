@@ -41,7 +41,7 @@ app
         <RSCElementRenderer context={context} cacheData={cacheData}>
           <ServerElement
             context={context}
-            element={elementData}
+            elementData={elementData}
             documentKey={documentKey}
           />
         </RSCElementRenderer>

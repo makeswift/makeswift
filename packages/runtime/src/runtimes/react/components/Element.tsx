@@ -47,6 +47,7 @@ export const Element = memo(
     const ElementRegistration =
       useIsReadOnly() || isRegisterElementDisabled ? NoOp : BuilderElementRegistration
 
+    console.log('@@@ Element (client)', { element })
     return (
       <ElementRegistration
         componentHandle={imperativeHandleRef.current}

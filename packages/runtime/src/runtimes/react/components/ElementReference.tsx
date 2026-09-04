@@ -37,6 +37,8 @@ export const ElementReference = memo(
       [documentKeys, documentKey],
     )
 
+    console.log('@@ ElementReference (client)', { elementReference, elementReferenceDocument })
+
     if (globalElementData == null) {
       return (
         <FallbackComponent
