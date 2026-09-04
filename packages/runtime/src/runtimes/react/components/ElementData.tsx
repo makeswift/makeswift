@@ -65,6 +65,8 @@ const ElementDataServer = forwardRef(function ElementDataServer(
     return rscNode
   }
 
+  console.log('@@@ ElementDataServer', { elementData, rscNode })
+
   return <EditableServerElement initialElementData={elementData}>{rscNode}</EditableServerElement>
 })
 

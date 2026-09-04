@@ -30,7 +30,9 @@ export const EditableServerElement = ({
   const elementData = useElementData({ elementKey })
   if (elementData == null) {
     // Element has been deleted
-    return null
+    // console.error(`@@ EditableServerElement ${elementKey}: Element has been deleted`)
+    // FIXME
+    return children
   }
 
   return (
