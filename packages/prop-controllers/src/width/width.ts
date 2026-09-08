@@ -1,13 +1,30 @@
 import { P, match } from 'ts-pattern'
-import { ControlDataTypeKey, ResolveOptions, Types } from '../prop-controllers'
+import {
+  ControlDataTypeKey,
+  ResolveOptions,
+  Schema,
+  Types,
+} from '../prop-controllers'
 import { z } from 'zod'
 import { LengthData } from '../data'
-import {
-  ResponsiveLengthData,
-  responsiveLengthDataSchema,
-} from '../responsive-length'
 
-const widthPropControllerDataV0Schema = responsiveLengthDataSchema
+// Width supports `fill` (flex: 1) in addition to the shared px/% length units.
+export const widthLengthDataSchema = z.object({
+  value: z.number(),
+  unit: z.enum(['px', '%', 'fill']),
+})
+
+export type WidthLengthData = z.infer<typeof widthLengthDataSchema>
+
+export const responsiveWidthLengthDataSchema = Schema.responsiveValue(
+  widthLengthDataSchema,
+)
+
+export type ResponsiveWidthLengthData = z.infer<
+  typeof responsiveWidthLengthDataSchema
+>
+
+const widthPropControllerDataV0Schema = responsiveWidthLengthDataSchema
 
 export type WidthPropControllerDataV0 = z.infer<
   typeof widthPropControllerDataV0Schema
@@ -17,7 +34,7 @@ export const WidthPropControllerDataV1Type = 'prop-controllers::width::v1'
 
 const widthPropControllerDataV1Schema = z.object({
   [ControlDataTypeKey]: z.literal(WidthPropControllerDataV1Type),
-  value: responsiveLengthDataSchema,
+  value: responsiveWidthLengthDataSchema,
 })
 
 export type WidthPropControllerDataV1 = z.infer<
@@ -73,7 +90,7 @@ export type WidthDescriptor<
 export type ResolveWidthPropControllerValue<T extends WidthDescriptor> =
   T extends WidthDescriptor
     ? undefined extends ResolveOptions<T['options']>['format']
-      ? ResponsiveLengthData | undefined
+      ? ResponsiveWidthLengthData | undefined
       : ResolveOptions<
             T['options']
           >['format'] extends typeof WidthPropControllerFormat.ClassName
@@ -81,7 +98,7 @@ export type ResolveWidthPropControllerValue<T extends WidthDescriptor> =
         : ResolveOptions<
               T['options']
             >['format'] extends typeof WidthPropControllerFormat.ResponsiveValue
-          ? ResponsiveLengthData | undefined
+          ? ResponsiveWidthLengthData | undefined
           : never
     : never
 
@@ -99,7 +116,7 @@ Width.Format = WidthPropControllerFormat
 
 export function getWidthPropControllerDataResponsiveLengthData(
   data: WidthPropControllerData | undefined,
-): ResponsiveLengthData | undefined {
+): ResponsiveWidthLengthData | undefined {
   return match(data)
     .with(
       { [ControlDataTypeKey]: WidthPropControllerDataV1Type },
@@ -109,7 +126,7 @@ export function getWidthPropControllerDataResponsiveLengthData(
 }
 
 export function createWidthPropControllerDataFromResponsiveLengthData(
-  responsiveLengthData: ResponsiveLengthData,
+  responsiveLengthData: ResponsiveWidthLengthData,
   definition?: WidthDescriptor,
 ): WidthPropControllerData {
   return match(definition)

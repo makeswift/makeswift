@@ -21,7 +21,7 @@ import {
 import { cx } from '@emotion/css'
 import {
   type LinkData,
-  type ResponsiveLengthData,
+  type ResponsiveWidthLengthData,
   type ResponsiveTextStyleData,
   type ResponsiveSelectValue,
   type ResponsiveIconRadioGroupValue,
@@ -38,7 +38,7 @@ type BaseProps<T extends ElementType> = {
   color?: ResponsiveColor | null
   textColor?: ResponsiveColor | null
   textStyle?: ResponsiveTextStyleData
-  width?: ResponsiveLengthData
+  width?: ResponsiveWidthLengthData
   margin?: string
 }
 

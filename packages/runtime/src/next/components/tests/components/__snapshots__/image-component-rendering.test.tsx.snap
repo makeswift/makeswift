@@ -49,27 +49,27 @@ exports[`correctly renders image component 1`] = `
 @media only screen and (min-width: 769px) {
   .emotion-3 {
     margin-top: 20px;
-    margin-right: auto;
+    margin-right: var(--makeswift-default-side-margin, auto);
     margin-bottom: 25px;
-    margin-left: auto;
+    margin-left: var(--makeswift-default-side-margin, auto);
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .emotion-3 {
     margin-top: 20px;
-    margin-right: auto;
+    margin-right: var(--makeswift-default-side-margin, auto);
     margin-bottom: 25px;
-    margin-left: auto;
+    margin-left: var(--makeswift-default-side-margin, auto);
   }
 }
 
 @media only screen and (max-width: 575px) {
   .emotion-3 {
     margin-top: 20px;
-    margin-right: auto;
+    margin-right: var(--makeswift-default-side-margin, auto);
     margin-bottom: 25px;
-    margin-left: auto;
+    margin-left: var(--makeswift-default-side-margin, auto);
   }
 }
 

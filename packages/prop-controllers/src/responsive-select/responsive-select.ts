@@ -1,5 +1,6 @@
 import { type Options, Types } from '../prop-controllers'
 import { responsiveSelectValueSchema } from '../data'
+import { type IconRadioGroupOption } from '../responsive-icon-radio-group'
 import {
   versionedPropDef,
   typeArg,
@@ -8,11 +9,19 @@ import {
 
 export type SelectLabelOrientation = 'vertical' | 'horizontal'
 
-export type SelectOption<T extends string> = { value: T; label: string }
+/** `alignment` renders a Figma-style 3x3 alignment grid in the builder. */
+export type SelectVariant = 'select' | 'alignment' | 'icon-radio-group'
+
+export type SelectOption<T extends string> = {
+  value: T
+  label: string
+  icon?: IconRadioGroupOption<T>['icon']
+}
 
 export type RawSelectOptions<T extends string = string, U extends T = T> = {
   label?: string
   labelOrientation?: SelectLabelOrientation
+  variant?: SelectVariant
   options: SelectOption<T>[]
   defaultValue?: U
   hidden?: boolean

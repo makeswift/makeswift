@@ -53,7 +53,10 @@ export type GridPropControllerData = z.infer<
   typeof gridPropControllerDataSchema
 >
 
-export type GridOptions = Options<Record<string, never>>
+export type GridOptions = Options<{
+  /** `flex` hides the builder's grid overlay and uses order-based drop zones. Defaults to `grid`. */
+  layout?: 'grid' | 'flex'
+}>
 
 type GridDescriptorV0<_T = GridPropControllerDataV0> = {
   type: typeof Types.Grid

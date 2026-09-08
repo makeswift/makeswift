@@ -1,5 +1,6 @@
 import { type ReactRuntimeCore } from '../../runtimes/react/react-runtime-core'
 import { registerComponent as registerBoxComponent } from './Box/register'
+import { registerComponent as registerBoxV2Component } from './BoxV2/register'
 import { registerComponent as registerButtonComponent } from './Button/register'
 import { registerComponent as registerCarouselComponent } from './Carousel/register'
 import { registerComponent as registerCountdownComponent } from './Countdown/register'
@@ -16,6 +17,7 @@ import { registerComponent as registerVideoComponent } from './Video/register'
 
 export function registerBuiltinComponents(runtime: ReactRuntimeCore) {
   const unregisterBoxComponent = registerBoxComponent(runtime)
+  const unregisterBoxV2Component = registerBoxV2Component(runtime)
   const unregisterButtonComponent = registerButtonComponent(runtime)
   const unregisterCarouselComponent = registerCarouselComponent(runtime)
   const unregisterCountdownComponent = registerCountdownComponent(runtime)
@@ -32,6 +34,7 @@ export function registerBuiltinComponents(runtime: ReactRuntimeCore) {
 
   return () => {
     unregisterBoxComponent()
+    unregisterBoxV2Component()
     unregisterButtonComponent()
     unregisterCarouselComponent()
     unregisterCountdownComponent()

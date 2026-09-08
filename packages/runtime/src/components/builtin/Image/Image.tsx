@@ -4,7 +4,7 @@ import { useState, useEffect, Ref, forwardRef } from 'react'
 
 import {
   LinkData,
-  ResponsiveLengthData,
+  ResponsiveWidthLengthData,
   ImageData,
   ResponsiveOpacityValue,
   ResponsiveSelectValue,
@@ -34,7 +34,7 @@ type Props = {
   file?: ImageData
   altText?: string
   link?: LinkData
-  width?: ResponsiveLengthData
+  width?: ResponsiveWidthLengthData
   aspectRatio?: ResponsiveSelectValue<AspectRatio>
   margin?: string
   padding?: string

@@ -4,6 +4,7 @@
  */
 export const MakeswiftComponentType = {
   Box: './components/Box/index.js',
+  BoxV2: 'makeswift::components::box::v2',
   Button: './components/Button/index.js',
   Carousel: './components/Carousel/index.js',
   Countdown: './components/Countdown/index.js',

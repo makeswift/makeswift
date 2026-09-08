@@ -9,8 +9,9 @@ import type {
   ResponsiveMarginData,
   ResponsivePaddingData,
   ResponsiveValue,
-  ResponsiveLengthData,
   ResponsiveTextStyleData,
+  ResponsiveWidthLengthData,
+  WidthLengthData,
 } from '@makeswift/prop-controllers'
 
 import {
@@ -69,14 +70,18 @@ export function useResponsiveStyle<
 
 export function responsiveWidth(
   breakpoints: Breakpoints,
-  widthData: ResponsiveLengthData | undefined,
-  defaultValue: LengthData | WidthProperty<string | number> = '100%',
+  widthData: ResponsiveWidthLengthData | undefined,
+  defaultValue: WidthLengthData | WidthProperty<string | number> = '100%',
 ): CSSObject {
   return {
     maxWidth: '100%',
-    ...responsiveStyle(breakpoints, [widthData], ([width = defaultValue]) => ({
-      width: typeof width === 'object' ? `${width.value}${width.unit}` : width,
-    })),
+    ...responsiveStyle(breakpoints, [widthData], ([width = defaultValue]) => {
+      if (typeof width === 'object' && width.unit === 'fill') {
+        return { width: 'auto', flexGrow: 1, flexShrink: 1, flexBasis: '0%' }
+      }
+
+      return { width: typeof width === 'object' ? `${width.value}${width.unit}` : width }
+    }),
   }
 }
 
@@ -108,6 +113,11 @@ export function useResponsivePadding(
   return responsivePadding(useBreakpoints(), ...args)
 }
 
+// Lets flex containers (Box V2) zero out the legacy auto side margins without overriding user-set values.
+export const defaultMarginCustomProperty = '--makeswift-default-side-margin'
+
+const defaultSideMargin = `var(${defaultMarginCustomProperty}, auto)`
+
 export function responsiveMargin(
   breakpoints: Breakpoints,
   marginData: ResponsiveMarginData | undefined,
@@ -117,7 +127,12 @@ export function responsiveMargin(
     marginPropertyDataToStyle(
       margin,
       Object.assign(
-        { marginTop: 0, marginRight: 'auto', marginBottom: 0, marginLeft: 'auto' },
+        {
+          marginTop: 0,
+          marginRight: defaultSideMargin,
+          marginBottom: 0,
+          marginLeft: defaultSideMargin,
+        },
         defaultValue,
       ),
     ),
@@ -193,6 +208,8 @@ export function responsiveGridItem(
 ): CSSObject {
   return {
     display: 'flex',
+    // Restore legacy centering for grid containers nested inside a Box V2.
+    [defaultMarginCustomProperty]: 'auto',
     ...responsiveStyle(
       breakpoints,
       [props.grid, props.columnGap, props.rowGap] as const,

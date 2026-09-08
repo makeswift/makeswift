@@ -343,6 +343,8 @@ export {
   Width,
   WidthPropControllerFormat,
   widthPropControllerDataSchema,
+  widthLengthDataSchema,
+  responsiveWidthLengthDataSchema,
   getWidthPropControllerDataResponsiveLengthData,
   createWidthPropControllerDataFromResponsiveLengthData,
 } from './width'
@@ -350,6 +352,8 @@ export type {
   ResolveWidthPropControllerValue,
   WidthDescriptor,
   WidthPropControllerData,
+  WidthLengthData,
+  ResponsiveWidthLengthData,
 } from './width'
 export {
   Video,

@@ -127,6 +127,7 @@ export function useBoxAnimation(
   responsiveDuration: ResponsiveValue<number> | undefined,
   responisveDelay: ResponsiveValue<number> | undefined,
   itemResponsiveAnimationType: ResponsiveValue<BoxAnimateIn> | undefined,
+  itemSelector: string = `& > div > .${gridItemIdentifierClassName}`,
 ): [string, () => void, (element: HTMLElement | null) => void] {
   const [isVisible, setElement] = useElementOnScreen({
     root: null,
@@ -143,7 +144,7 @@ export function useBoxAnimation(
   const entered = {
     ...enteredBoxAnimationProperties[animationType],
     transition: `transform ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms,filter ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms, opacity ${actualDuration}ms ease ${actualDelay}ms`,
-    [`& > div > .${gridItemIdentifierClassName}`]: {
+    [itemSelector]: {
       ...enteredBoxAnimationProperties[itemAnimationType],
     },
   }
@@ -151,7 +152,7 @@ export function useBoxAnimation(
   const exited = {
     ...exitedBoxAnimationProperties[animationType],
     transition: `all 0ms`,
-    [`& > div > .${gridItemIdentifierClassName}`]: {
+    [itemSelector]: {
       ...exitedBoxAnimationProperties[itemAnimationType],
     },
   }
@@ -180,6 +181,7 @@ export function useItemAnimation(
   responisveDelay: ResponsiveValue<number> | undefined,
   responsiveStagger: ResponsiveValue<number> | undefined,
   index: number,
+  selector?: string,
 ) {
   const duration = useMediaQuery(responsiveDuration) || DEFAULT_BOX_ANIMATE_DURATION
   const delay = useMediaQuery(responisveDelay) || DEFAULT_BOX_ANIMATE_DELAY
@@ -188,9 +190,11 @@ export function useItemAnimation(
   const actualDelay = (delay + delayFromStagger) * 1000
   const actualDuration = duration * 1000
 
-  return useStyle({
+  const style: CSSObject = {
     '@media (prefers-reduced-motion: no-preference)': {
       transition: `transform ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms,filter ${actualDuration}ms cubic-bezier(0.16, 0.84, 0.44, 1) ${actualDelay}ms, opacity ${actualDuration}ms ease ${actualDelay}ms`,
     },
-  })
+  }
+
+  return useStyle(selector ? { [selector]: style } : style)
 }
