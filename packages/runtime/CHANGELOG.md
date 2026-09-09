@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.16
+
+### Patch Changes
+
+- fb56792: fix: retry transient API errors
+
 ## 0.28.10-canary.15
 
 ### Patch Changes
