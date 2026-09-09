@@ -38,7 +38,7 @@ export class MakeswiftRestAPIClient {
       fetch,
       timeout: false,
       retry: {
-        statusCodes: [429],
+        statusCodes: [408, 429, 500, 502, 503, 504],
         limit: RetryBackoffConfig.MaxAttempts,
         backoffLimit: RetryBackoffConfig.MaxDelayMs,
         delay: attemptCount => 2 ** (attemptCount - 1) * 1000,

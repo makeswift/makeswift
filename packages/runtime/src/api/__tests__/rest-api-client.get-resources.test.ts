@@ -64,7 +64,7 @@ describe('getSwatch', () => {
     const client = createTestClient()
 
     server.use(
-      http.get(resourceUrl, () => HttpResponse.json('Internal server error', { status: 500 }), {
+      http.get(resourceUrl, () => HttpResponse.json('Forbidden', { status: 403 }), {
         once: true,
       }),
     )
@@ -74,10 +74,10 @@ describe('getSwatch', () => {
 
     // Assert
     expect(error.name).toBe('RestApiClientError')
-    expect(error.message).toBe("Failed to get swatch 'mySwatch': 500 Internal Server Error")
-    expect(error.status).toBe(500)
+    expect(error.message).toBe("Failed to get swatch 'mySwatch': 403 Forbidden")
+    expect(error.status).toBe(403)
     expect(error.cause).toEqual({
-      body: 'Internal server error',
+      body: 'Forbidden',
       siteVersion: TestWorkingSiteVersion,
     })
   })
@@ -110,7 +110,7 @@ describe('getFile', () => {
     const client = createTestClient()
 
     server.use(
-      http.get(resourceUrl, () => HttpResponse.json('Internal server error', { status: 500 }), {
+      http.get(resourceUrl, () => HttpResponse.json('Forbidden', { status: 403 }), {
         once: true,
       }),
     )
@@ -120,10 +120,10 @@ describe('getFile', () => {
 
     // Assert
     expect(error.name).toBe('RestApiClientError')
-    expect(error.message).toBe("Failed to get file 'myFile': 500 Internal Server Error")
-    expect(error.status).toBe(500)
+    expect(error.message).toBe("Failed to get file 'myFile': 403 Forbidden")
+    expect(error.status).toBe(403)
     expect(error.cause).toEqual({
-      body: 'Internal server error',
+      body: 'Forbidden',
     })
   })
 })
@@ -155,7 +155,7 @@ describe('getTable', () => {
     const client = createTestClient()
 
     server.use(
-      http.get(resourceUrl, () => HttpResponse.json('Internal server error', { status: 500 }), {
+      http.get(resourceUrl, () => HttpResponse.json('Forbidden', { status: 403 }), {
         once: true,
       }),
     )
@@ -165,10 +165,10 @@ describe('getTable', () => {
 
     // Assert
     expect(error.name).toBe('RestApiClientError')
-    expect(error.message).toBe("Failed to get table 'myTable': 500 Internal Server Error")
-    expect(error.status).toBe(500)
+    expect(error.message).toBe("Failed to get table 'myTable': 403 Forbidden")
+    expect(error.status).toBe(403)
     expect(error.cause).toEqual({
-      body: 'Internal server error',
+      body: 'Forbidden',
     })
   })
 })
@@ -289,7 +289,7 @@ describe('getLocalizedGlobalElement', () => {
     const client = createTestClient()
 
     server.use(
-      http.get(resourceUrl, () => HttpResponse.json('Request timeout', { status: 408 }), {
+      http.get(resourceUrl, () => HttpResponse.json('Forbidden', { status: 403 }), {
         once: true,
       }),
     )
@@ -301,10 +301,10 @@ describe('getLocalizedGlobalElement', () => {
 
     // Assert
     expect(error.message).toBe(
-      "Failed to get localized global element 'myGlobalElement': 408 Request Timeout",
+      "Failed to get localized global element 'myGlobalElement': 403 Forbidden",
     )
     expect(error.cause).toEqual({
-      body: 'Request timeout',
+      body: 'Forbidden',
       locale: 'es-MX',
       siteVersion: null,
     })
@@ -321,7 +321,7 @@ describe('getPagePathnameSlice', () => {
     const client = createTestClient()
 
     server.use(
-      http.get(resourceUrl, () => HttpResponse.json('Request timeout', { status: 408 }), {
+      http.get(resourceUrl, () => HttpResponse.json('Forbidden', { status: 403 }), {
         once: true,
       }),
     )
@@ -330,9 +330,7 @@ describe('getPagePathnameSlice', () => {
     const error = await captureClientError(client.getPagePathnameSlice(pageId, null, { locale }))
 
     // Assert
-    expect(error.message).toBe(
-      'Failed to get page pathname slice(s) for pageId: 408 Request Timeout',
-    )
-    expect(error.cause).toEqual({ body: 'Request timeout', locale: 'fr', siteVersion: null })
+    expect(error.message).toBe('Failed to get page pathname slice(s) for pageId: 403 Forbidden')
+    expect(error.cause).toEqual({ body: 'Forbidden', locale: 'fr', siteVersion: null })
   })
 })
