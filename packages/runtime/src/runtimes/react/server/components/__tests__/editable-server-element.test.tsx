@@ -18,7 +18,6 @@ import { setResolvedValueOverride } from '../../../../../state/actions/internal/
 import { Document } from '../../../components/Document'
 import { FrameworkContextProvider } from '../../../components/framework-context'
 import { createReactRuntime, ReactProvider } from '../../../testing'
-import { ClientCSSProvider } from '../../css/client-css'
 
 import { ServerElementsCache } from '../server-elements-cache'
 
@@ -71,9 +70,7 @@ const createFixtures = async ({
     <ReactProvider runtime={runtime} siteVersion={TestWorkingSiteVersion}>
       <FrameworkContextProvider value={{ renderRSCElement }}>
         <ServerElementsCache value={new Map([[elementKey, serverNode]])}>
-          <ClientCSSProvider>
-            <Document document={document} />
-          </ClientCSSProvider>
+          <Document document={document} />
         </ServerElementsCache>
       </FrameworkContextProvider>
     </ReactProvider>,
