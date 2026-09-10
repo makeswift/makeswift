@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.22-canary.5
+
+### Patch Changes
+
+- c523616: Add an optional `suffix` config option to the `Slider` control, allowing a unit such as `%` or `px` to be displayed next to the slider value in the builder.
+
 ## 0.1.22-canary.4
 
 ### Patch Changes
