@@ -101,4 +101,10 @@ export class StylesheetEngine implements Stylesheet {
       this.onStyleGenerated,
     )
   }
+
+  // 'key' was added to the Stylesheet interface in preparation for the migration to the new css runtime,
+  // which will replace the StylesheetEngine. This is not intended to be used in its current form.
+  key(): string {
+    return this.elementKey ?? ''
+  }
 }
