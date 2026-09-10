@@ -54,6 +54,9 @@ export function useStylesheetFactory(): StylesheetFactory {
       child(id: string): Stylesheet {
         return getStylesheet(`${styleSheetId}-${id}`)
       },
+      key(): string {
+        return styleSheetId
+      }
     })
 
     return {
