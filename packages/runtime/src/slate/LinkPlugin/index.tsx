@@ -61,7 +61,7 @@ export function LinkPlugin() {
   return Plugin({
     control: {
       definition: Link({
-        label: 'On Click',
+        label: 'On click',
       }),
       onChange,
       getValue,
