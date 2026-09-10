@@ -7,6 +7,8 @@ import { Page as BuiltinPage, type PageProps } from '../../runtimes/react/compon
 import { useRouterLocaleSync } from '../hooks/use-router-locale-sync'
 
 export { type PageProps } from '../../runtimes/react/components/page'
+import { CSSObject } from '@emotion/serialize'
+import { useBaseStyles } from '../../runtimes/react/css-runtime/hooks/use-base-styles'
 
 /**
  * @param snapshot - The snapshot of the page to render, from
@@ -36,5 +38,20 @@ See our docs for more information on what's changed and instructions to migrate:
 
   useRouterLocaleSync()
 
-  return <BuiltinPage snapshot={snapshot} metadata={metadata} />
+  const pageBaseStyles: CSSObject = {
+    html: {
+      fontFamily: 'sans-serif',
+    },
+    'div#__next': {
+      overflow: 'hidden',
+    },
+  }
+  const { styleElement: baseStylesElement } = useBaseStyles({ styles: pageBaseStyles })
+
+  return (
+    <>
+      <BuiltinPage snapshot={snapshot} metadata={metadata} />
+      {baseStylesElement}
+    </>
+  )
 })

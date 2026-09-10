@@ -208,7 +208,6 @@ async function testGlobalElementRendering({ locale }: { locale: string | null })
       </Testing.ReactProvider>,
     ),
   )
-
   expect(document.querySelector('#title')).toMatchSnapshot()
 }
 

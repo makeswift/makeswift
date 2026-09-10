@@ -1,4 +1,4 @@
-import { RenderElementProps } from 'slate-react'
+import { ReactEditor, RenderElementProps, useSlateStatic } from 'slate-react'
 
 import { RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
 
@@ -6,15 +6,32 @@ import { ControlValue } from '../../control'
 
 type RichTextV2ElementProps = RenderElementProps & {
   plugins: RichTextV2Plugin[]
+  pathComponents: string[]
+  parentStylesheetKey: string
 }
 
-export function RichTextV2Element({ plugins, ...props }: RichTextV2ElementProps) {
+export function RichTextV2Element({
+  plugins,
+  pathComponents,
+  parentStylesheetKey,
+  ...props
+}: RichTextV2ElementProps) {
+  const slateEditor = useSlateStatic()
   function initialRenderElement(props: RenderElementProps) {
     return props.children
   }
 
+  const slatePath = () => {
+    try {
+      return ReactEditor.findPath(slateEditor, props.element)
+    } catch (error) {
+      return []
+    }
+  }
+  const slatePathString = `slate-editor-path-[${slatePath().join(',')}]`
+
   const renderElement = plugins.reduce(
-    (renderFn, plugin) =>
+    (renderFn, plugin, index) =>
       function RenderElementPlugin(props: RenderElementProps) {
         const { control, renderElement } = plugin
 
@@ -23,10 +40,22 @@ export function RichTextV2Element({ plugins, ...props }: RichTextV2ElementProps)
         if (control == null || control.getElementValue == null)
           return renderElement(renderFn, undefined)(props)
 
+        const pseudoElementKey = parentStylesheetKey
+        const elementPathComponents = [
+          ...pathComponents,
+          `editable`,
+          `plugins`,
+          `${index}`,
+          `element`,
+          slatePathString,
+        ]
+
         return (
           <ControlValue
             definition={control.definition}
             data={control.getElementValue(props.element)}
+            elementKey={pseudoElementKey}
+            propPathComponents={elementPathComponents}
           >
             {value => renderElement(renderFn, value)(props)}
           </ControlValue>

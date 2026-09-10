@@ -1,10 +1,12 @@
-import { cx } from '@emotion/css'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
-import { useStyle } from '../../../../../../../runtimes/react/use-style'
 
 import { useResponsiveStyle } from '../../../../../../utils/responsive-style'
 import { Size, useFormContext, Sizes } from '../../../../context/FormContext'
 import responsiveField from '../../services/responsiveField'
+import {
+  composeStyles,
+  useStyle,
+} from '../../../../../../../runtimes/react/css-runtime/hooks/use-style'
 
 export function getSizeHeight(size: Size): number {
   switch (size) {
@@ -31,21 +33,21 @@ export default forwardRef(function Input(
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   const { shape, size, contrast, brandColor } = useFormContext()
+  const styles = composeStyles(
+    useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
+    useStyle(
+      useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
+        minHeight: getSizeHeight(size),
+        maxHeight: getSizeHeight(size),
+      })),
+    ),
+    className,
+  )
 
   return (
-    <input
-      {...restOfProps}
-      ref={ref}
-      className={cx(
-        useStyle(responsiveField({ shape, size, contrast, brandColor, error })),
-        useStyle(
-          useResponsiveStyle([size] as const, ([size = Sizes.MEDIUM]) => ({
-            minHeight: getSizeHeight(size),
-            maxHeight: getSizeHeight(size),
-          })),
-        ),
-        className,
-      )}
-    />
+    <>
+      {styles.styleElements}
+      <input {...restOfProps} ref={ref} className={styles.className} />
+    </>
   )
 })

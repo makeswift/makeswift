@@ -15,6 +15,7 @@ import { RootStyleRegistry } from '@makeswift/hono-react'
 import type { RscPayload } from './rsc'
 import { GlobalErrorBoundary } from './error-boundary'
 import { createRscRenderRequest } from './request'
+import { rootStyleProps } from '../lib/makeswift/styles'
 
 async function main() {
   // stash `setPayload` function to trigger re-rendering
@@ -75,7 +76,7 @@ async function main() {
   const browserRoot = (
     <React.StrictMode>
       <GlobalErrorBoundary>
-        <RootStyleRegistry>
+        <RootStyleRegistry {...rootStyleProps}>
           <BrowserRoot />
         </RootStyleRegistry>
       </GlobalErrorBoundary>

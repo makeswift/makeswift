@@ -5,9 +5,16 @@ import { ControlValue } from '../../control'
 
 type RichTextV2LeafProps = RenderLeafProps & {
   plugins: RichTextV2Plugin[]
+  pathComponents: string[]
+  parentStylesheetKey: string
 }
 
-export function RichTextV2Leaf({ plugins, ...props }: RichTextV2LeafProps) {
+export function RichTextV2Leaf({
+  plugins,
+  pathComponents,
+  parentStylesheetKey,
+  ...props
+}: RichTextV2LeafProps) {
   function initialRenderLeaf({ attributes, children, leaf }: RenderLeafProps): ReactNode {
     return (
       <span className={leaf.className} {...attributes}>
@@ -17,16 +24,32 @@ export function RichTextV2Leaf({ plugins, ...props }: RichTextV2LeafProps) {
   }
 
   const renderLeaf = plugins.reduce(
-    (renderFn, plugin) =>
+    (renderFn, plugin, index) =>
       function RenderLeafPlugin(props: RenderLeafProps) {
         const { control, renderLeaf } = plugin
 
         if (control?.definition == null || renderLeaf == null) return renderFn(props)
 
         if (control.getLeafValue == null) return renderLeaf(renderFn, undefined)(props)
+        // @ts-expect-error - this is a property that is added by a custom Slate decorator and is used by the css runtime
+        const slatePath = props.leaf._makeswiftLeafPath ?? ''
+        const pseudoElementKey = parentStylesheetKey
+        const leafPathComponents = [
+          ...pathComponents,
+          `editable`,
+          `plugins`,
+          `${index}`,
+          `leaf`,
+          slatePath,
+        ]
 
         return (
-          <ControlValue definition={control.definition} data={control.getLeafValue(props.leaf)}>
+          <ControlValue
+            definition={control.definition}
+            data={control.getLeafValue(props.leaf)}
+            elementKey={pseudoElementKey}
+            propPathComponents={leafPathComponents}
+          >
             {value => renderLeaf(renderFn, value)(props)}
           </ControlValue>
         )

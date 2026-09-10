@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page can render BorderPropController v0 data: rendered 1`] = `
+@media only screen and (min-width: 769px) {
+  .ms-9x6073 {
+    border-top: 1px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-9x6073 {
+    border-top: 1px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-9x6073 {
+    border-top: 1px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+
+<div
+  class="ms-9x6073"
+  data-testid="test-id"
+/>
+`;
+
+exports[`Page can render BorderPropController v1 data: rendered 1`] = `
+@media only screen and (min-width: 769px) {
+  .ms-9x6073 {
+    border-top: 1px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-9x6073 {
+    border-top: 1px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-9x6073 {
+    border-top: 1px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+
+<div
+  class="ms-9x6073"
+  data-testid="test-id"
+/>
+`;

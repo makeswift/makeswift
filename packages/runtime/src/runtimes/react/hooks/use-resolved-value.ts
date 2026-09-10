@@ -8,13 +8,14 @@ export function useResolvedValue<D, T>(
   data: D,
   resolver: (data: D, resourceResolver: ResourceResolver) => Resolvable<T>,
   defaultValue?: T,
+  extraDeps: readonly unknown[] = [],
 ): T | undefined {
   const resourceResolver = useResourceResolver()
   const resolvable = useMemo(() => {
     return propErrorHandlingProxy(resolver(data, resourceResolver), defaultValue, error => {
       console.warn(`Error resolving data, falling back to \`${defaultValue}\`.`, { error, data })
     })
-  }, [data, resourceResolver, defaultValue])
+  }, [data, resourceResolver, defaultValue, ...extraDeps])
 
   useEffect(() => {
     resolvable.triggerResolve()
