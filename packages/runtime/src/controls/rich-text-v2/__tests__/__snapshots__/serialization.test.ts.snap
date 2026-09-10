@@ -134,7 +134,7 @@ RichTextV2Definition {
       "control": {
         "definition": LinkDefinition {
           "config": {
-            "label": "On Click",
+            "label": "On click",
           },
         },
       },
@@ -289,7 +289,7 @@ exports[`RichTextV2 serialization deserialized definition in block mode contains
         "control": {
           "definition": {
             "config": {
-              "label": "On Click",
+              "label": "On click",
             },
             "type": "makeswift::controls::link",
           },
