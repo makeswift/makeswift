@@ -15,8 +15,8 @@ import { colorToString } from '../../../components/utils/colorToString'
 import { responsiveStyle } from '../../../components/utils/responsive-style'
 import { ColorValue } from '../../../components/utils/types'
 import { isNonNullable } from '../../../utils/isNonNullable'
-import { useStyle } from '../use-style'
 import { useBreakpoints } from '../hooks/use-breakpoints'
+import { useStyle } from '../css-runtime/hooks/use-style'
 
 export function typographyFragementToTypographyControlData(
   fragment: Typography | null,
@@ -189,7 +189,8 @@ export function typographyCss(breakpoints: Breakpoints, style: EnhancedTypograph
   )
 }
 
-export function useTypographyClassName(value: EnhancedTypography): string {
+export function useTypographyStyle(value: EnhancedTypography) {
   const breakpoints = useBreakpoints()
-  return useStyle(typographyCss(breakpoints, value))
+  const cssObject = typographyCss(breakpoints, value)
+  return useStyle(cssObject)
 }

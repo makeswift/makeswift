@@ -37,20 +37,3 @@ export function PageLink({ precedence, ...props }: PageLinkProps) {
     </Head>
   )
 }
-
-type ReactCanaryStyleProps = {
-  precedence?: 'reset' | 'low' | 'medium' | 'high'
-  href?: string
-}
-type PageStyleProps = ComponentPropsWithoutRef<'style'> & ReactCanaryStyleProps
-
-export function PageStyle({ children, precedence, href, ...props }: PageStyleProps) {
-  const { Head } = useFrameworkContext()
-  return (
-    <Head>
-      <style {...props} precedence={precedence} href={href}>
-        {children}
-      </style>
-    </Head>
-  )
-}
