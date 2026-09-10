@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toCssStatements declarations (properties with associated values) 1`] = `".my-red-circle{width:100px;height:100px;background-color:red;border-radius:50%;}"`;
+
+exports[`toCssStatements media queries 1`] = `"@media only screen and (min-width: 1281px){.my-responsive-font{font-family:Permanent Marker;font-size:24px;font-weight:404;line-height:1.5;}}@media only screen and (min-width: 1025px) and (max-width: 1280px){.my-responsive-font{font-family:Permanent Marker;font-size:22px;font-weight:403;line-height:1.5;}}@media only screen and (min-width: 769px) and (max-width: 1024px){.my-responsive-font{font-family:Permanent Marker;font-size:20px;font-weight:402;line-height:1.5;}}@media only screen and (min-width: 576px) and (max-width: 768px){.my-responsive-font{font-family:Permanent Marker;font-size:18px;font-weight:401;line-height:1.5;}}@media only screen and (max-width: 575px){.my-responsive-font{font-family:Permanent Marker;font-size:16px;font-weight:400;line-height:1.5;}}"`;
+
+exports[`toCssStatements nesting selector (&) 1`] = `".my-purple-effect:hover{background:purple;}"`;
+
+exports[`toCssStatements rulesets (selectors with associated declarations) 1`] = `".my-parent .my-child-1{font-family:sans-serif;}.my-parent .my-child-1 .my-child-2{background-color:blue;}.my-parent div[data-status="active"]{background-color:green;}"`;
