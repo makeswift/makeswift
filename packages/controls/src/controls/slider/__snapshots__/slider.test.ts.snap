@@ -61,6 +61,19 @@ SliderDefinition {
 }
 `;
 
+exports[`Slider constructor creates slider with suffix 1`] = `
+SliderDefinition {
+  "config": {
+    "defaultValue": 50,
+    "label": "width",
+    "max": 100,
+    "min": 0,
+    "suffix": "%",
+  },
+  "version": 1,
+}
+`;
+
 exports[`Slider definition w/ config {"defaultValue":50,"label":"volume","min":0,"max":100} toData returns v1 data for \`0\` when definition version is 1 1`] = `
 {
   "@@makeswift/type": "number::v1",
