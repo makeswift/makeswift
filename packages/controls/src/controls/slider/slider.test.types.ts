@@ -18,6 +18,7 @@ describe('Slider Types', () => {
         max?: number
         step?: number
         showInput?: boolean
+        suffix?: string
         provides?: undefined
       }>()
     })
@@ -35,6 +36,7 @@ describe('Slider Types', () => {
         max?: number
         step?: number
         showInput?: boolean
+        suffix?: string
         provides?: typeof volumeContext
       }>()
     })
