@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.28.10-canary.17
+
+### Patch Changes
+
+- 7fd1c5d: Lowercases "click" in the link plugin's "On click" label.
+
 ## 0.28.10-canary.16
 
 ### Patch Changes

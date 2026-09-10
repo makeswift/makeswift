@@ -18,6 +18,7 @@
     "vite-rsc-hono-react-cloudflare": "0.0.1"
   },
   "changesets": [
+    "arr-1116-lowercase-click-label",
     "dark-items-drive",
     "eager-doors-sort",
     "eager-trains-shop",
