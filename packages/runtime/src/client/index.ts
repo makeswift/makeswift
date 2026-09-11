@@ -758,12 +758,10 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       siteVersion: siteVersionPromise,
       locale,
       allowLocaleFallback = true,
-      unstable_enforceSuccess = false,
     }: {
       siteVersion: SiteVersion | null | Promise<SiteVersion | null>
       locale?: string
       allowLocaleFallback?: boolean
-      unstable_enforceSuccess?: boolean
     },
   ): Promise<MakeswiftComponentSnapshot> {
     const siteVersion = await siteVersionPromise
@@ -771,76 +769,32 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     const baseLocaleWasRequested = locale == null
     const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
 
-    const parseElementTreeResponse = async (
-      response: Response,
-    ): Promise<MakeswiftComponentDocument | null> => {
-      if (!response.ok) {
-        // See comment on `failedResponseBody` for why we always consume the
-        // response body of failed responses.
-        const failedBody = await failedResponseBody(response)
-        if (response.status === 404) {
-          return null
-        }
+    const searchParams = new URLSearchParams()
+    if (locale) searchParams.set('locale', locale)
+    if (canAttemptLocaleFallback) searchParams.set('allowLocaleFallback', 'true')
 
-        throw new RestApiClientError(`Failed to get component snapshot for '${id}'`, response, {
-          body: failedBody,
-          siteVersion,
-          locale,
-        })
-      }
+    const response = await this.fetch(
+      `v3/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+      siteVersion,
+    )
 
-      const responseBody = await response.json()
-      const parsed = Schema.componentDocumentResponse.parse(responseBody)
-      if ('notFound' in parsed) return null
-      return parsed
-    }
-
-    const getElementTree = async (
-      searchParams: URLSearchParams,
-    ): Promise<MakeswiftComponentDocument | null> => {
-      const response = await this.fetch(
-        `v2/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+    if (!response.ok) {
+      // See comment on `failedResponseBody` for why we always consume the
+      // response body of failed responses.
+      const failedBody = await failedResponseBody(response)
+      throw new RestApiClientError(`Failed to get component snapshot for '${id}'`, response, {
+        body: failedBody,
         siteVersion,
-      )
-      return await parseElementTreeResponse(response)
+        locale,
+      })
     }
 
-    const getPrimaryTree = async (): Promise<MakeswiftComponentDocument | null> => {
-      const searchParams = new URLSearchParams()
-      if (locale) searchParams.set('locale', locale)
-      if (unstable_enforceSuccess) searchParams.set('unstable_enforceSuccess', 'true')
-      return await getElementTree(searchParams)
-    }
-
-    const getFallbackTree = async (): Promise<MakeswiftComponentDocument | null> => {
-      const searchParams = new URLSearchParams()
-      if (unstable_enforceSuccess) searchParams.set('unstable_enforceSuccess', 'true')
-      return await getElementTree(searchParams)
-    }
-
-    const primaryTree = await getPrimaryTree()
-
-    const result =
-      primaryTree == null && canAttemptLocaleFallback ? await getFallbackTree() : primaryTree
-
-    if (result == null) {
-      return {
-        document: {
-          id,
-          locale: locale ?? null,
-          data: null,
-        },
-        key,
-        cacheData: CacheData.empty(),
-        meta: {
-          allowLocaleFallback,
-          requestedLocale: locale ?? null,
-        },
-      }
-    }
-
-    const document = result
-    const cacheData = await this.introspect(document.data, siteVersion, document.locale)
+    const reponseBody = await response.json()
+    const document = Schema.componentDocumentResponse.parse(reponseBody)
+    const cacheData =
+      document.data == null
+        ? CacheData.empty()
+        : await this.introspect(document.data, siteVersion, document.locale)
 
     return {
       document,
