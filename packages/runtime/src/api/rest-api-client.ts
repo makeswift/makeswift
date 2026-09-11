@@ -14,6 +14,11 @@ import {
 import { type SiteVersion } from './site-version'
 import * as Schema from './schema'
 
+export type GlobalElementWithLocalized = {
+  base: GlobalElement | null
+  localized: LocalizedGlobalElement | null
+}
+
 const RetryBackoffConfig = {
   MaxAttempts: 3,
   MaxDelayMs: 5_000,
@@ -137,6 +142,37 @@ export class MakeswiftRestAPIClient {
     const globalElement = await response.json()
 
     return globalElement
+  }
+
+  async getGlobalElements(
+    globalElementIds: string[],
+    siteVersion: SiteVersion | null,
+    { locale }: { locale?: string | null } = {},
+  ): Promise<GlobalElementWithLocalized[]> {
+    if (globalElementIds.length === 0) return []
+
+    const url = new URL(`v3/global-elements/bulk`, this.apiOrigin)
+
+    globalElementIds.forEach(id => url.searchParams.append('ids', id))
+    if (locale != null) url.searchParams.set('locale', locale)
+
+    const response = await this.fetch(url.pathname + url.search, siteVersion)
+
+    if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
+      // 404 means the requested version has no commit (e.g., site never published)
+      if (response.status === 404) {
+        return globalElementIds.map(() => ({ base: null, localized: null }))
+      }
+
+      throw new RestApiClientError(
+        `Failed to get global elements for [${globalElementIds.join(', ')}]`,
+        response,
+        { body: failedBody, siteVersion, locale },
+      )
+    }
+
+    return await response.json()
   }
 
   async getLocalizedGlobalElement(

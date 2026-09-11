@@ -467,125 +467,144 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     const globalElementCache = new Map<string, GlobalElement | null>()
     const localizedGlobalElementCache = new Map<string, LocalizedGlobalElement | null>()
 
+    function createTreeCache() {
+      return {
+        swatchIds: new Set<string>(),
+        fileIds: new Set<string>(),
+        typographyIds: new Set<string>(),
+        tableIds: new Set<string>(),
+        pageIds: new Set<string>(),
+        globalElements: new Map<string, GlobalElement | null>(),
+        localizedGlobalElements: new Map<string, LocalizedGlobalElement | null>(),
+        localizedResourcesMap: new Map<string, string | null>(),
+      }
+    }
+
     // Per-tree tracking, keyed by tree ID
-    const treeCaches = new Map(
+    const traversals = new Map(
       trees.map(tree => [
         tree.id,
         {
-          data: tree.data,
-          swatchIds: new Set<string>(),
-          fileIds: new Set<string>(),
-          typographyIds: new Set<string>(),
-          tableIds: new Set<string>(),
-          pageIds: new Set<string>(),
-          globalElements: new Map<string, GlobalElement | null>(),
-          localizedGlobalElements: new Map<string, LocalizedGlobalElement | null>(),
-          localizedResourcesMap: new Map<string, string | null>(),
+          cache: createTreeCache(),
+          remaining: [tree.data],
+          seen: new Set<string>(),
         },
       ]),
     )
 
-    // DFS traversal per tree
-    for (const currentTreeCache of treeCaches.values()) {
-      const remaining = [currentTreeCache.data]
-      const seen = new Set<string>()
-      let current: Element | undefined
+    // Layered DFS traversal: each pass walks every tree as far as the caches allow, then
+    // fetches every newly discovered global element in one bulk round-trip before resuming.
+    while (true) {
+      const pendingGlobalElementIds = new Set<string>()
+      const deferred: { treeId: string; element: Element }[] = []
 
-      while ((current = remaining.pop())) {
-        let element: ElementData
+      for (const [treeId, traversal] of traversals) {
+        const { remaining, seen, cache: currentTreeCache } = traversal
+        let current: Element | undefined
 
-        if (isElementReference(current)) {
-          const globalElementId = current.value
+        while ((current = remaining.pop())) {
+          let element: ElementData
 
-          // Fetch global element, using cache if already fetched for another tree
-          let globalElement: GlobalElement | null
-          if (globalElementCache.has(globalElementId)) {
-            globalElement = globalElementCache.get(globalElementId)!
-          } else {
-            globalElement = await this.getGlobalElement(globalElementId, siteVersion)
-            globalElementCache.set(globalElementId, globalElement)
-          }
+          if (isElementReference(current)) {
+            const globalElementId = current.value
 
-          let elementData = globalElement?.data
-
-          if (locale) {
-            let localizedGlobalElement: LocalizedGlobalElement | null
-            if (localizedGlobalElementCache.has(globalElementId)) {
-              localizedGlobalElement = localizedGlobalElementCache.get(globalElementId)!
-            } else {
-              localizedGlobalElement = await this.getLocalizedGlobalElement(
-                globalElementId,
-                locale,
-                siteVersion,
-              )
-              localizedGlobalElementCache.set(globalElementId, localizedGlobalElement)
+            // Defer until the global element is fetched as part of this layer's bulk request
+            if (!globalElementCache.has(globalElementId)) {
+              pendingGlobalElementIds.add(globalElementId)
+              deferred.push({ treeId, element: current })
+              continue
             }
 
-            if (localizedGlobalElement) {
-              // Update the logic here when we can merge element trees
-              elementData = localizedGlobalElement.data
+            const globalElement = globalElementCache.get(globalElementId) ?? null
 
-              currentTreeCache.localizedResourcesMap.set(globalElementId, localizedGlobalElement.id)
-              currentTreeCache.localizedGlobalElements.set(
-                localizedGlobalElement.id,
-                localizedGlobalElement,
-              )
-            } else {
-              // Record that this localized global element doesn't exist so the
-              // client won't try to fetch it again (which would result in a 404).
-              currentTreeCache.localizedResourcesMap.set(globalElementId, null)
-            }
-          }
+            let elementData = globalElement?.data
 
-          currentTreeCache.globalElements.set(globalElementId, globalElement)
+            if (locale) {
+              const localizedGlobalElement =
+                localizedGlobalElementCache.get(globalElementId) ?? null
 
-          if (elementData == null) continue
+              if (localizedGlobalElement) {
+                // Update the logic here when we can merge element trees
+                elementData = localizedGlobalElement.data
 
-          element = elementData as ElementData
-        } else {
-          element = current
-        }
-
-        const elementDescriptors = descriptors.get(element.type)
-
-        if (elementDescriptors == null) continue
-
-        getResourcesFromElementDescriptors(elementDescriptors, element.props)
-
-        function getResourcesFromElementDescriptors(
-          elementDescriptors: Record<string, PropControllerDescriptor>,
-          props: ElementData['props'],
-        ) {
-          Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
-            getSwatchIds(descriptor, props[propName]).forEach(swatchId => {
-              currentTreeCache.swatchIds.add(swatchId)
-            })
-
-            getFileIds(descriptor, props[propName]).forEach(fileId => {
-              currentTreeCache.fileIds.add(fileId)
-            })
-
-            getTypographyIds(descriptor, props[propName]).forEach(typographyId => {
-              currentTreeCache.typographyIds.add(typographyId)
-            })
-
-            getTableIds(descriptor, props[propName]).forEach(tableId => {
-              currentTreeCache.tableIds.add(tableId)
-            })
-
-            getPageIds(descriptor, props[propName]).forEach(pageId => {
-              currentTreeCache.pageIds.add(pageId)
-            })
-
-            getElementChildren(descriptor, props[propName]).forEach(child => {
-              if (!seen.has(child.key)) {
-                seen.add(child.key)
-                remaining.push(child)
+                currentTreeCache.localizedResourcesMap.set(
+                  globalElementId,
+                  localizedGlobalElement.id,
+                )
+                currentTreeCache.localizedGlobalElements.set(
+                  localizedGlobalElement.id,
+                  localizedGlobalElement,
+                )
+              } else {
+                // Record that this localized global element doesn't exist so the
+                // client won't try to fetch it again (which would result in a 404).
+                currentTreeCache.localizedResourcesMap.set(globalElementId, null)
               }
+            }
+
+            currentTreeCache.globalElements.set(globalElementId, globalElement)
+
+            if (elementData == null) continue
+
+            element = elementData as ElementData
+          } else {
+            element = current
+          }
+
+          const elementDescriptors = descriptors.get(element.type)
+
+          if (elementDescriptors == null) continue
+
+          getResourcesFromElementDescriptors(elementDescriptors, element.props)
+
+          function getResourcesFromElementDescriptors(
+            elementDescriptors: Record<string, PropControllerDescriptor>,
+            props: ElementData['props'],
+          ) {
+            Object.entries(elementDescriptors).forEach(([propName, descriptor]) => {
+              getSwatchIds(descriptor, props[propName]).forEach(swatchId => {
+                currentTreeCache.swatchIds.add(swatchId)
+              })
+
+              getFileIds(descriptor, props[propName]).forEach(fileId => {
+                currentTreeCache.fileIds.add(fileId)
+              })
+
+              getTypographyIds(descriptor, props[propName]).forEach(typographyId => {
+                currentTreeCache.typographyIds.add(typographyId)
+              })
+
+              getTableIds(descriptor, props[propName]).forEach(tableId => {
+                currentTreeCache.tableIds.add(tableId)
+              })
+
+              getPageIds(descriptor, props[propName]).forEach(pageId => {
+                currentTreeCache.pageIds.add(pageId)
+              })
+
+              getElementChildren(descriptor, props[propName]).forEach(child => {
+                if (!seen.has(child.key)) {
+                  seen.add(child.key)
+                  remaining.push(child)
+                }
+              })
             })
-          })
+          }
         }
       }
+
+      // If there are no pendingGlobalElementIds then all elements have been traversed completely
+      if (pendingGlobalElementIds.size === 0) break
+
+      const ids = [...pendingGlobalElementIds]
+      const results = await this.getGlobalElements(ids, siteVersion, { locale })
+
+      ids.forEach((id, index) => {
+        globalElementCache.set(id, results[index]?.base ?? null)
+        localizedGlobalElementCache.set(id, results[index]?.localized ?? null)
+      })
+
+      deferred.forEach(({ treeId, element }) => traversals.get(treeId)!.remaining.push(element))
     }
 
     // Accumulate shared sets from per-tree state for bulk calls
@@ -595,7 +614,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     const allTableIds = new Set<string>()
     const allPageIds = new Set<string>()
 
-    for (const currentTreeCache of treeCaches.values()) {
+    for (const { cache: currentTreeCache } of traversals.values()) {
       currentTreeCache.swatchIds.forEach(id => allSwatchIds.add(id))
       currentTreeCache.fileIds.forEach(id => allFileIds.add(id))
       currentTreeCache.typographyIds.forEach(id => allTypographyIds.add(id))
@@ -623,7 +642,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
 
       if (secondarySwatchIds.length > 0) {
         // Add discovered swatches to per-tree sets for trees that reference this typography
-        for (const currentTreeCache of treeCaches.values()) {
+        for (const { cache: currentTreeCache } of traversals.values()) {
           if (currentTreeCache.typographyIds.has(typography.id)) {
             secondarySwatchIds.forEach(id => currentTreeCache.swatchIds.add(id))
           }
@@ -647,7 +666,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     // Build per-tree CacheData using only the resources that tree references
     const result = new Map<string, CacheData>()
 
-    for (const [treeId, currentTreeCache] of treeCaches) {
+    for (const [treeId, { cache: currentTreeCache }] of traversals) {
       const apiResources = {
         [APIResourceType.Swatch]: [...currentTreeCache.swatchIds].map(id => ({
           id,
