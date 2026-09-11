@@ -13,7 +13,7 @@ import {
   makeTypography,
   makePagePathnameSlice,
 } from '../../testing/fixtures/resources'
-import { Color, Image, Link, unstable_Typography } from '../../controls'
+import { Color, Image, Link, Slot, unstable_Typography } from '../../controls'
 import { type Element } from '../../state/read-only-state'
 
 const TEST_API_KEY = 'myApiKey'
@@ -32,8 +32,24 @@ runtime.registerComponent(() => null, {
     // so exercising it here covers the production path for Typography ID extraction.
     typography: unstable_Typography(),
     table: Table(),
+    slot: Slot(),
   },
 })
+
+function referenceTo(key: string, globalElementId: string) {
+  return { type: 'reference' as const, key, value: globalElementId }
+}
+
+function globalElementWithChildren(id: string, children: Element[]) {
+  return {
+    id,
+    data: {
+      type: TEST_COMPONENT_TYPE,
+      key: `${id}-key`,
+      props: { slot: { columns: [], elements: children } },
+    },
+  }
+}
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })
@@ -47,6 +63,38 @@ function componentTree(
     id: treeId,
     data: { type: TEST_COMPONENT_TYPE, key: `${treeId}-key`, props } as Element,
   }
+}
+
+const GLOBAL_ELEMENTS_BULK_URL = `${runtime.apiOrigin}/v3/global-elements/bulk`
+
+function requestedIds(request: Request): string[] {
+  return new URL(request.url).searchParams.getAll('ids')
+}
+
+function requestedLocale(request: Request): string | null {
+  return new URL(request.url).searchParams.get('locale')
+}
+
+function bulkResponse(
+  request: Request,
+  elements: Record<string, unknown>,
+  localizedElements: Record<string, unknown> = {},
+) {
+  return HttpResponse.json(
+    requestedIds(request).map(id => ({
+      globalElement: elements[id] ?? null,
+      localizedGlobalElement: localizedElements[id] ?? null,
+    })),
+  )
+}
+
+function globalElementsBulkHandler(
+  elements: Record<string, unknown>,
+  localizedElements: Record<string, unknown> = {},
+) {
+  return http.get(GLOBAL_ELEMENTS_BULK_URL, ({ request }) =>
+    bulkResponse(request, elements, localizedElements),
+  )
 }
 
 afterEach(() => {
@@ -77,16 +125,11 @@ describe('introspectMany', () => {
       data: { type: 'globalType', key: 'global-key-1', props: {} },
     }
 
-    const globalElementHandler = jest.fn(() => {
-      return HttpResponse.json(globalElementData, { status: 200 })
-    })
-
-    server.use(
-      http.get(
-        `${runtime.apiOrigin}/v3/global-elements/${sharedGlobalElementId}`,
-        globalElementHandler,
-      ),
+    const globalElementHandler = jest.fn(({ request }: { request: Request }) =>
+      bulkResponse(request, { [sharedGlobalElementId]: globalElementData }),
     )
+
+    server.use(http.get(GLOBAL_ELEMENTS_BULK_URL, globalElementHandler))
 
     const tree1 = {
       id: 'tree-1',
@@ -102,6 +145,9 @@ describe('introspectMany', () => {
 
     // Assert — global element should only be fetched once despite being referenced by two trees
     expect(globalElementHandler).toHaveBeenCalledTimes(1)
+    expect(requestedIds(globalElementHandler.mock.calls[0]![0].request)).toEqual([
+      sharedGlobalElementId,
+    ])
 
     // Both trees should have the global element in their CacheData
     expect(results.size).toBe(2)
@@ -127,14 +173,11 @@ describe('introspectMany', () => {
       data: { type: 'globalType2', key: 'global-key-2', props: {} },
     }
 
-    server.use(
-      http.get(`${runtime.apiOrigin}/v3/global-elements/global-elem-1`, () =>
-        HttpResponse.json(globalElement1, { status: 200 }),
-      ),
-      http.get(`${runtime.apiOrigin}/v3/global-elements/global-elem-2`, () =>
-        HttpResponse.json(globalElement2, { status: 200 }),
-      ),
+    const globalElementHandler = jest.fn(({ request }: { request: Request }) =>
+      bulkResponse(request, { 'global-elem-1': globalElement1, 'global-elem-2': globalElement2 }),
     )
+
+    server.use(http.get(GLOBAL_ELEMENTS_BULK_URL, globalElementHandler))
 
     const tree1 = {
       id: 'tree-1',
@@ -148,7 +191,14 @@ describe('introspectMany', () => {
     // Act
     const results = await client['introspectMany']([tree1, tree2], TestWorkingSiteVersion, null)
 
-    // Assert — each tree only has its own global element
+    // Assert — both top-level references go out in a single bulk request
+    expect(globalElementHandler).toHaveBeenCalledTimes(1)
+    expect(requestedIds(globalElementHandler.mock.calls[0]![0].request)).toEqual([
+      'global-elem-1',
+      'global-elem-2',
+    ])
+
+    // Each tree only has its own global element
     expect(results.size).toBe(2)
 
     const tree1GlobalElements = results.get('tree-1')!.apiResources.GlobalElement!
@@ -165,11 +215,7 @@ describe('introspectMany', () => {
     const client = createTestClient()
     setupGraphqlMock()
 
-    server.use(
-      http.get(`${runtime.apiOrigin}/v3/global-elements/missing-elem`, () =>
-        HttpResponse.text('', { status: 404 }),
-      ),
-    )
+    server.use(globalElementsBulkHandler({}))
 
     const tree = {
       id: 'tree-1',
@@ -204,9 +250,7 @@ describe('introspectMany', () => {
     }
 
     server.use(
-      http.get(`${runtime.apiOrigin}/v3/global-elements/global-with-color`, () =>
-        HttpResponse.json(globalElement, { status: 200 }),
-      ),
+      globalElementsBulkHandler({ 'global-with-color': globalElement }),
       http.get(`${runtime.apiOrigin}/v3/swatches/bulk`, ({ request }) => {
         const url = new URL(request.url)
         const ids = url.searchParams.getAll('ids')
@@ -263,11 +307,9 @@ describe('introspectMany', () => {
     const mockSwatchLocalized = { id: 'swatch-localized', hue: 0, saturation: 100, lightness: 50 }
 
     server.use(
-      http.get(`${runtime.apiOrigin}/v3/global-elements/global-elem`, () =>
-        HttpResponse.json(baseGlobalElement, { status: 200 }),
-      ),
-      http.get(`${runtime.apiOrigin}/v3/localized-global-elements/global-elem`, () =>
-        HttpResponse.json(localizedGlobalElement, { status: 200 }),
+      globalElementsBulkHandler(
+        { 'global-elem': baseGlobalElement },
+        { 'global-elem': localizedGlobalElement },
       ),
       http.get(`${runtime.apiOrigin}/v3/swatches/bulk`, ({ request }) => {
         const url = new URL(request.url)
@@ -760,13 +802,8 @@ describe('introspectMany', () => {
       }
 
       server.use(
-        http.get(`${runtime.apiOrigin}/v3/global-elements/global-1`, () =>
-          HttpResponse.json(baseGlobalElement, { status: 200 }),
-        ),
         // Localized variant doesn't exist
-        http.get(`${runtime.apiOrigin}/v3/localized-global-elements/global-1`, () =>
-          HttpResponse.text('', { status: 404 }),
-        ),
+        globalElementsBulkHandler({ 'global-1': baseGlobalElement }),
         http.get(`${runtime.apiOrigin}/v3/swatches/bulk`, ({ request }) => {
           const ids = new URL(request.url).searchParams.getAll('ids')
           return HttpResponse.json(ids.map(id => makeSwatch(id)))
@@ -802,15 +839,16 @@ describe('introspectMany', () => {
         data: { type: TEST_COMPONENT_TYPE, key: 'inner', props: {} },
       }
 
-      const localizedHandler = jest.fn(() =>
-        HttpResponse.json(localizedGlobalElement, { status: 200 }),
+      const bulkHandler = jest.fn(({ request }: { request: Request }) =>
+        bulkResponse(
+          request,
+          { 'global-1': baseGlobalElement },
+          { 'global-1': localizedGlobalElement },
+        ),
       )
 
       server.use(
-        http.get(`${runtime.apiOrigin}/v3/global-elements/global-1`, () =>
-          HttpResponse.json(baseGlobalElement, { status: 200 }),
-        ),
-        http.get(`${runtime.apiOrigin}/v3/localized-global-elements/global-1`, localizedHandler),
+        http.get(GLOBAL_ELEMENTS_BULK_URL, bulkHandler),
         graphql.operation(() => HttpResponse.json({})),
       )
 
@@ -825,7 +863,9 @@ describe('introspectMany', () => {
 
       const results = await client['introspectMany']([tree1, tree2], TestWorkingSiteVersion, 'fr')
 
-      expect(localizedHandler).toHaveBeenCalledTimes(1)
+      expect(bulkHandler).toHaveBeenCalledTimes(1)
+      expect(requestedIds(bulkHandler.mock.calls[0]![0].request)).toEqual(['global-1'])
+      expect(requestedLocale(bulkHandler.mock.calls[0]![0].request)).toBe('fr')
       for (const treeId of ['tree-1', 'tree-2']) {
         const r = results.get(treeId)!
         expect(r.apiResources.LocalizedGlobalElement!.map(le => le.id)).toEqual([
@@ -837,7 +877,7 @@ describe('introspectMany', () => {
       }
     })
 
-    test('skips all localized-variant fetches when locale is null and leaves localizedResourcesMap empty', async () => {
+    test('omits the locale param when locale is null and leaves localizedResourcesMap empty', async () => {
       const client = createTestClient()
 
       const baseGlobalElement = {
@@ -845,13 +885,12 @@ describe('introspectMany', () => {
         data: { type: TEST_COMPONENT_TYPE, key: 'inner', props: {} },
       }
 
-      const localizedHandler = jest.fn(() => HttpResponse.json({}, { status: 200 }))
+      const bulkHandler = jest.fn(({ request }: { request: Request }) =>
+        bulkResponse(request, { 'global-1': baseGlobalElement }),
+      )
 
       server.use(
-        http.get(`${runtime.apiOrigin}/v3/global-elements/global-1`, () =>
-          HttpResponse.json(baseGlobalElement, { status: 200 }),
-        ),
-        http.get(`${runtime.apiOrigin}/v3/localized-global-elements/global-1`, localizedHandler),
+        http.get(GLOBAL_ELEMENTS_BULK_URL, bulkHandler),
         graphql.operation(() => HttpResponse.json({})),
       )
 
@@ -862,8 +901,104 @@ describe('introspectMany', () => {
 
       const results = await client['introspectMany']([tree], TestWorkingSiteVersion, null)
 
-      expect(localizedHandler).not.toHaveBeenCalled()
+      expect(bulkHandler).toHaveBeenCalledTimes(1)
+      expect(requestedLocale(bulkHandler.mock.calls[0]![0].request)).toBeNull()
       expect(results.get('tree-1')!.localizedResourcesMap).toEqual({})
+    })
+
+    test('bulk localized response with a null entry records null only for that global element', async () => {
+      const client = createTestClient()
+
+      const elements = {
+        'global-1': { id: 'global-1', data: { type: TEST_COMPONENT_TYPE, key: 'k1', props: {} } },
+        'global-2': { id: 'global-2', data: { type: TEST_COMPONENT_TYPE, key: 'k2', props: {} } },
+      }
+      const localizedGlobal1 = {
+        id: 'localized-global-1-fr',
+        data: { type: TEST_COMPONENT_TYPE, key: 'k1', props: {} },
+      }
+
+      server.use(
+        globalElementsBulkHandler(elements, { 'global-1': localizedGlobal1 }),
+        graphql.operation(() => HttpResponse.json({})),
+      )
+
+      const tree1 = {
+        id: 'tree-1',
+        data: { type: 'reference' as const, key: 'r1', value: 'global-1' },
+      }
+      const tree2 = {
+        id: 'tree-2',
+        data: { type: 'reference' as const, key: 'r2', value: 'global-2' },
+      }
+
+      const results = await client['introspectMany']([tree1, tree2], TestWorkingSiteVersion, 'fr')
+
+      expect(results.get('tree-1')!.localizedResourcesMap).toEqual({
+        fr: { 'global-1': 'localized-global-1-fr' },
+      })
+      expect(results.get('tree-1')!.apiResources.LocalizedGlobalElement!.map(r => r.id)).toEqual([
+        'localized-global-1-fr',
+      ])
+      expect(results.get('tree-2')!.localizedResourcesMap).toEqual({ fr: { 'global-2': null } })
+      expect(results.get('tree-2')!.apiResources.LocalizedGlobalElement).toEqual([])
+    })
+  })
+
+  describe('layered bulk fetching', () => {
+    test('fetches each nesting level of global elements in its own bulk request', async () => {
+      const client = createTestClient()
+
+      // outer-a and outer-b are top-level references; outer-a's slot contains inner-a,
+      // and both outer-b's and inner-a's slots contain shared-inner.
+      const elements = {
+        'outer-a': globalElementWithChildren('outer-a', [referenceTo('outer-a-ref', 'inner-a')]),
+        'outer-b': globalElementWithChildren('outer-b', [
+          referenceTo('outer-b-ref', 'shared-inner'),
+        ]),
+        'inner-a': globalElementWithChildren('inner-a', [
+          referenceTo('inner-a-ref', 'shared-inner'),
+        ]),
+        'shared-inner': globalElementWithChildren('shared-inner', []),
+      }
+
+      const globalElementHandler = jest.fn(({ request }: { request: Request }) =>
+        bulkResponse(request, elements),
+      )
+
+      server.use(
+        http.get(GLOBAL_ELEMENTS_BULK_URL, globalElementHandler),
+        graphql.operation(() => HttpResponse.json({})),
+      )
+
+      const tree1 = { id: 'tree-1', data: referenceTo('r1', 'outer-a') }
+      const tree2 = { id: 'tree-2', data: referenceTo('r2', 'outer-b') }
+
+      const results = await client['introspectMany']([tree1, tree2], TestWorkingSiteVersion, null)
+
+      // Layer 1: both top-level references. Layer 2: inner-a (from outer-a) and
+      // shared-inner (from outer-b). Layer 3: nothing new — inner-a's reference to
+      // shared-inner is already cached, so no third request is made.
+      const requestedIdsPerCall = globalElementHandler.mock.calls.map(([{ request }]) =>
+        requestedIds(request),
+      )
+      expect(requestedIdsPerCall).toEqual([
+        ['outer-a', 'outer-b'],
+        ['inner-a', 'shared-inner'],
+      ])
+
+      expect(
+        results
+          .get('tree-1')!
+          .apiResources.GlobalElement!.map(r => r.id)
+          .sort(),
+      ).toEqual(['inner-a', 'outer-a', 'shared-inner'])
+      expect(
+        results
+          .get('tree-2')!
+          .apiResources.GlobalElement!.map(r => r.id)
+          .sort(),
+      ).toEqual(['outer-b', 'shared-inner'])
     })
   })
 })
