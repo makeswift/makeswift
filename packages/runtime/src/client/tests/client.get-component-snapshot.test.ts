@@ -1,4 +1,8 @@
-import { MakeswiftClient, MakeswiftComponentDocument } from '../../client'
+import {
+  MakeswiftClient,
+  MakeswiftComponentDocument,
+  MakeswiftComponentDocumentFallback,
+} from '../../client'
 import { http, HttpResponse, graphql } from 'msw'
 
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
@@ -9,22 +13,96 @@ import { Link } from '../../controls'
 
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
-const baseUrl = `${runtime.apiOrigin}/v2/element-trees`
+const baseUrl = `${runtime.apiOrigin}/v3/element-trees`
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })
+}
+
+function makeDocument(
+  id: string,
+  locale: string | null,
+  { key = 'abc123' }: { key?: string } = {},
+): MakeswiftComponentDocument {
+  return {
+    id,
+    name: 'myElementTree',
+    data: {
+      type: 'myType',
+      key,
+      props: {},
+    },
+    locale,
+    siteId: 'mySiteId',
+    inheritsFromParent: false,
+  }
+}
+
+function makeEmptyDocument(id: string, locale: string | null): MakeswiftComponentDocumentFallback {
+  return { id, locale, data: null }
 }
 
 afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('getComponentSnapshot using v2 element tree endpoint', () => {
+describe('getComponentSnapshot using v3 element tree endpoint', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  test('return null document data on 404', async () => {
+  test('returns null document data on a 200 empty document response', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree'
+    const httpHandler = jest.fn((_: { request: Request }) =>
+      HttpResponse.json(makeEmptyDocument(treeId, null), { status: 200 }),
+    )
+    server.use(http.get(`${baseUrl}/${treeId}`, httpHandler))
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result.document.id).toBe(treeId)
+    expect(result.document.data).toBeNull()
+    expect(result.document.locale).toBeNull()
+    expect(result.meta).toEqual({ allowLocaleFallback: true, requestedLocale: null })
+
+    expect(httpHandler).toHaveBeenCalledTimes(1)
+    const requestUrl = httpHandler.mock.calls[0][0].request.url
+    expect(requestUrl).not.toContain('locale=')
+    expect(requestUrl).not.toContain('allowLocaleFallback')
+  })
+
+  test('preserves the requested locale on an empty document response', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree'
+    const localeToTest = 'fr-FR'
+    server.use(
+      http.get(
+        `${baseUrl}/${treeId}`,
+        () => HttpResponse.json(makeEmptyDocument(treeId, localeToTest), { status: 200 }),
+        { once: true },
+      ),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+      locale: localeToTest,
+    })
+
+    // Assert
+    expect(result.document.data).toBeNull()
+    expect(result.document.locale).toBe(localeToTest)
+    expect(result.meta.requestedLocale).toBe(localeToTest)
+  })
+
+  test('throws on a 404 response', async () => {
     // Arrange
     const client = createTestClient()
     const treeId = 'myTree'
@@ -35,107 +113,17 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
     )
 
     // Act
-    const result = await client.getComponentSnapshot(treeId, {
+    const resultPromise = client.getComponentSnapshot(treeId, {
       siteVersion: TestWorkingSiteVersion,
     })
 
     // Assert
-    expect(result.document).not.toBeNull()
-    expect(result.document.id).toBe(treeId)
-    expect(result.document.data).toBeNull()
-  })
-
-  test('return null document data on a 200 `{ notFound: true }` response', async () => {
-    // Arrange
-    const client = createTestClient()
-    const treeId = 'myTree'
-    server.use(
-      http.get(
-        `${baseUrl}/${treeId}`,
-        () => HttpResponse.json({ notFound: true }, { status: 200 }),
-        { once: true },
-      ),
+    await expect(resultPromise).rejects.toThrow(
+      "Failed to get component snapshot for 'myTree': 404 Not Found",
     )
-
-    // Act
-    const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: TestWorkingSiteVersion,
-    })
-
-    // Assert
-    expect(result.document).not.toBeNull()
-    expect(result.document.id).toBe(treeId)
-    expect(result.document.data).toBeNull()
   })
 
-  test('omits the `unstable_enforceSuccess` QSP when `unstable_enforceSuccess` is false', async () => {
-    // Arrange
-    const client = createTestClient()
-    const treeId = 'myTree'
-    const httpHandler = jest.fn(({ request }) => {
-      void request
-      return HttpResponse.text('', { status: 404 })
-    })
-    server.use(http.get(`${baseUrl}/${treeId}`, httpHandler))
-
-    // Act
-    await client.getComponentSnapshot(treeId, {
-      siteVersion: TestWorkingSiteVersion,
-      unstable_enforceSuccess: false,
-    })
-
-    // Assert
-    expect(httpHandler.mock.calls[0][0].request.url).not.toContain('unstable_enforceSuccess')
-  })
-
-  test('performs locale fallback on a 200 `{ notFound: true }` response', async () => {
-    // Arrange
-    const client = createTestClient()
-    const localeToTest = 'fr-FR'
-    const treeId = 'myTree123'
-    const elementTreeKey = 'abc123'
-    const document: MakeswiftComponentDocument = {
-      id: treeId,
-      name: 'myElementTree',
-      data: {
-        type: 'myType',
-        key: elementTreeKey,
-        props: {},
-      },
-      locale: null,
-      siteId: 'mySiteId',
-      inheritsFromParent: false,
-    }
-
-    const httpHandler = jest.fn(({ request }) => {
-      const { searchParams } = new URL(request.url)
-      if (searchParams.get('locale') === localeToTest) {
-        return HttpResponse.json({ notFound: true }, { status: 200 })
-      }
-
-      return HttpResponse.json(document, { status: 200 })
-    })
-
-    server.use(
-      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
-      graphql.operation(() => {
-        return HttpResponse.json({})
-      }),
-    )
-
-    // Act
-    const result = await client.getComponentSnapshot(treeId, {
-      siteVersion: TestWorkingSiteVersion,
-      locale: localeToTest,
-    })
-
-    // Assert
-    expect(result.document.data?.key).toBe(elementTreeKey)
-    expect(result.document.locale).toBeNull()
-    expect(httpHandler).toHaveBeenCalledTimes(2)
-  })
-
-  test('throws on errors other than 404', async () => {
+  test('throws on a 400 response', async () => {
     // Arrange
     const client = createTestClient()
     const treeId = 'myTree'
@@ -161,117 +149,52 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
     { treeId: 'unsafe:url;chars=@&?❔🤷', locale: 'fr-FR' },
     { treeId: '/blog/slug', locale: 'en-US' },
   ])(
-    "successfully performs locale fallback by requesting base locale tree after receiving a 404 response for the element tree '$treeId' with the '$locale' locale",
+    "requests server-side locale fallback in a single request for the element tree '$treeId' with the '$locale' locale",
     async ({ treeId, locale }) => {
       // Arrange
       const client = createTestClient()
-      const localeToTest = locale
-      const baseLocale = null
-
-      // mock base locale tree document
-      const elementTreeName = 'myElementTree'
       const elementTreeKey = 'abc123'
-      const document: MakeswiftComponentDocument = {
-        id: treeId,
-        name: elementTreeName,
-        data: {
-          type: 'myType',
-          key: elementTreeKey,
-          props: {},
-        },
-        locale: baseLocale,
-        siteId: 'mySiteId',
-        inheritsFromParent: false,
-      }
+      // The server resolved the base locale tree, so the returned locale is null.
+      const document = makeDocument(treeId, null, { key: elementTreeKey })
 
-      /*
-        Intercept:
-        (1) initial request to v1 endpoint for the locale variant tree
-        (2) subsequent request to v1 endpoint for the base locale tree
-            - this is the step that we're really testing here - we want the logic in getComponentSnapshot to execute this subsequent request
-        (3) graphql query for introspection
-    */
-      const httpHandler = jest.fn(({ request }) => {
-        const { searchParams } = new URL(request.url)
-        const locale = searchParams.get('locale')
-        if (locale === localeToTest) {
-          return HttpResponse.text('', { status: 404 })
-        }
-
-        return HttpResponse.json(document, { status: 200 })
-      })
+      const httpHandler = jest.fn((_: { request: Request }) =>
+        HttpResponse.json(document, { status: 200 }),
+      )
 
       server.use(
         http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
-        graphql.operation(() => {
-          return HttpResponse.json({})
-        }),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       // Act
       const result = await client.getComponentSnapshot(treeId, {
         siteVersion: TestWorkingSiteVersion,
-        locale: localeToTest,
+        locale,
       })
 
       // Assert
-      expect(result).not.toBeNull()
-      expect(result.document).not.toBeNull()
-      expect(result.document.data).not.toBeNull()
+      expect(result.document.id).toBe(treeId)
       expect(result.document.data?.key).toBe(elementTreeKey)
       expect(result.document.locale).toBeNull()
+      expect(result.meta.requestedLocale).toBe(locale)
 
-      expect(httpHandler).toHaveBeenCalledTimes(2)
-      expect(httpHandler.mock.calls[0][0].request.url).toContain(`locale=${localeToTest}`)
+      expect(httpHandler).toHaveBeenCalledTimes(1)
+      const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
+      expect(searchParams.get('locale')).toBe(locale)
+      expect(searchParams.get('allowLocaleFallback')).toBe('true')
     },
   )
 
-  test('does not perform locale fallback after receiving a 404 response for a locale variant tree, when allowFallback is false', async () => {
+  test('does not request locale fallback when allowLocaleFallback is false', async () => {
     // Arrange
     const client = createTestClient()
-    const localeToTest = 'fr-FR'
-    const baseLocale = null
-
-    // mock base locale tree document
     const treeId = 'myTree123'
-    const elementTreeName = 'myElementTree'
-    const elementTreeKey = 'abc123'
-    const document: MakeswiftComponentDocument = {
-      id: treeId,
-      name: elementTreeName,
-      data: {
-        type: 'myType',
-        key: elementTreeKey,
-        props: {},
-      },
-      locale: baseLocale,
-      siteId: 'mySiteId',
-      inheritsFromParent: false,
-    }
+    const localeToTest = 'fr-FR'
 
-    /*
-        Intercept:
-        (1) initial request to v1 endpoint for the locale variant tree
-        (2) subsequent request to v1 endpoint for the base locale tree
-            - should not execute for this test
-        (3) graphql query for introspection
-      */
-    const httpHandler = jest.fn(({ request }) => {
-      const { searchParams } = new URL(request.url)
-      const locale = searchParams.get('locale')
-      if (locale === localeToTest) {
-        return HttpResponse.text('', { status: 404 })
-      }
-
-      return HttpResponse.json(document, { status: 200 })
-    })
-
-    server.use(
-      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
-      graphql.operation(() => {
-        return HttpResponse.json({})
-      }),
+    const httpHandler = jest.fn((_: { request: Request }) =>
+      HttpResponse.json(makeEmptyDocument(treeId, localeToTest), { status: 200 }),
     )
+    server.use(http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler))
 
     // Act
     const result = await client.getComponentSnapshot(treeId, {
@@ -281,86 +204,77 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
     })
 
     // Assert
-    expect(result).not.toBeNull()
-    expect(result.document).not.toBeNull()
     expect(result.document.id).toBe(treeId)
     expect(result.document.data).toBeNull()
     expect(result.document.locale).toBe(localeToTest)
+    expect(result.meta).toEqual({ allowLocaleFallback: false, requestedLocale: localeToTest })
 
     expect(httpHandler).toHaveBeenCalledTimes(1)
-    expect(httpHandler.mock.calls[0][0].request.url).toContain(`locale=${localeToTest}`)
+    const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
+    expect(searchParams.get('locale')).toBe(localeToTest)
+    expect(searchParams.has('allowLocaleFallback')).toBe(false)
+  })
+
+  test('does not request locale fallback when the base locale is requested', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree123'
+    const httpHandler = jest.fn((_: { request: Request }) =>
+      HttpResponse.json(makeDocument(treeId, null), { status: 200 }),
+    )
+    server.use(
+      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
+      graphql.operation(() => HttpResponse.json({})),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result.document.data).not.toBeNull()
+    expect(result.document.locale).toBeNull()
+
+    expect(httpHandler).toHaveBeenCalledTimes(1)
+    const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
+    expect(searchParams.has('locale')).toBe(false)
+    expect(searchParams.has('allowLocaleFallback')).toBe(false)
   })
 
   test.each([
-    { treeId: 'myTree123', locale: null },
+    { treeId: 'myTree123', locale: 'fr-FR' },
     { treeId: 'unsafe:url;chars=@&?❔🤷', locale: 'fr-FR' },
     { treeId: '/blog/slug', locale: 'en-US' },
   ])(
-    "does not perform locale fallback after receiving a 200 response for the element tree '$treeId' with the requested locale '$locale'",
+    "returns the localized element tree '$treeId' with the requested locale '$locale'",
     async ({ treeId, locale }) => {
       // Arrange
       const client = createTestClient()
-
-      // mock locale variant tree document
-      const elementTreeName = 'myElementTree'
-      const elementTreeKey = 'abc123'
-      const document: MakeswiftComponentDocument = {
-        id: treeId,
-        name: elementTreeName,
-        data: {
-          type: 'myType',
-          key: elementTreeKey,
-          props: {},
-        },
-        locale,
-        siteId: 'mySiteId',
-        inheritsFromParent: false,
-      }
-
-      /*
-        Intercept:
-        (1) initial request to v1 endpoint for the locale variant tree
-        (2) subsequent request to v1 endpoint for the base locale tree
-            - should not happen for this test
-        (3) graphql query for introspection
-      */
-      const httpHandler = jest.fn(({ request }) => {
-        const { searchParams } = new URL(request.url)
-        const requestLocale = searchParams.get('locale')
-        if (requestLocale === locale) {
-          return HttpResponse.json(document, { status: 200 })
-        }
-
-        return HttpResponse.text('', { status: 404 })
-      })
+      const document = makeDocument(treeId, locale)
+      const httpHandler = jest.fn((_: { request: Request }) =>
+        HttpResponse.json(document, { status: 200 }),
+      )
 
       server.use(
         http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler),
-        graphql.operation(() => {
-          return HttpResponse.json({})
-        }),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       // Act
       const result = await client.getComponentSnapshot(treeId, {
         siteVersion: TestWorkingSiteVersion,
-        locale: locale ?? undefined,
+        locale,
       })
 
       // Assert
-      expect(result).not.toBeNull()
-      expect(result.document).not.toBeNull()
       expect(result.document.id).toBe(treeId)
       expect(result.document.locale).toBe(locale)
       expect(result.document.data).not.toBeNull()
 
       expect(httpHandler).toHaveBeenCalledTimes(1)
-      const requestUrl = httpHandler.mock.calls[0][0].request.url
-      if (locale !== null) {
-        expect(requestUrl).toContain(`locale=${locale}`)
-      } else {
-        expect(requestUrl).not.toContain('locale=')
-      }
+      const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
+      expect(searchParams.get('locale')).toBe(locale)
     },
   )
 
@@ -400,19 +314,15 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
       }
     }
 
-    test('uses the default locale (null) after falling back from a missing localized tree', async () => {
+    test('uses the default locale (null) when the server fell back to the base tree', async () => {
       // Arrange
       const client = createTestClient()
       const elementTreeId = 'site-header-123'
       const requestedLocale = 'fr-FR'
 
-      const treeHandler = jest.fn(({ request }: { request: Request }) => {
-        const locale = new URL(request.url).searchParams.get('locale')
-        if (locale === requestedLocale) {
-          return HttpResponse.text('', { status: 404 })
-        }
-        return HttpResponse.json(makeLinkDocument(elementTreeId, null), { status: 200 })
-      })
+      const treeHandler = jest.fn(() =>
+        HttpResponse.json(makeLinkDocument(elementTreeId, null), { status: 200 }),
+      )
       const slicesHandler = makeSlicesHandler()
 
       server.use(
@@ -429,6 +339,7 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
 
       // Assert
       expect(result.document.locale).toBeNull()
+      expect(treeHandler).toHaveBeenCalledTimes(1)
 
       // Confirm introspection ran with that result locale (null), not 'fr-FR'.
       expect(result.cacheData.apiResources.PagePathnameSlice).toEqual([
@@ -477,6 +388,30 @@ describe('getComponentSnapshot using v2 element tree endpoint', () => {
 
       expect(slicesHandler).toHaveBeenCalledTimes(1)
       expect(slicesHandler.mock.calls[0][0].request.url).toContain(`locale=${requestedLocale}`)
+    })
+
+    test('does not introspect an empty document', async () => {
+      // Arrange
+      const client = createTestClient()
+      const elementTreeId = 'site-header-123'
+      const slicesHandler = makeSlicesHandler()
+
+      server.use(
+        http.get(`${baseUrl}/${encodeURIComponent(elementTreeId)}`, () =>
+          HttpResponse.json(makeEmptyDocument(elementTreeId, null), { status: 200 }),
+        ),
+        http.get(`${runtime.apiOrigin}/v3/page-pathname-slices/bulk`, slicesHandler),
+      )
+
+      // Act
+      const result = await client.getComponentSnapshot(elementTreeId, {
+        siteVersion: TestWorkingSiteVersion,
+      })
+
+      // Assert
+      expect(result.document.data).toBeNull()
+      expect(result.cacheData.apiResources.PagePathnameSlice ?? []).toEqual([])
+      expect(slicesHandler).not.toHaveBeenCalled()
     })
   })
 })
