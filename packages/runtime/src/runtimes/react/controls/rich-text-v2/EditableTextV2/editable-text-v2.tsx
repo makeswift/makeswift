@@ -80,7 +80,7 @@ function EditableTextV2({ text, config, instanceKey, parentStylesheetKey }: Prop
 
     const element = ReactEditor.toDOMNode(editor, editor)
     return pollBoxModel({
-      element,
+      getElement: () => element,
       onBoxModelChange: boxModel => control.changeBoxModel(boxModel),
     })
   }, [editor, control])

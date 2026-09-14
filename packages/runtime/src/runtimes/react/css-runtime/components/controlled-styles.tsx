@@ -36,8 +36,20 @@ export function ControlledStyle({
   useEffect(() => {
     const onBoxModelChange = styleData.onBoxModelChange
     if (onBoxModelChange == null) return
-    const element = document.querySelector(`.${className}`)
-    return pollBoxModel({ element, onBoxModelChange })
+
+    const findElement = () => document.querySelector(`.${className}`)
+    let element = findElement()
+
+    return pollBoxModel({
+      getElement: () => {
+        // The 'isConnected' check is important to RSC re-renders, where the DOM node bearing the controlled class gets replaced
+        if (element == null || !element.isConnected) {
+          element = findElement()
+        }
+        return element
+      },
+      onBoxModelChange,
+    })
   }, [className])
 
   return (
