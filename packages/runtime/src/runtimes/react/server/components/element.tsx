@@ -26,10 +26,11 @@ export function ServerElement({
   element: ElementDataOrRef
   documentKey: string
 }): ReactNode {
+  console.log(`@@ ServerElement ${element.type}`, element)
   // check for element references first to avoid looking them up as regular components
-  if (isElementReference(element)) {
-    return <FallbackComponent text="Element reference is not supported on server yet" />
-  }
+  // if (isElementReference(element)) {
+  //   return <FallbackComponent text="Element reference is not supported on server yet" />
+  // }
 
   const state = getStore(context).getState()
   const elementMeta = getComponentsMeta(state).get(element.type)
