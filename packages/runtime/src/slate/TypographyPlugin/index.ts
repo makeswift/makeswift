@@ -1,5 +1,4 @@
 import { BaseEditor, Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
-import { cx } from '@emotion/css'
 import { unstable_Typography } from '@makeswift/controls'
 
 import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
@@ -13,6 +12,7 @@ import { Plugin } from '../../controls/rich-text-v2/plugin'
 import { normalizeTypographyUp } from './normalizeTypographyUp'
 import { normalizeTypographyDown } from './normalizeTypographyDown'
 import { normalizeSimilarText } from './normalizeSimilarText'
+import clsx from 'clsx'
 
 export const TypographyActions = {
   setActiveTypographyId,
@@ -127,7 +127,7 @@ export function TypographyPlugin() {
         ...props,
         leaf: {
           ...props.leaf,
-          className: cx(props.leaf.className, className),
+          className: clsx(props.leaf.className, className),
         },
       })
     },
