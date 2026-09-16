@@ -69,7 +69,7 @@ export function useStylesheetFactory(): StylesheetFactory {
             .map(([uid, callback]) =>
               callback != null
                 ? pollBoxModel({
-                    element: document.querySelector(`.${uid}`),
+                    getElement: () => document.querySelector(`.${uid}`),
                     onBoxModelChange: callback,
                   })
                 : undefined,
