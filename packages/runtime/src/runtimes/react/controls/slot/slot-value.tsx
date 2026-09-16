@@ -101,7 +101,7 @@ export function Slot<T extends ElementType = 'div'>({
     if (element == null || control == null) return
 
     return pollBoxModel({
-      element,
+      getElement: () => element,
       onBoxModelChange: boxModel => control.changeContainerBoxModel(boxModel),
     })
   }, [element, control])
@@ -155,7 +155,7 @@ function SlotItem<T extends ElementType = 'div'>({
     if (element == null || control == null) return
 
     return pollBoxModel({
-      element,
+      getElement: () => element,
       onBoxModelChange: boxModel => control.changeItemBoxModel(index, boxModel),
     })
   }, [element, control, index])
@@ -191,7 +191,7 @@ function SlotPlaceholder({ control, placeholder }: SlotPlaceholderProps): ReactN
     if (element == null || control == null) return
 
     return pollBoxModel({
-      element,
+      getElement: () => element,
       onBoxModelChange: boxModel => control.changeContainerBoxModel(boxModel),
     })
   }, [element, control])

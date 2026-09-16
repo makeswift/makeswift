@@ -63,7 +63,7 @@ export const EditableText = forwardRef(function EditableText(
     const element = ReactEditor.toDOMNode(editor, editor)
 
     return pollBoxModel({
-      element,
+      getElement: () => element,
       onBoxModelChange: boxModel => controller.changeBoxModel(boxModel),
     })
   }, [editor, controller])
