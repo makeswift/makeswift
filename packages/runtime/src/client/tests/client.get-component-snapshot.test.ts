@@ -72,9 +72,8 @@ describe('getComponentSnapshot using the element tree content endpoint', () => {
     expect(result.meta).toEqual({ allowLocaleFallback: true, requestedLocale: null })
 
     expect(httpHandler).toHaveBeenCalledTimes(1)
-    const requestUrl = httpHandler.mock.calls[0][0].request.url
-    expect(requestUrl).not.toContain('locale=')
-    expect(requestUrl).not.toContain('allowLocaleFallback')
+    const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
+    expect(searchParams.has('locale')).toBe(false)
   })
 
   test('preserves the requested locale on an empty document response', async () => {
@@ -149,12 +148,11 @@ describe('getComponentSnapshot using the element tree content endpoint', () => {
     { treeId: 'unsafe:url;chars=@&?❔🤷', locale: 'fr-FR' },
     { treeId: '/blog/slug', locale: 'en-US' },
   ])(
-    "requests server-side locale fallback in a single request for the element tree '$treeId' with the '$locale' locale",
+    "uses the base locale tree returned by the server for the element tree '$treeId' with the '$locale' locale",
     async ({ treeId, locale }) => {
       // Arrange
       const client = createTestClient()
       const elementTreeKey = 'abc123'
-      // The server resolved the base locale tree, so the returned locale is null.
       const document = makeDocument(treeId, null, { key: elementTreeKey })
 
       const httpHandler = jest.fn((_: { request: Request }) =>
@@ -181,18 +179,17 @@ describe('getComponentSnapshot using the element tree content endpoint', () => {
       expect(httpHandler).toHaveBeenCalledTimes(1)
       const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
       expect(searchParams.get('locale')).toBe(locale)
-      expect(searchParams.get('allowLocaleFallback')).toBe('true')
     },
   )
 
-  test('does not request locale fallback when allowLocaleFallback is false', async () => {
+  test('returns null document data when allowLocaleFallback is false and the server fell back to the base locale tree', async () => {
     // Arrange
     const client = createTestClient()
     const treeId = 'myTree123'
     const localeToTest = 'fr-FR'
 
     const httpHandler = jest.fn((_: { request: Request }) =>
-      HttpResponse.json(makeEmptyDocument(treeId, localeToTest), { status: 200 }),
+      HttpResponse.json(makeDocument(treeId, null), { status: 200 }),
     )
     server.use(http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, httpHandler))
 
@@ -208,14 +205,64 @@ describe('getComponentSnapshot using the element tree content endpoint', () => {
     expect(result.document.data).toBeNull()
     expect(result.document.locale).toBe(localeToTest)
     expect(result.meta).toEqual({ allowLocaleFallback: false, requestedLocale: localeToTest })
+    expect(result.cacheData.apiResources.PagePathnameSlice ?? []).toEqual([])
 
     expect(httpHandler).toHaveBeenCalledTimes(1)
     const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
     expect(searchParams.get('locale')).toBe(localeToTest)
-    expect(searchParams.has('allowLocaleFallback')).toBe(false)
   })
 
-  test('does not request locale fallback when the base locale is requested', async () => {
+  test('returns the localized element tree when allowLocaleFallback is false and it exists', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree123'
+    const localeToTest = 'fr-FR'
+    const document = makeDocument(treeId, localeToTest)
+
+    server.use(
+      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, () =>
+        HttpResponse.json(document, { status: 200 }),
+      ),
+      graphql.operation(() => HttpResponse.json({})),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+      locale: localeToTest,
+      allowLocaleFallback: false,
+    })
+
+    // Assert
+    expect(result.document.data).not.toBeNull()
+    expect(result.document.locale).toBe(localeToTest)
+  })
+
+  test('preserves an empty document when allowLocaleFallback is false', async () => {
+    // Arrange
+    const client = createTestClient()
+    const treeId = 'myTree123'
+    const localeToTest = 'fr-FR'
+
+    server.use(
+      http.get(`${baseUrl}/${encodeURIComponent(treeId)}`, () =>
+        HttpResponse.json(makeEmptyDocument(treeId, localeToTest), { status: 200 }),
+      ),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot(treeId, {
+      siteVersion: TestWorkingSiteVersion,
+      locale: localeToTest,
+      allowLocaleFallback: false,
+    })
+
+    // Assert
+    expect(result.document.data).toBeNull()
+    expect(result.document.locale).toBe(localeToTest)
+  })
+
+  test('omits the locale param when the base locale is requested', async () => {
     // Arrange
     const client = createTestClient()
     const treeId = 'myTree123'
@@ -239,7 +286,6 @@ describe('getComponentSnapshot using the element tree content endpoint', () => {
     expect(httpHandler).toHaveBeenCalledTimes(1)
     const { searchParams } = new URL(httpHandler.mock.calls[0][0].request.url)
     expect(searchParams.has('locale')).toBe(false)
-    expect(searchParams.has('allowLocaleFallback')).toBe(false)
   })
 
   test.each([

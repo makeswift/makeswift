@@ -766,12 +766,8 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
   ): Promise<MakeswiftComponentSnapshot> {
     const siteVersion = await siteVersionPromise
     const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
-    const baseLocaleWasRequested = locale == null
-    const canAttemptLocaleFallback = !baseLocaleWasRequested && allowLocaleFallback
-
     const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
-    if (canAttemptLocaleFallback) searchParams.set('allowLocaleFallback', 'true')
 
     const response = await this.fetch(
       `v1/content/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
@@ -789,8 +785,18 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       })
     }
 
-    const reponseBody = await response.json()
-    const document = Schema.componentDocumentResponse.parse(reponseBody)
+    const responseBody = await response.json()
+    const documentResponse = Schema.componentDocumentResponse.parse(responseBody)
+
+    const document =
+      !allowLocaleFallback && documentResponse.locale != locale
+        ? {
+            id,
+            locale: locale ?? null,
+            data: null,
+          }
+        : documentResponse
+
     const cacheData =
       document.data == null
         ? CacheData.empty()
