@@ -13,7 +13,7 @@ import { Link } from '../../controls'
 
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
-const baseUrl = `${runtime.apiOrigin}/v3/element-trees`
+const baseUrl = `${runtime.apiOrigin}/v1/content/element-trees`
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })
@@ -46,7 +46,7 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
-describe('getComponentSnapshot using v3 element tree endpoint', () => {
+describe('getComponentSnapshot using the element tree content endpoint', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
   })

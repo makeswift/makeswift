@@ -774,7 +774,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     if (canAttemptLocaleFallback) searchParams.set('allowLocaleFallback', 'true')
 
     const response = await this.fetch(
-      `v3/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+      `v1/content/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
       siteVersion,
     )
 
