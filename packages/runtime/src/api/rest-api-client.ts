@@ -19,6 +19,8 @@ export type GlobalElementWithLocalized = {
   localized: LocalizedGlobalElement | null
 }
 
+const MAX_GLOBAL_ELEMENTS_PER_REQUEST = 100
+
 const RetryBackoffConfig = {
   MaxAttempts: 3,
   MaxDelayMs: 5_000,
@@ -149,30 +151,40 @@ export class MakeswiftRestAPIClient {
     siteVersion: SiteVersion | null,
     { locale }: { locale?: string | null } = {},
   ): Promise<GlobalElementWithLocalized[]> {
-    if (globalElementIds.length === 0) return []
+    const getGlobalElementsBatch = async (ids: string[]): Promise<GlobalElementWithLocalized[]> => {
+      const url = new URL(`v3/global-elements/bulk`, this.apiOrigin)
 
-    const url = new URL(`v3/global-elements/bulk`, this.apiOrigin)
+      ids.forEach(id => url.searchParams.append('ids', id))
+      if (locale != null) url.searchParams.set('locale', locale)
 
-    globalElementIds.forEach(id => url.searchParams.append('ids', id))
-    if (locale != null) url.searchParams.set('locale', locale)
+      const response = await this.fetch(url.pathname + url.search, siteVersion)
 
-    const response = await this.fetch(url.pathname + url.search, siteVersion)
+      if (!response.ok) {
+        const failedBody = await failedResponseBody(response)
+        // 404 means the requested version has no commit (e.g., site never published)
+        if (response.status === 404) {
+          return ids.map(() => ({ base: null, localized: null }))
+        }
 
-    if (!response.ok) {
-      const failedBody = await failedResponseBody(response)
-      // 404 means the requested version has no commit (e.g., site never published)
-      if (response.status === 404) {
-        return globalElementIds.map(() => ({ base: null, localized: null }))
+        throw new RestApiClientError(
+          `Failed to get global elements for [${ids.join(', ')}]`,
+          response,
+          { body: failedBody, siteVersion, locale },
+        )
       }
 
-      throw new RestApiClientError(
-        `Failed to get global elements for [${globalElementIds.join(', ')}]`,
-        response,
-        { body: failedBody, siteVersion, locale },
-      )
+      return await response.json()
     }
 
-    return await response.json()
+    const batches: string[][] = []
+
+    for (let i = 0; i < globalElementIds.length; i += MAX_GLOBAL_ELEMENTS_PER_REQUEST) {
+      batches.push(globalElementIds.slice(i, i + MAX_GLOBAL_ELEMENTS_PER_REQUEST))
+    }
+
+    const results = await Promise.all(batches.map(getGlobalElementsBatch))
+
+    return results.flat()
   }
 
   async getLocalizedGlobalElement(

@@ -418,6 +418,27 @@ describe('getGlobalElements', () => {
     expect(error.message).toBe('Failed to get global elements for [a, b]: 400 Bad Request')
     expect(error.cause).toEqual({ body: 'Bad request', siteVersion: null, locale: 'es-MX' })
   })
+
+  test('splits more than 100 ids across requests and preserves order', async () => {
+    // Arrange
+    const client = createTestClient()
+    const ids = Array.from({ length: 250 }, (_, i) => `id-${i}`)
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const requested = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(requested.map(id => ({ base: { id, data: {} }, localized: null })))
+    })
+    server.use(http.get(resourceUrl, handler))
+
+    // Act
+    const result = await client.getGlobalElements(ids, TestWorkingSiteVersion)
+
+    // Assert
+    expect(handler).toHaveBeenCalledTimes(3)
+    expect(
+      handler.mock.calls.map(([{ request }]) => new URL(request.url).searchParams.getAll('ids')),
+    ).toEqual([ids.slice(0, 100), ids.slice(100, 200), ids.slice(200)])
+    expect(result.map(entry => entry.base?.id)).toEqual(ids)
+  })
 })
 
 describe('getPagePathnameSlice', () => {
