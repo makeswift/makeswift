@@ -13,7 +13,7 @@ import { Link } from '../../controls'
 
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
-const baseUrl = `${runtime.apiOrigin}/v1/content/element-trees`
+const baseUrl = `${runtime.apiOrigin}/content/v1/element-trees`
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })

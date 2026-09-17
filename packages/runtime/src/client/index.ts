@@ -770,7 +770,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     if (locale) searchParams.set('locale', locale)
 
     const response = await this.fetch(
-      `v1/content/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
+      `content/v1/element-trees/${encodeURIComponent(id)}?${searchParams.toString()}`,
       siteVersion,
     )
 
