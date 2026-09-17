@@ -1,5 +1,16 @@
 # @makeswift/react-router
 
+## 0.2.0-canary.19
+
+### Minor Changes
+
+- 065a51a: updates `RootStyleRegistry` usage in accordance with the new css runtime in `@makeswift/runtime`. This modifies the format of Makeswift-generated class names and content returned by `renderHtml`.
+
+### Patch Changes
+
+- Updated dependencies [d2e58ac]
+  - @makeswift/runtime@0.29.0-canary.19
+
 ## 0.1.12-canary.18
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @makeswift/hono-react
 
+## 0.3.0-canary.20
+
+### Minor Changes
+
+- 8f895de: updates `RootStyleRegistry` usage in accordance with the new css runtime in `@makeswift/runtime`. This modifies the format of Makeswift-generated class names and content returned by `renderHtml`.
+
+### Patch Changes
+
+- Updated dependencies [d2e58ac]
+  - @makeswift/runtime@0.29.0-canary.19
+
 ## 0.3.0-canary.19
 
 ### Patch Changes

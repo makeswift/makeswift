@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.22-canary.6
+
+### Patch Changes
+
+- 84f48a8: adds 'key' function to the Stylesheet interface
+
 ## 0.1.22-canary.5
 
 ### Patch Changes
