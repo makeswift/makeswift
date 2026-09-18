@@ -382,23 +382,6 @@ describe('getGlobalElements', () => {
     ])
   })
 
-  test('returns all-null entries on 404', async () => {
-    // Arrange
-    const client = createTestClient()
-
-    server.use(http.get(resourceUrl, () => HttpResponse.text('', { status: 404 }), { once: true }))
-
-    // Act
-    const result = await client.getGlobalElements(['a', 'b'], TestWorkingSiteVersion)
-
-    // Assert
-    expect(result).toEqual([
-      { base: null, localized: null },
-      { base: null, localized: null },
-    ])
-    expect(consoleErrorSpy).not.toHaveBeenCalled()
-  })
-
   test('throws on other errors, attaching the details to the error', async () => {
     // Arrange
     const client = createTestClient()

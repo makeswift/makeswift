@@ -161,10 +161,6 @@ export class MakeswiftRestAPIClient {
 
       if (!response.ok) {
         const failedBody = await failedResponseBody(response)
-        // 404 means the requested version has no commit (e.g., site never published)
-        if (response.status === 404) {
-          return ids.map(() => ({ base: null, localized: null }))
-        }
 
         throw new RestApiClientError(
           `Failed to get global elements for [${ids.join(', ')}]`,
