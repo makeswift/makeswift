@@ -47,22 +47,27 @@ export function collectServerElements(
   const descriptors = getPropControllerDescriptors(state)
 
   const result: ElementsMap = new Map()
+  const processedGlobalElements = new Set<string>()
   const rootElements = [document.rootElement]
   let rootElement: Element | undefined
 
   while ((rootElement = rootElements.pop())) {
     for (const element of traverseElementTree(rootElement, descriptors)) {
       if (isElementReference(element)) {
-        const globalElement = store.apiResourcesClient.readGlobalElement(element.value)
-        console.log('@@ collectServerElements globalElement', element, globalElement)
+        // FIXME: unify reference resolution with introspectMany
         // FIXME: handle localized global elements
-        // FIXME: handle cycles
+        const globalElementId = element.value
+        if (processedGlobalElements.has(globalElementId)) continue
+
+        processedGlobalElements.add(globalElementId)
+        const globalElement = store.apiResourcesClient.readGlobalElement(globalElementId)
+        console.log('@@ collectServerElements globalElement', element, globalElement)
 
         const elementData = globalElement?.data as ElementData | undefined
         if (elementData != null) {
           rootElements.push(elementData)
         } else {
-          console.warn(`collectServerElements: missing global element ${element.value}`, element)
+          console.warn(`collectServerElements: missing global element ${globalElementId}`, element)
         }
         continue
       }

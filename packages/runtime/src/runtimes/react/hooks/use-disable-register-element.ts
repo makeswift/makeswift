@@ -1,7 +1,7 @@
-import { createContext, useContext } from 'react'
+// import { createContext, useContext } from 'react'
 
-export const DisableRegisterElement = createContext(false)
+// export const DisableRegisterElement = createContext(false)
 
-export function useIsRegisterElementDisabled() {
-  return useContext(DisableRegisterElement)
-}
+// export function useIsRegisterElementDisabled() {
+//   return useContext(DisableRegisterElement)
+// }

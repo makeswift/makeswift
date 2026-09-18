@@ -3,7 +3,10 @@ import { type ReactNode, type Ref, forwardRef, memo, useCallback } from 'react'
 import { type ElementData as MakeswiftElementData } from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 
-import { EditableServerElement } from '../server/components/editable-server-element'
+import {
+  EditableServerElement,
+  EditableServerReference,
+} from '../server/components/editable-server-element'
 import { useServerElementsCache } from '../server/components/server-elements-cache'
 
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
@@ -17,10 +20,14 @@ import { ActivityOrFallback } from './activity-with-fallback'
 
 type ElementDataProps = {
   elementData: MakeswiftElementData
+  isReferenceData?: boolean
 }
 
 export const ElementData = memo(
-  forwardRef(function ElementData({ elementData }: ElementDataProps, ref: Ref<unknown>): ReactNode {
+  forwardRef(function ElementData(
+    { elementData, isReferenceData }: ElementDataProps,
+    ref: Ref<unknown>,
+  ): ReactNode {
     const componentMeta = useComponentMeta(elementData.type)
 
     if (componentMeta == null) {
@@ -36,7 +43,7 @@ export const ElementData = memo(
     }
 
     return componentMeta.server ? (
-      <ElementDataServer elementData={elementData} ref={ref} />
+      <ElementDataServer elementData={elementData} ref={ref} isReferenceData={isReferenceData} />
     ) : (
       <ElementDataClient elementData={elementData} ref={ref} />
     )
@@ -44,7 +51,7 @@ export const ElementData = memo(
 )
 
 const ElementDataServer = forwardRef(function ElementDataServer(
-  { elementData }: ElementDataProps,
+  { elementData, isReferenceData }: ElementDataProps,
   ref: Ref<unknown>,
 ): ReactNode {
   // lookup and render RSC node for the element; see the `ServerElementsCache` comment
@@ -67,7 +74,11 @@ const ElementDataServer = forwardRef(function ElementDataServer(
 
   console.log('@@@ ElementDataServer', { elementData, rscNode })
 
-  return <EditableServerElement initialElementData={elementData}>{rscNode}</EditableServerElement>
+  return isReferenceData ? (
+    <EditableServerReference initialElementData={elementData}>{rscNode}</EditableServerReference>
+  ) : (
+    <EditableServerElement initialElementData={elementData}>{rscNode}</EditableServerElement>
+  )
 })
 
 const ElementDataClient = forwardRef(function ElementDataClient(

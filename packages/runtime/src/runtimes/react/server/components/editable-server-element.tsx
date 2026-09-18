@@ -30,9 +30,7 @@ export const EditableServerElement = ({
   const elementData = useElementData({ elementKey })
   if (elementData == null) {
     // Element has been deleted
-    // console.error(`@@ EditableServerElement ${elementKey}: Element has been deleted`)
-    // FIXME
-    return children
+    return null
   }
 
   return (
@@ -40,6 +38,29 @@ export const EditableServerElement = ({
       {children}
     </EditableServerElementWrapper>
   )
+}
+
+export const EditableServerReference = ({
+  initialElementData,
+  children,
+}: PropsWithChildren<{ initialElementData: ElementData }>) => {
+  const documentKey = useDocumentKey()
+  const elementKey = initialElementData.key
+  console.log('@@ EditableServerReference', { initialElementData, children })
+
+  const applyServerRefresh = useApplyServerRefresh({ elementKey })
+
+  useEffect(() => {
+    if (documentKey == null) return
+    if (children == null) {
+      // If we don't have a server-rendered node (i.e. user just dropped the element to the page),
+      // trigger a server re-render
+      applyServerRefresh(initialElementData, [], documentKey)
+      return
+    }
+  }, [children, applyServerRefresh, initialElementData, documentKey])
+
+  return children
 }
 
 /**
@@ -74,24 +95,7 @@ const EditableServerElementWrapper = ({
     getLeafPropsAndInstances(resolvedProps, controlInstances).leafProps,
   )
 
-  const serverRefresh = useServerElementRefresh({ elementKey })
-  const applyServerRefresh = useCallback(
-    (elementData: ElementData, leafInstances: ControlInstance[], documentKey: string) =>
-      startTransition(async () => {
-        const applied = await serverRefresh(elementData)
-        if (!applied) return
-
-        // need a nested `startTransition` here, see
-        // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
-        startTransition(() => {
-          // reset instance overrides, if any
-          leafInstances.forEach(c =>
-            dispatch(clearResolvedValueOverride({ documentKey, instanceKey: c.instanceKey })),
-          )
-        })
-      }),
-    [serverRefresh, dispatch],
-  )
+  const applyServerRefresh = useApplyServerRefresh({ elementKey })
 
   const applyResolvedValueOverrides = useCallback(
     (instances: ControlInstance[], props: Record<string, unknown>, documentKey: string) =>
@@ -162,6 +166,30 @@ const EditableServerElementWrapper = ({
       {styleElements}
     </>
   )
+}
+
+const useApplyServerRefresh = ({ elementKey }: { elementKey: string }) => {
+  const dispatch = useDispatch()
+  const serverRefresh = useServerElementRefresh({ elementKey })
+  const applyServerRefresh = useCallback(
+    (elementData: ElementData, leafInstances: ControlInstance[], documentKey: string) =>
+      startTransition(async () => {
+        const applied = await serverRefresh(elementData)
+        if (!applied) return
+
+        // need a nested `startTransition` here, see
+        // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
+        startTransition(() => {
+          // reset instance overrides, if any
+          leafInstances.forEach(c =>
+            dispatch(clearResolvedValueOverride({ documentKey, instanceKey: c.instanceKey })),
+          )
+        })
+      }),
+    [serverRefresh, dispatch],
+  )
+
+  return applyServerRefresh
 }
 
 /**

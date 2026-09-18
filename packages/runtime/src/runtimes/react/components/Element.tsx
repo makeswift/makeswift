@@ -21,7 +21,7 @@ import { FallbackComponent } from '../../../components/shared/FallbackComponent'
 import { ErrorBoundary } from '../../../components/shared/ErrorBoundary'
 
 import { useIsReadOnly } from '../hooks/use-is-read-only'
-import { useIsRegisterElementDisabled } from '../hooks/use-disable-register-element'
+// import { useIsRegisterElementDisabled } from '../hooks/use-disable-register-element'
 
 import { ElementImperativeHandle } from '../element-imperative-handle'
 import { FindDomNode } from '../find-dom-node'
@@ -43,9 +43,8 @@ export const Element = memo(
     const { imperativeHandleRef, findDomNodeCallbackRef, elementCallbackRef } =
       useElementImperativeHandle(ref)
 
-    const isRegisterElementDisabled = useIsRegisterElementDisabled()
-    const ElementRegistration =
-      useIsReadOnly() || isRegisterElementDisabled ? NoOp : BuilderElementRegistration
+    // const isRegisterElementDisabled = useIsRegisterElementDisabled()
+    const ElementRegistration = useIsReadOnly() ? NoOp : BuilderElementRegistration
 
     console.log('@@@ Element (client)', { element })
     return (
@@ -79,7 +78,7 @@ export const Element = memo(
  * Uses the element's attached ref when available; otherwise, falls back to React's
  * `findDOMNode` to locate the rendered DOM node.
  */
-function useElementImperativeHandle(ref: Ref<ElementImperativeHandle>) {
+export function useElementImperativeHandle(ref: Ref<ElementImperativeHandle>) {
   const useFindDomNodeRef = useRef(true)
   const imperativeHandleRef = useRef(new ElementImperativeHandle())
 
@@ -104,6 +103,6 @@ function NoOp({ children }: PropsWithChildren) {
   return children
 }
 
-function ErrorFallback() {
+export function ErrorFallback() {
   return <FallbackComponent text={`Error rendering component`} />
 }

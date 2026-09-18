@@ -74,6 +74,7 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
 
     case ReadWriteActionTypes.CHANGE_ELEMENT_TREE: {
       const { oldDocument, newDocument, descriptors, operation } = action.payload
+      console.log('@@ CHANGE_ELEMENT_TREE', operation)
       const documentKey = oldDocument.key
       console.assert(
         documentKey === newDocument.key,
