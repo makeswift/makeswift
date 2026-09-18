@@ -8,10 +8,13 @@ import {
   ElementReference as ReactPageElementReference,
 } from '../../../state/read-only-state'
 import { FallbackComponent } from '../../../components/shared/FallbackComponent'
-import { Element } from './Element'
+import { useElementImperativeHandle, ErrorFallback } from './Element'
 import { Document } from './Document'
-import { DisableRegisterElement } from '../hooks/use-disable-register-element'
 import { useDocumentLocale } from '../hooks/use-document-context'
+
+import { ErrorBoundary } from '../../../components/shared/ErrorBoundary'
+import { ElementData } from './ElementData'
+import { FindDomNode } from '../find-dom-node'
 
 type ElementRefereceProps = {
   elementReference: ReactPageElementReference
@@ -37,6 +40,8 @@ export const ElementReference = memo(
       [documentKeys, documentKey],
     )
 
+    console.log('@@ ElementReference (client)', { elementReference, elementReferenceDocument })
+
     if (globalElementData == null) {
       return (
         <FallbackComponent
@@ -60,12 +65,31 @@ export const ElementReference = memo(
         {elementReferenceDocument != null ? (
           <Document document={elementReferenceDocument} ref={ref} />
         ) : (
-          <DisableRegisterElement.Provider value={true}>
-            {/* We render Element instead of ElementData because we rely on the FindDomNode */}
-            <Element element={globalElementData} ref={ref} />
-          </DisableRegisterElement.Provider>
+          <ElementReferenceData elementData={globalElementData} ref={ref} />
         )}
       </DocumentCyclesContext.Provider>
+    )
+  }),
+)
+
+const ElementReferenceData = memo(
+  forwardRef(function Element(
+    { elementData }: { elementData: ReactPageElementData },
+    ref: Ref<ElementImperativeHandle>,
+  ): ReactNode | null {
+    const { findDomNodeCallbackRef, elementCallbackRef } = useElementImperativeHandle(ref)
+
+    return (
+      <FindDomNode ref={findDomNodeCallbackRef}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <ElementData
+            key={elementData.key}
+            ref={elementCallbackRef}
+            elementData={elementData}
+            isReferenceData={true}
+          />
+        </ErrorBoundary>
+      </FindDomNode>
     )
   }),
 )
