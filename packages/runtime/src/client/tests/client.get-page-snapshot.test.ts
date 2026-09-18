@@ -160,7 +160,7 @@ describe('getPageSnapshot', () => {
     const client = createTestClient()
 
     server.use(
-      http.get(snapshotUrl, () => HttpResponse.text('Internal server error', { status: 500 }), {
+      http.get(snapshotUrl, () => HttpResponse.text('Forbidden', { status: 403 }), {
         once: true,
       }),
     )
@@ -172,11 +172,9 @@ describe('getPageSnapshot', () => {
       .catch((e: RestApiClientError) => e)
 
     // Assert
-    expect(error?.message).toBe(
-      "Failed to get page snapshot for 'blog/hello-world': 500 Internal Server Error",
-    )
+    expect(error?.message).toBe("Failed to get page snapshot for 'blog/hello-world': 403 Forbidden")
     expect(error?.cause).toEqual({
-      body: 'Internal server error',
+      body: 'Forbidden',
       siteVersion: null,
       locale: 'es-MX',
     })

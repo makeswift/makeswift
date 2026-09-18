@@ -32,6 +32,18 @@ describe('Slider', () => {
       ).toMatchSnapshot()
     })
 
+    test('creates slider with suffix', () => {
+      expect(
+        Slider({
+          label: 'width',
+          defaultValue: 50,
+          min: 0,
+          max: 100,
+          suffix: '%',
+        }),
+      ).toMatchSnapshot()
+    })
+
     test('disallows extraneous properties', () => {
       Slider({
         label: undefined,
@@ -53,6 +65,7 @@ describe('Slider', () => {
     assignTest(Slider({ defaultValue: undefined }))
     assignTest(Slider({ min: 0, max: 100 }))
     assignTest(Slider({ min: 0, max: 100, step: 1 }))
+    assignTest(Slider({ suffix: 'px' }))
     assignTest(
       Slider({
         defaultValue: 50,

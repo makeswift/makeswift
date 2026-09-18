@@ -83,6 +83,7 @@ class Definition<C extends Config> extends ControlDefinition<
         max: z.number().optional(),
         step: z.number().optional(),
         showInput: z.boolean().optional(),
+        suffix: z.string().optional(),
         provides: provides.optional(),
       })
 

@@ -1,5 +1,4 @@
-import { lazy } from 'react'
-import { ReactRuntime } from '@makeswift/vite-rsc'
+import { ReactRuntime, serverOnly } from '@makeswift/vite-rsc'
 
 import {
   Checkbox,
@@ -18,7 +17,7 @@ import {
 
 export const registerRscMarkdownComponent = (runtime: ReactRuntime) =>
   runtime.registerComponent(
-    lazy(() =>
+    serverOnly(() =>
       import('./server').then((mod) => ({ default: mod.RscKitchenSink })),
     ),
     {

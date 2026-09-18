@@ -152,11 +152,11 @@ export default function responsiveField(
         color: getContrastColor(contrast),
         backgroundColor: getContrastBackgroundColor(contrast),
 
-        ':focus, :focus-within': {
+        '&:focus, &:focus-within': {
           borderColor: colorToString(brandColor),
         },
 
-        '::placeholder': {
+        '&::placeholder': {
           color: getContrastPlaceholderColor(contrast),
         },
       }),

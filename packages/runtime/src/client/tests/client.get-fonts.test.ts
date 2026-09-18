@@ -74,7 +74,7 @@ describe('getFonts', () => {
 
   test.each([
     { status: 400, statusText: 'Bad Request' },
-    { status: 500, statusText: 'Internal Server Error' },
+    { status: 403, statusText: 'Forbidden' },
   ])('throws when response is $status', async ({ status, statusText }) => {
     // Arrange
     const client = createTestClient()

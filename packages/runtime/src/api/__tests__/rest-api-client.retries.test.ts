@@ -30,7 +30,7 @@ function respondAfterFailures(
       requestCount++
 
       return requestCount <= failureCount
-        ? HttpResponse.json('Rate limited', { status })
+        ? HttpResponse.json('Request failed', { status })
         : HttpResponse.json(makeSwatch(swatchId))
     }),
   )
@@ -76,7 +76,7 @@ describe('rate limiting', () => {
 
     // Assert
     expect(error?.message).toBe("Failed to get swatch 'mySwatch': 429 Too Many Requests")
-    expect(error?.cause).toEqual({ body: 'Rate limited', siteVersion: TestWorkingSiteVersion })
+    expect(error?.cause).toEqual({ body: 'Request failed', siteVersion: TestWorkingSiteVersion })
 
     // The initial request, plus three retries.
     expect(requestCount()).toBe(4)
@@ -124,7 +124,31 @@ describe('rate limiting', () => {
 describe.each([
   ['408 Request Timeout', 408],
   ['500 Internal Server Error', 500],
+  ['502 Bad Gateway', 502],
   ['503 Service Unavailable', 503],
+  ['504 Gateway Timeout', 504],
+])('%s', (_name, status) => {
+  test('is retried', async () => {
+    // Arrange
+    const client = createTestClient()
+    const { requestCount } = respondAfterFailures(status, 2)
+
+    // Act
+    const result = await client.getSwatch(swatchId, TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toStrictEqual(makeSwatch(swatchId))
+    expect(requestCount()).toBe(3)
+    expect(consoleErrorSpy).not.toHaveBeenCalled()
+  })
+})
+
+describe.each([
+  ['400 Bad Request', 400],
+  ['401 Unauthorized', 401],
+  ['403 Forbidden', 403],
+  ['413 Payload Too Large', 413],
+  ['501 Not Implemented', 501],
 ])('%s', (_name, status) => {
   test('is not retried', async () => {
     // Arrange

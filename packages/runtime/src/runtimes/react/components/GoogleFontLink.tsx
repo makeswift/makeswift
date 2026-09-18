@@ -13,6 +13,7 @@ import {
   getGoogleFontsUrl,
 } from '../utils/google-fonts-url'
 import { PageLink } from './page/head-tags'
+import { MakeswiftStylePrecedence } from '../css-runtime/types'
 
 type Props = {
   fonts: Font[]
@@ -42,7 +43,7 @@ export function GoogleFontLink({ fonts, siteId }: Props) {
     return null
   }
 
-  return <PageLink precedence="medium" rel="stylesheet" href={url} />
+  return <PageLink precedence={MakeswiftStylePrecedence.MEDIUM} rel="stylesheet" href={url} />
 }
 
 function useCachedSite(siteId: string | null): Site | null {
