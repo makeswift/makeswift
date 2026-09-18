@@ -152,7 +152,7 @@ export class MakeswiftRestAPIClient {
     { locale }: { locale?: string | null } = {},
   ): Promise<GlobalElementWithLocalized[]> {
     const getGlobalElementsBatch = async (ids: string[]): Promise<GlobalElementWithLocalized[]> => {
-      const url = new URL(`v3/global-elements/bulk`, this.apiOrigin)
+      const url = new URL(`content/v1/global-elements/bulk`, this.apiOrigin)
 
       ids.forEach(id => url.searchParams.append('ids', id))
       if (locale != null) url.searchParams.set('locale', locale)

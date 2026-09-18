@@ -312,7 +312,7 @@ describe('getLocalizedGlobalElement', () => {
 })
 
 describe('getGlobalElements', () => {
-  const resourceUrl = `${baseUrl}/global-elements/bulk`
+  const resourceUrl = `${TestOrigins.apiOrigin}/content/v1/global-elements/bulk`
 
   test('returns an empty array without a request when given no ids', async () => {
     // Arrange

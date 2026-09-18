@@ -65,7 +65,7 @@ function componentTree(
   }
 }
 
-const GLOBAL_ELEMENTS_BULK_URL = `${runtime.apiOrigin}/v3/global-elements/bulk`
+const GLOBAL_ELEMENTS_BULK_URL = `${runtime.apiOrigin}/content/v1/global-elements/bulk`
 
 function requestedIds(request: Request): string[] {
   return new URL(request.url).searchParams.getAll('ids')
