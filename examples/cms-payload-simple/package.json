@@ -13,7 +13,7 @@
     "@conform-to/react": "^1.6.1",
     "@conform-to/zod": "^1.6.1",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "@makeswift/runtime": "^0.24.6",
+    "@makeswift/runtime": "0.28.9",
     "@next/env": "^15.3.4",
     "@payloadcms/richtext-lexical": "^3.52.0",
     "@portabletext/react": "^3.2.1",
