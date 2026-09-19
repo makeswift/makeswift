@@ -2,9 +2,8 @@ import { MetadataRoute } from 'next'
 
 import { MakeswiftPage } from '@makeswift/runtime/next'
 
+import { env } from '@/env'
 import { client } from '@/lib/makeswift/client'
-
-import { env } from '../env'
 
 type NextSitemapItem = MetadataRoute.Sitemap[number]
 

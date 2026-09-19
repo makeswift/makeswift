@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react'
 
-import { ReactRuntimeProvider, RootStyleRegistry, SiteVersion } from '@makeswift/runtime/next'
+import { ReactRuntimeProvider, RootStyleRegistry } from '@makeswift/runtime/next'
 
 import '@/lib/makeswift/components'
 import { runtime } from '@/lib/makeswift/runtime'
@@ -10,14 +10,14 @@ import { runtime } from '@/lib/makeswift/runtime'
 export function MakeswiftProvider({
   children,
   locale = undefined,
-  siteVersion,
+  previewMode = false,
 }: {
   children: ReactNode
   locale?: string
-  siteVersion: SiteVersion | null
+  previewMode: boolean
 }) {
   return (
-    <ReactRuntimeProvider {...{ runtime, siteVersion, locale }}>
+    <ReactRuntimeProvider {...{ runtime, previewMode, locale }}>
       <RootStyleRegistry>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
   )

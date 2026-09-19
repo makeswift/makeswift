@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { DM_Serif_Text, Inter, Roboto_Mono } from 'next/font/google'
-
-import { getSiteVersion } from '@makeswift/runtime/next/server'
+import { draftMode } from 'next/headers'
 
 import '@/lib/makeswift/components'
 import { MakeswiftProvider } from '@/lib/makeswift/provider'
@@ -38,7 +37,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${body.variable} ${heading.variable} ${mono.variable}`}>
-        <MakeswiftProvider siteVersion={await getSiteVersion()}>{children}</MakeswiftProvider>
+        <MakeswiftProvider previewMode={(await draftMode()).isEnabled}>
+          {children}
+        </MakeswiftProvider>
       </body>
     </html>
   )
