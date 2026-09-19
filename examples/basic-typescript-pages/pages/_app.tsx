@@ -8,10 +8,10 @@ import '@/lib/makeswift/components'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function App({ Component, pageProps: { previewMode, ...pageProps } }: AppProps) {
+export default function App({ Component, pageProps: { siteVersion, ...pageProps } }: AppProps) {
   return (
     <main className={inter.className}>
-      <MakeswiftProvider previewMode={previewMode}>
+      <MakeswiftProvider siteVersion={siteVersion}>
         <Component {...pageProps} />
       </MakeswiftProvider>
     </main>
