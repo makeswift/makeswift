@@ -13,7 +13,7 @@
     "@conform-to/react": "^1.6.1",
     "@conform-to/zod": "^1.6.1",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "@makeswift/runtime": "^0.24.6",
+    "@makeswift/runtime": "^0.28.9",
     "@next/env": "^15.3.4",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.3",
