@@ -7,7 +7,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@makeswift/runtime": "^0.23.11",
+    "@makeswift/runtime": "^0.28.9",
     "@radix-ui/react-navigation-menu": "^1.2.3",
     "clsx": "^2.0.0",
     "next": "15.5.21",

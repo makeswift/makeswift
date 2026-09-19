@@ -1,11 +1,16 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 
-import { Makeswift, Page as MakeswiftPage, PageProps as MakeswiftPageProps } from '@makeswift/runtime/next'
+import {
+  Makeswift,
+  Page as MakeswiftPage,
+  PageProps as MakeswiftPageProps,
+  SiteVersion,
+} from '@makeswift/runtime/next'
 
 import { client } from '@/lib/makeswift/client'
 import '@/lib/makeswift/components'
 
-type PageProps = MakeswiftPageProps & { previewMode: boolean }
+type PageProps = MakeswiftPageProps & { siteVersion: SiteVersion | null }
 
 export const getStaticPaths = (async () => {
   return {
@@ -26,18 +31,12 @@ export const getStaticProps = (async ({ params, previewData }) => {
 
   const path = Array.isArray(params.path) ? '/' + params.path.join('/') : '/'
 
-  const snapshot = await client.getPageSnapshot(path, {
-    siteVersion: Makeswift.getSiteVersion(previewData),
-  })
+  const siteVersion = Makeswift.getSiteVersion(previewData)
+  const snapshot = await client.getPageSnapshot(path, { siteVersion })
 
   if (snapshot == null) return { notFound: true }
 
-  return { 
-    props: { 
-      snapshot, 
-      previewMode: Makeswift.getPreviewMode(previewData)
-    } 
-  }
+  return { props: { snapshot, siteVersion } }
 }) satisfies GetStaticProps<PageProps>
 
 export default function Page({ snapshot }: InferGetStaticPropsType<typeof getStaticProps>) {
