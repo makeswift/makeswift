@@ -43,11 +43,28 @@ const Root = forwardRef(function Page(
   const { styleElement: cssResetStyleElement } = useCssReset({ styles: cssResetStyles })
   const { className, styleElement } = useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })
 
+  // Stretch the page (and thus its backgrounds) to cover at least the entire viewport,
+  // so that shorter pages don't leave negative space below their background.
+  const { className: containerClassName, styleElement: containerStyleElement } = useStyle({
+    width: '100%',
+    margin: '0 auto',
+    minHeight: '100vh',
+    '@supports (min-height: 100dvh)': {
+      minHeight: '100dvh',
+    },
+  })
+
   return (
     <>
       {cssResetStyleElement}
       {styleElement}
-      <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
+      {containerStyleElement}
+      <BackgroundsContainer
+        ref={ref}
+        className={containerClassName}
+        style={{ background: 'white' }}
+        backgrounds={backgrounds}
+      >
         <div className={className}>
           {children && children.elements.length > 0 ? (
             children.elements.map((child, index) => (
