@@ -1,4 +1,4 @@
-import { ReactRuntime } from '@makeswift/runtime/react'
+import { ReactRuntime } from '@makeswift/runtime/next'
 
 export const runtime = new ReactRuntime({
   breakpoints: {

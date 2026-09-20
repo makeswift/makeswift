@@ -1,3 +1,5 @@
-import { ReactRuntime } from '@makeswift/runtime/react';
+import { ReactRuntime } from '@makeswift/runtime/next';
 
-export const runtime = new ReactRuntime();
+export const runtime = new ReactRuntime({
+  apiOrigin: process.env.MAKESWIFT_API_ORIGIN,
+});
