@@ -17,11 +17,4 @@ export const componentDocumentFallback = z.object({
   data: z.null(),
 })
 
-const unstableNotFoundComponentDocumentResponse = z.object({
-  notFound: z.literal(true),
-})
-
-export const componentDocumentResponse = z.union([
-  unstableNotFoundComponentDocumentResponse,
-  componentDocument,
-])
+export const componentDocumentResponse = z.union([componentDocument, componentDocumentFallback])
