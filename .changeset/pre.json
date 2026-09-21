@@ -19,6 +19,7 @@
   },
   "changesets": [
     "arr-1116-lowercase-click-label",
+    "bulk-global-element-introspection",
     "dark-items-drive",
     "eager-doors-sort",
     "eager-trains-shop",

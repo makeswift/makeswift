@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.0-canary.20
+
+### Patch Changes
+
+- 2619860: Fetch global elements in bulk during introspection, to reduce request volume and avoid rate limiting on sites with many global elements.
+
 ## 0.29.0-canary.19
 
 ### Minor Changes
