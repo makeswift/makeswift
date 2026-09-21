@@ -311,6 +311,119 @@ describe('getLocalizedGlobalElement', () => {
   })
 })
 
+describe('getGlobalElements', () => {
+  const resourceUrl = `${TestOrigins.apiOrigin}/content/v1/global-elements/bulk`
+
+  test('returns an empty array without a request when given no ids', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(() => HttpResponse.json([]))
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getGlobalElements([], TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toEqual([])
+    expect(handler).not.toHaveBeenCalled()
+  })
+
+  test('sends all ids as repeated query params, omits locale by default, and returns the response in order', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const ids = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(
+        ids.map(id => ({
+          base: id === 'b' ? null : { id, data: {} },
+          localized: null,
+        })),
+      )
+    })
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getGlobalElements(['a', 'b', 'c'], TestWorkingSiteVersion)
+
+    // Assert
+    const url = new URL(handler.mock.calls[0]![0].request.url)
+    expect(url.searchParams.getAll('ids')).toEqual(['a', 'b', 'c'])
+    expect(url.searchParams.has('locale')).toBe(false)
+    expect(result).toEqual([
+      { base: { id: 'a', data: {} }, localized: null },
+      { base: null, localized: null },
+      { base: { id: 'c', data: {} }, localized: null },
+    ])
+  })
+
+  test('sends the locale as a query param when provided', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const ids = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(
+        ids.map(id => ({
+          base: { id, data: {} },
+          localized: { id: `${id}-es-MX`, data: {} },
+        })),
+      )
+    })
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getGlobalElements(['a'], TestWorkingSiteVersion, {
+      locale: 'es-MX',
+    })
+
+    // Assert
+    expect(new URL(handler.mock.calls[0]![0].request.url).searchParams.get('locale')).toBe('es-MX')
+    expect(result).toEqual([
+      { base: { id: 'a', data: {} }, localized: { id: 'a-es-MX', data: {} } },
+    ])
+  })
+
+  test('throws on other errors, attaching the details to the error', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(resourceUrl, () => HttpResponse.json('Bad request', { status: 400 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const error = await captureClientError(
+      client.getGlobalElements(['a', 'b'], null, { locale: 'es-MX' }),
+    )
+
+    // Assert
+    expect(error.message).toBe('Failed to get global elements for [a, b]: 400 Bad Request')
+    expect(error.cause).toEqual({ body: 'Bad request', siteVersion: null, locale: 'es-MX' })
+  })
+
+  test('splits more than 100 ids across requests and preserves order', async () => {
+    // Arrange
+    const client = createTestClient()
+    const ids = Array.from({ length: 250 }, (_, i) => `id-${i}`)
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const requested = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(requested.map(id => ({ base: { id, data: {} }, localized: null })))
+    })
+    server.use(http.get(resourceUrl, handler))
+
+    // Act
+    const result = await client.getGlobalElements(ids, TestWorkingSiteVersion)
+
+    // Assert
+    expect(handler).toHaveBeenCalledTimes(3)
+    expect(
+      handler.mock.calls.map(([{ request }]) => new URL(request.url).searchParams.getAll('ids')),
+    ).toEqual([ids.slice(0, 100), ids.slice(100, 200), ids.slice(200)])
+    expect(result.map(entry => entry.base?.id)).toEqual(ids)
+  })
+})
+
 describe('getPagePathnameSlice', () => {
   const pageId = 'pageId'
   const locale = 'fr'
