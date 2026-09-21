@@ -14,6 +14,13 @@ import {
 import { type SiteVersion } from './site-version'
 import * as Schema from './schema'
 
+export type GlobalElementWithLocalized = {
+  base: GlobalElement | null
+  localized: LocalizedGlobalElement | null
+}
+
+const MAX_GLOBAL_ELEMENTS_PER_REQUEST = 100
+
 const RetryBackoffConfig = {
   MaxAttempts: 3,
   MaxDelayMs: 5_000,
@@ -137,6 +144,43 @@ export class MakeswiftRestAPIClient {
     const globalElement = await response.json()
 
     return globalElement
+  }
+
+  async getGlobalElements(
+    globalElementIds: string[],
+    siteVersion: SiteVersion | null,
+    { locale }: { locale?: string | null } = {},
+  ): Promise<GlobalElementWithLocalized[]> {
+    const getGlobalElementsBatch = async (ids: string[]): Promise<GlobalElementWithLocalized[]> => {
+      const url = new URL(`content/v1/global-elements/bulk`, this.apiOrigin)
+
+      ids.forEach(id => url.searchParams.append('ids', id))
+      if (locale != null) url.searchParams.set('locale', locale)
+
+      const response = await this.fetch(url.pathname + url.search, siteVersion)
+
+      if (!response.ok) {
+        const failedBody = await failedResponseBody(response)
+
+        throw new RestApiClientError(
+          `Failed to get global elements for [${ids.join(', ')}]`,
+          response,
+          { body: failedBody, siteVersion, locale },
+        )
+      }
+
+      return await response.json()
+    }
+
+    const batches: string[][] = []
+
+    for (let i = 0; i < globalElementIds.length; i += MAX_GLOBAL_ELEMENTS_PER_REQUEST) {
+      batches.push(globalElementIds.slice(i, i + MAX_GLOBAL_ELEMENTS_PER_REQUEST))
+    }
+
+    const results = await Promise.all(batches.map(getGlobalElementsBatch))
+
+    return results.flat()
   }
 
   async getLocalizedGlobalElement(
