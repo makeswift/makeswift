@@ -1,19 +1,19 @@
 'use client'
 
-import { ReactRuntimeProvider } from '@makeswift/runtime/next'
+import { ReactRuntimeProvider, SiteVersion } from '@makeswift/runtime/next'
 
 import '@/lib/makeswift/components'
 import { runtime } from '@/lib/makeswift/runtime'
 
 export function MakeswiftProvider({
   children,
-  previewMode,
+  siteVersion,
 }: {
   children: React.ReactNode
-  previewMode: boolean
+  siteVersion: SiteVersion | null
 }) {
   return (
-    <ReactRuntimeProvider runtime={runtime} previewMode={previewMode}>
+    <ReactRuntimeProvider runtime={runtime} siteVersion={siteVersion}>
       {children}
     </ReactRuntimeProvider>
   )
