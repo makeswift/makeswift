@@ -182,6 +182,18 @@ export function getResolvedValueOverride(
   )
 }
 
+export function getResolvedValueOverrides(
+  state: State,
+  documentKey: string,
+  instanceKeys: ResolvedValueOverrides.ResolvedValueKey[],
+): ResolvedValueOverrides.ResolvedValueOverrides {
+  return ResolvedValueOverrides.getValueOverrides(
+    getResolvedValueOverridesStateSlice(state),
+    documentKey,
+    instanceKeys,
+  )
+}
+
 export function setupBuilderProxy(
   builderProxy: BuilderAPIProxy,
 ): ThunkAction<VoidFunction, State, unknown, Action> {

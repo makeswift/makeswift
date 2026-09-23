@@ -7,6 +7,10 @@ import { Branded } from '../../../utils/branded'
 
 export type ResolvedValueKey = ControlInstanceKey
 export type ResolvedValue = unknown
+export type ResolvedValueOverrides = {
+  instanceKey: ResolvedValueKey
+  expectedValue: ResolvedValue
+}[]
 
 type CompositeKey = Branded<string, 'CompositeResolvedValueKey'>
 
@@ -37,6 +41,19 @@ export function getValueOverride(
   return state.overrides.get(documentKey)?.get(compositeKey(instanceKey))
 }
 
+export function getValueOverrides(
+  state: State,
+  documentKey: string,
+  instanceKeys: ResolvedValueKey[],
+): ResolvedValueOverrides {
+  return instanceKeys
+    .filter(key => hasValueOverride(state, documentKey, key))
+    .map(key => ({
+      instanceKey: key,
+      expectedValue: getValueOverride(state, documentKey, key),
+    }))
+}
+
 export function reducer(state: State = getInitialState(), action: Action | UnknownAction) {
   if (!isKnownAction(action)) return state
 
@@ -53,10 +70,16 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
     }
 
     case ReadWriteActionTypes.CLEAR_RESOLVED_VALUE_OVERRIDE: {
-      const { documentKey, instanceKey } = action.payload
-      const nextOverrides = new Map(state.overrides.get(documentKey) ?? [])
+      const { documentKey, instanceKey, expectedValue } = action.payload
+      const overrides = state.overrides.get(documentKey)
+      const key = compositeKey(instanceKey)
 
-      const deleted = nextOverrides.delete(compositeKey(instanceKey))
+      // don't clear if override has been re-set to a different value
+      if (!Object.is(overrides?.get(key), expectedValue)) return state
+
+      const nextOverrides = new Map(overrides ?? [])
+
+      const deleted = nextOverrides.delete(key)
       return deleted
         ? { ...state, overrides: new Map(state.overrides).set(documentKey, nextOverrides) }
         : state

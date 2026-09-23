@@ -90,7 +90,7 @@ type SetResolvedValueOverrideAction = {
 
 type ClearResolvedValueOverrideAction = {
   type: typeof ReadWriteActionTypes.CLEAR_RESOLVED_VALUE_OVERRIDE
-  payload: { documentKey: string; instanceKey: ResolvedValueKey }
+  payload: { documentKey: string; instanceKey: ResolvedValueKey; expectedValue: ResolvedValue }
 }
 
 type UpdateAPIClientCache = {

@@ -5,6 +5,8 @@ import { type PropsWithChildren, useEffect, useRef, startTransition, useCallback
 import { ControlInstance } from '@makeswift/controls'
 
 import { type ElementData } from '../../../../state/read-only-state'
+import { getResolvedValueOverrides } from '../../../../state/read-write-state'
+import { isReadWriteState } from '../../../../state/unified-state'
 import {
   setResolvedValueOverride,
   clearResolvedValueOverride,
@@ -16,6 +18,7 @@ import { useControlDefs } from '../../hooks/use-control-defs'
 import { useResolvedProps } from '../../hooks/use-resolved-props'
 import { useControlInstances } from '../../components/control-instances-context'
 import { useDispatch } from '../../hooks/use-dispatch'
+import { useStore } from '../../hooks/use-store'
 import { useDocumentKey } from '../../hooks/use-document-context'
 
 import { getProp } from '../../../../utils/prop-by-path'
@@ -52,6 +55,7 @@ const EditableServerElementWrapper = ({
   children,
 }: PropsWithChildren<{ initialElementData: ElementData; elementData: ElementData }>) => {
   const elementKey = initialElementData.key
+  const store = useStore()
   const dispatch = useDispatch()
   const documentKey = useDocumentKey()
 
@@ -76,19 +80,29 @@ const EditableServerElementWrapper = ({
   const applyServerRefresh = useCallback(
     (elementData: ElementData, leafInstances: ControlInstance[], documentKey: string) =>
       startTransition(async () => {
-        const applied = await serverRefresh(elementData)
-        if (!applied) return
+        const state = store.getState()
+        // Capture the overrides state prior to initiating server refresh so that we
+        // only clear the ones that haven't been updated while the refresh is in flight
+        const overrides = isReadWriteState(state)
+          ? getResolvedValueOverrides(
+              state,
+              documentKey,
+              leafInstances.map(({ instanceKey }) => instanceKey),
+            )
+          : []
 
-        // need a nested `startTransition` here, see
-        // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
-        startTransition(() => {
-          // reset instance overrides, if any
-          leafInstances.forEach(c =>
-            dispatch(clearResolvedValueOverride({ documentKey, instanceKey: c.instanceKey })),
-          )
+        await serverRefresh(elementData, () => {
+          // need a nested `startTransition` here, see
+          // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
+          startTransition(() => {
+            // reset instance overrides, if any
+            overrides.forEach(override =>
+              dispatch(clearResolvedValueOverride({ documentKey, ...override })),
+            )
+          })
         })
       }),
-    [serverRefresh, dispatch],
+    [serverRefresh, dispatch, store],
   )
 
   const applyResolvedValueOverrides = useCallback(
