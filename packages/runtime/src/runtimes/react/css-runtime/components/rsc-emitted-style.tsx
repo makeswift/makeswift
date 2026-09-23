@@ -1,6 +1,6 @@
 'use client'
 
-import { useIsReadOnly } from '../../hooks/use-is-read-only'
+// import { useIsReadOnly } from '../../hooks/use-is-read-only'
 import { useStylesContext } from '../hooks/use-styles-context'
 import { ControlledStyleData } from '../types'
 import { ControlledStyle } from './controlled-styles'
@@ -34,12 +34,12 @@ type Props = {
  */
 export function RSCEmittedStyle({ namespace, serializableData }: Props) {
   const { stylesRegistry } = useStylesContext()
-  const isReadOnly = useIsReadOnly()
+  // const isReadOnly = useIsReadOnly()
 
   // Defer to the pathway for handling editable server elements, see note above
-  if (!isReadOnly) {
-    return null
-  }
+  // if (!isReadOnly) {
+  //   return null
+  // }
 
   stylesRegistry.setControlledStyle({
     namespace,

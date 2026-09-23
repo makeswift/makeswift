@@ -61,7 +61,7 @@ describe('ServerElement', () => {
     }
 
     const html = await renderToString(
-      <ServerElement context={renderContext} documentKey={documentKey} element={element} />,
+      <ServerElement context={renderContext} documentKey={documentKey} elementData={element} />,
     )
 
     expect(html).toEqual(
