@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.0-canary.22
+
+### Patch Changes
+
+- dc91120: refactor: move RSC refresh requests tracking to the elements cache
+
 ## 0.29.0-canary.21
 
 ### Patch Changes
