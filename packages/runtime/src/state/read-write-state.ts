@@ -182,16 +182,8 @@ export function getResolvedValueOverride(
   )
 }
 
-export function getResolvedValueOverrides(
-  state: State,
-  documentKey: string,
-  instanceKeys: ResolvedValueOverrides.ResolvedValueKey[],
-): ResolvedValueOverrides.ResolvedValueOverrides {
-  return ResolvedValueOverrides.getValueOverrides(
-    getResolvedValueOverridesStateSlice(state),
-    documentKey,
-    instanceKeys,
-  )
+export function getResolvedValueOverridesGeneration(state: State): number {
+  return ResolvedValueOverrides.getGeneration(getResolvedValueOverridesStateSlice(state))
 }
 
 export function setupBuilderProxy(
