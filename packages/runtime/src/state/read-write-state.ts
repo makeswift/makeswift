@@ -182,6 +182,10 @@ export function getResolvedValueOverride(
   )
 }
 
+export function getResolvedValueOverridesGeneration(state: State): number {
+  return ResolvedValueOverrides.getGeneration(getResolvedValueOverridesStateSlice(state))
+}
+
 export function setupBuilderProxy(
   builderProxy: BuilderAPIProxy,
 ): ThunkAction<VoidFunction, State, unknown, Action> {

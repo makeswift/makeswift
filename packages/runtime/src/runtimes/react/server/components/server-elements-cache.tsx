@@ -1,19 +1,58 @@
 'use client'
 
-import { createContext, ReactNode, useCallback, useContext, useState, useMemo } from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
+import { useIsomorphicLayoutEffect } from '../../../../components/hooks/useIsomorphicLayoutEffect'
 
 import { type ElementsMap } from '../collect-server-elements'
 
+type CommitRefresh = (node: ReactNode) => void
+
+type ElementRequests = {
+  lastIssued: number
+  lastAccepted: number
+  lastCommitted: number
+}
+
 type ContextValue = {
   getElement: (elementKey: string) => ReactNode
-  updateElement: (elementKey: string, node: ReactNode) => void
-  removeElement: (elementKey: string) => void
+  beginRefresh: (elementKey: string, onCommitted?: () => void) => CommitRefresh | null
 }
+
+type CacheEntry = {
+  node: ReactNode
+  onCommitted?: () => void
+}
+
+type CacheState = {
+  initialElements: ElementsMap
+  elements: Map<string, CacheEntry>
+  refreshScope: {
+    active: boolean
+    requestsByElement: Map<string, ElementRequests>
+  }
+}
+
+const createCacheState = (initialElements: ElementsMap): CacheState => ({
+  initialElements,
+  elements: new Map(Array.from(initialElements, ([key, node]) => [key, { node }] as const)),
+  refreshScope: {
+    active: false,
+    requestsByElement: new Map(),
+  },
+})
 
 const Context = createContext<ContextValue>({
   getElement: () => null,
-  updateElement: () => {},
-  removeElement: () => {},
+  beginRefresh: () => null,
 })
 
 /**
@@ -31,41 +70,100 @@ export const ServerElementsCache = ({
   children: ReactNode
   value: ElementsMap
 }) => {
-  // An RSC re-render does not inherently remount client components; React can reconcile
-  // the new server tree with the existing client tree, so we need to handle the `value`
-  // prop updates
-  const [nodes, setNodes] = useState(value)
-  const [previousValue, setPreviousValue] = useState(value)
-
-  // this is okay to do on render, see https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
-  if (value !== previousValue) {
-    setPreviousValue(value)
-    setNodes(value)
+  const [state, setState] = useState<CacheState>(() => createCacheState(value))
+  // A new elements map resets the state
+  if (state.initialElements !== value) {
+    setState(createCacheState(value))
   }
 
-  const getElement = useCallback((elementKey: string): ReactNode => nodes.get(elementKey), [nodes])
+  const { elements, refreshScope } = state
 
-  const updateElement = useCallback(
-    (elementKey: string, node: ReactNode) => setNodes(prev => new Map(prev).set(elementKey, node)),
-    [],
+  // Run during React commit, before paint
+  useIsomorphicLayoutEffect(() => {
+    // Activate current scope on mount / whenever we reset the state
+    refreshScope.active = true
+    return () => {
+      // Stop accepting refresh requests associated with the old scope
+      refreshScope.active = false
+    }
+  }, [refreshScope])
+
+  const getElement = useCallback(
+    // Always wrap the node in `<RefreshCommitObserver>` so adding a commit callback
+    // during refresh doesn't change the tree shape and remount the refreshed node
+    (elementKey: string): ReactNode => {
+      const entry = elements.get(elementKey)
+      if (entry == null) return null
+
+      return (
+        <RefreshCommitObserver onCommitted={entry.onCommitted}>{entry.node}</RefreshCommitObserver>
+      )
+    },
+    [elements],
   )
 
-  const removeElement = useCallback(
-    (elementKey: string) =>
-      setNodes(prev => {
-        const next = new Map(prev)
-        next.delete(elementKey)
-        return next
-      }),
-    [],
+  const beginRefresh = useCallback(
+    (elementKey: string, onCommitted?: () => void) => {
+      const { requestsByElement } = refreshScope
+
+      const elementRequests = requestsByElement.get(elementKey) ?? {
+        lastIssued: 0,
+        lastAccepted: 0,
+        lastCommitted: 0,
+      }
+
+      requestsByElement.set(elementKey, elementRequests)
+
+      const requestId = ++elementRequests.lastIssued
+
+      return (node: ReactNode): void => {
+        // Ignore stale updates
+        if (!refreshScope.active || requestId <= elementRequests.lastAccepted) return
+
+        elementRequests.lastAccepted = requestId
+        const notifyCommitted = () => {
+          if (requestId <= elementRequests.lastCommitted) return
+
+          elementRequests.lastCommitted = requestId
+          // Don't retain the external callback and its captured values after notification
+          const callback = onCommitted
+          onCommitted = undefined
+          callback?.()
+        }
+
+        setState(prev => {
+          // Ignore updates that come in between element map replacement and scope deactivation
+          if (prev.refreshScope !== refreshScope) return prev
+
+          return {
+            ...prev,
+            elements: new Map(prev.elements).set(elementKey, {
+              node,
+              onCommitted: notifyCommitted,
+            }),
+          }
+        })
+      }
+    },
+    [refreshScope],
   )
 
-  const cache = useMemo(
-    () => ({ getElement, updateElement, removeElement }),
-    [getElement, updateElement, removeElement],
-  )
+  const result = useMemo(() => ({ getElement, beginRefresh }), [getElement, beginRefresh])
 
-  return <Context.Provider value={cache}>{children}</Context.Provider>
+  return <Context.Provider value={result}>{children}</Context.Provider>
+}
+
+const RefreshCommitObserver = ({
+  children,
+  onCommitted,
+}: {
+  children: ReactNode
+  onCommitted?: () => void
+}) => {
+  // Notify the caller that the updated element node has been committed to
+  // the current React tree
+  useEffect(() => onCommitted?.(), [onCommitted])
+  return children
 }
 
 export const ServerElementsProvider = ({

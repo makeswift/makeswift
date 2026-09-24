@@ -11,12 +11,19 @@ import { TestWorkingSiteVersion } from '../../../../../testing/fixtures/site-ver
 import { expectReadWriteState } from '../../../../../testing/read-write-state'
 import { changeDocument } from '../../../../../state/host-api'
 import { createBaseDocument, type ElementData } from '../../../../../state/read-only-state'
-import { getPropControllers, hasResolvedValueOverride } from '../../../../../state/read-write-state'
+import {
+  getPropControllers,
+  getResolvedValueOverride,
+  hasResolvedValueOverride,
+} from '../../../../../state/read-write-state'
 import { registerDocument } from '../../../../../state/shared-api'
 import { setResolvedValueOverride } from '../../../../../state/actions/internal/read-write-actions'
 
 import { Document } from '../../../components/Document'
 import { FrameworkContextProvider } from '../../../components/framework-context'
+
+import { createDeferred } from '../../../../../utils/deferred'
+
 import { createReactRuntime, ReactProvider } from '../../../testing'
 
 import { ServerElementsCache } from '../server-elements-cache'
@@ -261,5 +268,84 @@ describe('EditableServerElement', () => {
       expectReadWriteState(state)
       expect(hasResolvedValueOverride(state, documentKey, instanceKey('title'))).toBe(false)
     })
+  })
+
+  test.each([
+    { hasExistingOverride: false, scenario: 'created' },
+    { hasExistingOverride: true, scenario: 'updated' },
+  ])('preserves an override $scenario during a refresh', async ({ hasExistingOverride }) => {
+    // start with a server component with an empty content slot
+    const initialContent = { columns: [], elements: [] }
+    const { renderRSCElement, store } = await createFixtures({
+      propDefs: { title: TextInput(), content: Slot() },
+      propsData: { title: 'Before', content: initialContent },
+    })
+
+    // deferred server refresh response to simulate long-running server refresh
+    const response = createDeferred<ReactNode>()
+    renderRSCElement.mockReturnValueOnce(response.promise)
+
+    act(() => {
+      if (hasExistingOverride) {
+        // for the "updated" case, emulate an earlier content edit (an override that
+        // already exists)
+        store.dispatch(
+          setResolvedValueOverride({
+            documentKey,
+            instanceKey: instanceKey('content'),
+            value: <div>Previous override</div>,
+          }),
+        )
+      }
+
+      // update the title; this starts our long-running server refresh
+      store.dispatch(changeDocument(documentKey, updateProp('title', 'Before', 'After')))
+    })
+
+    // make sure the title refresh is in flight
+    await waitFor(() => expect(renderRSCElement).toHaveBeenCalledTimes(1))
+
+    // simulate adding a child to the slot before the refresh finishes
+    const newContent = {
+      ...initialContent,
+      elements: [{ key: 'new-child', type: 'component', props: {} }],
+    }
+
+    act(() => {
+      store.dispatch(changeDocument(documentKey, updateProp('content', initialContent, newContent)))
+    })
+
+    // the slot edit should be reflected immediately through a client override
+    await waitFor(() => {
+      const state = store.getState()
+      expectReadWriteState(state)
+      const override = getResolvedValueOverride(state, documentKey, instanceKey('content'))
+      expect(override).toEqual(
+        expect.objectContaining({ props: expect.objectContaining({ data: newContent }) }),
+      )
+    })
+
+    // make sure there was no new server refresh
+    expect(renderRSCElement).toHaveBeenCalledTimes(1)
+
+    // retrieve the override so we can verify that the pending title refresh does not remove it
+    const state = store.getState()
+    expectReadWriteState(state)
+    const override = getResolvedValueOverride(state, documentKey, instanceKey('content'))
+
+    // trigger finishing the title update refresh that has the old slot content
+    await act(async () => {
+      response.resolve(<div>Title: After; content children: {initialContent.elements.length}</div>)
+    })
+
+    // wait until React commits it
+    await screen.findByText('Title: After; content children: 0')
+
+    // the newer slot override must remain after the older server response is committed
+    const refreshedState = store.getState()
+    expectReadWriteState(refreshedState)
+    expect(getResolvedValueOverride(refreshedState, documentKey, instanceKey('content'))).toBe(
+      override,
+    )
   })
 })

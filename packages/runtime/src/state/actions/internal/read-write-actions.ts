@@ -88,9 +88,9 @@ type SetResolvedValueOverrideAction = {
   payload: { documentKey: string; instanceKey: ResolvedValueKey; value: ResolvedValue }
 }
 
-type ClearResolvedValueOverrideAction = {
-  type: typeof ReadWriteActionTypes.CLEAR_RESOLVED_VALUE_OVERRIDE
-  payload: { documentKey: string; instanceKey: ResolvedValueKey }
+type ClearStaleResolvedValueOverridesAction = {
+  type: typeof ReadWriteActionTypes.CLEAR_STALE_RESOLVED_VALUE_OVERRIDES
+  payload: { documentKey: string; elementKey: string; generation: number }
 }
 
 type UpdateAPIClientCache = {
@@ -114,7 +114,7 @@ export type ReadWriteAction =
   | RegisterMeasurableAction
   | UnregisterMeasurableAction
   | SetResolvedValueOverrideAction
-  | ClearResolvedValueOverrideAction
+  | ClearStaleResolvedValueOverridesAction
   | UpdateAPIClientCache
   | ClearAPIClientCache
 
@@ -249,11 +249,11 @@ export function setResolvedValueOverride(
   }
 }
 
-export function clearResolvedValueOverride(
-  payload: ClearResolvedValueOverrideAction['payload'],
-): ClearResolvedValueOverrideAction {
+export function clearStaleResolvedValueOverrides(
+  payload: ClearStaleResolvedValueOverridesAction['payload'],
+): ClearStaleResolvedValueOverridesAction {
   return {
-    type: ReadWriteActionTypes.CLEAR_RESOLVED_VALUE_OVERRIDE,
+    type: ReadWriteActionTypes.CLEAR_STALE_RESOLVED_VALUE_OVERRIDES,
     payload,
   }
 }
