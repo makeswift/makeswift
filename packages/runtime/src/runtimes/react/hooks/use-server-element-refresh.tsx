@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 
 import { type ElementData } from '../../../state/read-only-state'
 
@@ -13,54 +13,42 @@ import { useApiResourcesClient } from './use-api-resources-client'
  * the server and stores the result in the server element cache under the
  * provided element key.
  *
- * The callback returns true only if the element render succeeds and is committed
- * to the cache. Returns false when rendering is unavailable, fails, or produces a
- * stale/out-of-order result.
+ * Calls the `onCommitted` callback once after a successfully rendered node is
+ * committed to the current React tree.
  */
 export const useServerElementRefresh = ({
   elementKey,
 }: {
   elementKey: string
-}): ((elementData: ElementData) => Promise<boolean>) => {
-  const requestIdRef = useRef(0)
-  const lastAppliedRequestId = useRef(0)
-
+}): ((elementData: ElementData, onCommitted?: () => void) => Promise<void>) => {
   const { renderRSCElement } = useFrameworkContext()
-  const { updateElement } = useServerElementsCache()
+  const { beginRefresh } = useServerElementsCache()
 
   const documentKey = useDocumentKey()
   const documentLocale = useDocumentLocale()
   const apiResourcesClient = useApiResourcesClient()
 
-  useEffect(() => {
-    // Invalidate all in-flight requests on unmount so they cannot update the cache
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      lastAppliedRequestId.current = ++requestIdRef.current
-    }
-  }, [])
-
   return useCallback(
-    async (elementData: ElementData): Promise<boolean> => {
-      if (!documentKey) return false
+    async (elementData: ElementData, onCommitted?: () => void): Promise<void> => {
+      if (!documentKey) return
       if (elementData.key !== elementKey) {
         console.error(
           `Cannot refresh server element: mismatching element key '${elementData.key}' != '${elementKey}'`,
         )
-        return false
+        return
       }
 
       if (!renderRSCElement) {
         console.error(
           `Cannot refresh server element '${elementKey}' of type '${elementData.type}': \`renderRSCElement\` callback is null`,
         )
-        return false
+        return
       }
 
       try {
-        // Assign each server refresh a sequential ID so we can track response
-        // arrival and ignore out-of-order results
-        const requestId = ++requestIdRef.current
+        const commit = beginRefresh(elementKey, onCommitted)
+        if (commit == null) return
+
         const reactNode = await renderRSCElement({
           elementData,
           cacheData: apiResourcesClient.cacheData,
@@ -70,20 +58,14 @@ export const useServerElementRefresh = ({
           },
         })
 
-        if (requestId > lastAppliedRequestId.current) {
-          updateElement(elementKey, reactNode)
-          lastAppliedRequestId.current = requestId
-          return true
-        }
+        commit(reactNode)
       } catch (error) {
         console.error(
           `Failed to refresh server element '${elementKey}' of type '${elementData.type}'`,
           error,
         )
       }
-
-      return false
     },
-    [renderRSCElement, documentKey, documentLocale, elementKey, apiResourcesClient, updateElement],
+    [renderRSCElement, documentKey, documentLocale, elementKey, apiResourcesClient, beginRefresh],
   )
 }

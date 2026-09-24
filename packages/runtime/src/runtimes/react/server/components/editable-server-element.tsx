@@ -5,9 +5,11 @@ import { type PropsWithChildren, useEffect, useRef, startTransition, useCallback
 import { ControlInstance } from '@makeswift/controls'
 
 import { type ElementData } from '../../../../state/read-only-state'
+import { getResolvedValueOverridesGeneration } from '../../../../state/read-write-state'
+import { isReadWriteState } from '../../../../state/unified-state'
 import {
   setResolvedValueOverride,
-  clearResolvedValueOverride,
+  clearStaleResolvedValueOverrides,
 } from '../../../../state/actions/internal/read-write-actions'
 
 import { useServerElementRefresh } from '../../hooks/use-server-element-refresh'
@@ -16,6 +18,7 @@ import { useControlDefs } from '../../hooks/use-control-defs'
 import { useResolvedProps } from '../../hooks/use-resolved-props'
 import { useControlInstances } from '../../components/control-instances-context'
 import { useDispatch } from '../../hooks/use-dispatch'
+import { useStore } from '../../hooks/use-store'
 import { useDocumentKey } from '../../hooks/use-document-context'
 
 import { getProp } from '../../../../utils/prop-by-path'
@@ -52,6 +55,7 @@ const EditableServerElementWrapper = ({
   children,
 }: PropsWithChildren<{ initialElementData: ElementData; elementData: ElementData }>) => {
   const elementKey = initialElementData.key
+  const store = useStore()
   const dispatch = useDispatch()
   const documentKey = useDocumentKey()
 
@@ -74,21 +78,25 @@ const EditableServerElementWrapper = ({
 
   const serverRefresh = useServerElementRefresh({ elementKey })
   const applyServerRefresh = useCallback(
-    (elementData: ElementData, leafInstances: ControlInstance[], documentKey: string) =>
+    (elementData: ElementData, documentKey: string) =>
       startTransition(async () => {
-        const applied = await serverRefresh(elementData)
-        if (!applied) return
+        const state = store.getState()
+        // Capture the overrides generation prior to initiating server refresh so that we
+        // only clear the overrides that haven't been updated while the refresh is in flight
+        const generation = isReadWriteState(state)
+          ? getResolvedValueOverridesGeneration(state)
+          : null
 
-        // need a nested `startTransition` here, see
-        // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
-        startTransition(() => {
-          // reset instance overrides, if any
-          leafInstances.forEach(c =>
-            dispatch(clearResolvedValueOverride({ documentKey, instanceKey: c.instanceKey })),
-          )
+        await serverRefresh(elementData, () => {
+          if (generation == null) return
+          // need a nested `startTransition` here, see
+          // https://react.dev/reference/react/useTransition#react-doesnt-treat-my-state-update-after-await-as-a-transition
+          startTransition(() => {
+            dispatch(clearStaleResolvedValueOverrides({ documentKey, elementKey, generation }))
+          })
         })
       }),
-    [serverRefresh, dispatch],
+    [serverRefresh, dispatch, store, elementKey],
   )
 
   const applyResolvedValueOverrides = useCallback(
@@ -111,9 +119,9 @@ const EditableServerElementWrapper = ({
     if (children == null) {
       // If we don't have a server-rendered node (i.e. user just dropped the element to the page),
       // trigger a server re-render
-      const { leafInstances, leafProps } = getLeafPropsAndInstances(resolvedProps, controlInstances)
+      const { leafProps } = getLeafPropsAndInstances(resolvedProps, controlInstances)
 
-      applyServerRefresh(elementData, leafInstances, documentKey)
+      applyServerRefresh(elementData, documentKey)
 
       prevPropsRef.current = resolvedProps
       prevLeafPropsRef.current = leafProps
@@ -128,7 +136,7 @@ const EditableServerElementWrapper = ({
       // in a change to the resolved value, which is what we want. Dynamic style updates are handled
       // through a subscription mechanism that listens for changes to controlled style data in the
       // styles registry.
-      const { needsRefresh, leafInstances, leafProps, reactNodeInstances } = needsServerRefresh({
+      const { needsRefresh, leafProps, reactNodeInstances } = needsServerRefresh({
         resolvedProps,
         controlInstances,
         prevProps: prevPropsRef.current,
@@ -136,7 +144,7 @@ const EditableServerElementWrapper = ({
       })
 
       if (needsRefresh) {
-        applyServerRefresh(elementData, leafInstances, documentKey)
+        applyServerRefresh(elementData, documentKey)
       } else {
         applyResolvedValueOverrides(reactNodeInstances, resolvedProps, documentKey)
       }
@@ -178,7 +186,6 @@ const needsServerRefresh = ({
   prevLeafProps: Set<string>
 }): {
   needsRefresh: boolean
-  leafInstances: ControlInstance[]
   leafProps: Set<string>
   reactNodeInstances: ControlInstance[]
 } => {
@@ -209,7 +216,6 @@ const needsServerRefresh = ({
 
   return {
     needsRefresh,
-    leafInstances,
     leafProps,
     reactNodeInstances,
   }
