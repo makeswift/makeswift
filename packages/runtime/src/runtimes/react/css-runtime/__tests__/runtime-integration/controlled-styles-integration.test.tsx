@@ -9,6 +9,7 @@ import { setBreakpoints } from '../../../../../state/builder-api/actions'
 import { styleV2Samples } from './__fixtures__/sample-stylev2-data'
 import { StyleElementUpdater } from '../../style-element-updater'
 import { TestWorkingSiteVersion } from '../../../../../testing/fixtures/site-version'
+import { windowMocks } from '../../../../../testing/window'
 
 describe('Controlled styles integration:', () => {
   afterEach(() => {
@@ -31,13 +32,16 @@ describe('Controlled styles integration:', () => {
     if (resources.length > 0) {
       mockApiResourceRequests({ resources })
     }
+
     const store = runtime.getOrCreateStore({
       siteVersion: TestWorkingSiteVersion,
       locale: undefined,
     })
     store.dispatch(setBreakpoints([{ id: 'desktop' }]))
 
+    const postMessageMock = windowMocks.mockPostMessage()
     await act(async () => testLibraryRender(render()))
+    postMessageMock.restore()
 
     const renderedElement = screen.getByTestId(domElementId)
     const resolvedClassName = renderedElement.className
