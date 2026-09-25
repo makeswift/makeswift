@@ -1,4 +1,4 @@
-import isErrorWithMessage from '../../utils/isErrorWithMessage'
+import { isErrorWithMessage } from '../../utils/error-message'
 import {
   type ApiRequest,
   type ErrorResponseBody,

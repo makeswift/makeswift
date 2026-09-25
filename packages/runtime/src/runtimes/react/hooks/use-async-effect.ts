@@ -1,5 +1,7 @@
 import { type DependencyList, useEffect } from 'react'
 
+import { errorMessage } from '../../../utils/error-message'
+
 export function useAsyncEffect(effect: () => Promise<void | (() => void)>, deps: DependencyList) {
   useEffect(() => {
     let cancelled = false
@@ -14,19 +16,20 @@ export function useAsyncEffect(effect: () => Promise<void | (() => void)>, deps:
           cleanup = null
         }
       } catch (error) {
-        console.error('Async effect error:', { error, deps })
+        console.error(`Async effect error: ${errorMessage(error)}`, { error, deps })
       }
     }
 
-    runAsyncEffect()
+    void runAsyncEffect()
 
     return () => {
       cancelled = true
       try {
         cleanup?.()
       } catch (error) {
-        console.error('Async effect cleanup error:', { error, deps })
+        console.error(`Async effect cleanup error: ${errorMessage(error)}`, { error, deps })
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 }

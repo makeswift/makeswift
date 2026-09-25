@@ -1,3 +1,14 @@
 import config from 'eslint-config'
 
-export default config
+const runtimeConfig = {
+  rules: {
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        additionalHooks: '^useAsyncEffect$',
+      },
+    ],
+  },
+}
+
+export default [...config, runtimeConfig]
