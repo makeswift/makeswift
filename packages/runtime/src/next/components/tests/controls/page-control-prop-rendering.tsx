@@ -15,6 +15,7 @@ import { Page } from '../../page'
 import { isServer } from '../../../../utils/is-server'
 
 import { renderToString } from '../../../../runtimes/react/testing/render-to-string'
+import { windowMocks } from '../../../../testing/window'
 import * as Testing from '../../../testing'
 
 const ROOT_ID = '00000000-0000-0000-0000-000000000000'
@@ -55,27 +56,6 @@ async function serverSideRender(children: ReactNode) {
   )
 
   return dom.window.document
-}
-
-/**
- * In read-write mode, the runtime opens a `MessageChannel` to the builder
- * parent frame; jsdom doesn't implement `MessageChannel`, so stub them to keep
- * the read-write setup from throwing.
- */
-function stubBuilderMessageChannel(): () => void {
-  const postMessageSpy = jest.spyOn(window, 'postMessage').mockImplementation(() => {})
-
-  const originalMessageChannel = window.MessageChannel
-  const stubPort = () => ({ onmessage: null, postMessage: () => {}, close: () => {} })
-  window.MessageChannel = class {
-    port1 = stubPort()
-    port2 = stubPort()
-  } as unknown as typeof MessageChannel
-
-  return () => {
-    postMessageSpy.mockRestore()
-    window.MessageChannel = originalMessageChannel
-  }
 }
 
 export async function testPageControlPropRendering<D extends ControlDefinition>(
@@ -160,7 +140,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
   }
 
   if (!isServer()) {
-    const restoreMessageChannel = isReadOnly ? null : stubBuilderMessageChannel()
+    const postMessageMock = windowMocks.mockPostMessage()
 
     const rootElementData: ElementData = Testing.createRootComponent(
       [elementData, ...rootElements],
@@ -185,7 +165,7 @@ export async function testPageControlPropRendering<D extends ControlDefinition>(
       expect(Number(screen.getByTestId(renderCountTestId).textContent)).toBe(expectedRenders)
     }
 
-    restoreMessageChannel?.()
+    postMessageMock.restore()
   } else {
     // test server-side rendering using a component snapshot
     console.assert(action == null)
