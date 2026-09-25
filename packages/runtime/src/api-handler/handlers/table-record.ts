@@ -1,7 +1,7 @@
 import { MakeswiftClient } from '../../client'
 import { RestApiClientError } from '../../api/rest-api-client'
 import { type ApiRequest, ApiResponse, type ErrorResponseBody } from '../request-response'
-import isErrorWithMessage from '../../utils/isErrorWithMessage'
+import { isErrorWithMessage } from '../../utils/error-message'
 
 export async function tableRecordHandler(
   req: ApiRequest,

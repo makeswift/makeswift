@@ -107,7 +107,7 @@ describe('useAsyncEffect', () => {
     // Assert
     await waitFor(() => deferred.promise.catch(() => {}))
     expect(cleanup).not.toHaveBeenCalled()
-    expect(consoleError).toHaveBeenCalledWith('Async effect error:', {
+    expect(consoleError).toHaveBeenCalledWith('Async effect error: Effect failed', {
       error: 'Effect failed',
       deps: [],
     })
@@ -132,7 +132,7 @@ describe('useAsyncEffect', () => {
     unmount()
 
     // Assert
-    expect(consoleError).toHaveBeenCalledWith('Async effect cleanup error:', {
+    expect(consoleError).toHaveBeenCalledWith('Async effect cleanup error: Cleanup failed', {
       error: cleanupError,
       deps: [],
     })
