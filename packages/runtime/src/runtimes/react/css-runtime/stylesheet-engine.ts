@@ -11,6 +11,7 @@ export class StylesheetEngine implements Stylesheet {
   private propPathComponents: readonly string[]
   private onDefineStyle: (data: ControlledStyleData) => void
   private classNamePrefix?: string
+  private forceImportant: boolean
 
   constructor({
     breakpointsData,
@@ -19,6 +20,7 @@ export class StylesheetEngine implements Stylesheet {
     propPathComponents,
     onDefineStyle,
     classNamePrefix,
+    forceImportant = false,
   }: {
     breakpointsData: Breakpoints
     documentKey: string
@@ -26,6 +28,7 @@ export class StylesheetEngine implements Stylesheet {
     propPathComponents: readonly string[]
     onDefineStyle: (data: ControlledStyleData) => void
     classNamePrefix?: string
+    forceImportant?: boolean
   }) {
     this.breakpointsData = breakpointsData
     this.documentKey = documentKey
@@ -33,6 +36,7 @@ export class StylesheetEngine implements Stylesheet {
     this.propPathComponents = propPathComponents
     this.onDefineStyle = onDefineStyle
     this.classNamePrefix = classNamePrefix
+    this.forceImportant = forceImportant
   }
 
   breakpoints(): Breakpoints {
@@ -48,8 +52,11 @@ export class StylesheetEngine implements Stylesheet {
       data: this.key(),
       classNamePrefix: this.classNamePrefix,
     })
+
     const cssObject = resolvedStyleToCss(this.breakpointsData, resolvedStyle)
-    const { css, contentHash } = toCssStatements(cssObject, className)
+    const { css, contentHash } = toCssStatements(cssObject, className, {
+      forceImportant: this.forceImportant,
+    })
 
     this.onDefineStyle?.({
       className,
@@ -71,10 +78,12 @@ export class StylesheetEngine implements Stylesheet {
       propPathComponents: [...this.propPathComponents, propName],
       onDefineStyle: this.onDefineStyle,
       classNamePrefix: this.classNamePrefix,
+      forceImportant: this.forceImportant,
     })
   }
 
   key(): string {
-    return `${this.documentKey}-${this.elementKey}-${this.propPathComponents.join('.')}`
+    const key = `${this.documentKey}-${this.elementKey}-${this.propPathComponents.join('.')}`
+    return this.forceImportant ? `${key}-important` : key
   }
 }

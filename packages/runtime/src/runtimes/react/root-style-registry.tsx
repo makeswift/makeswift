@@ -8,6 +8,7 @@ import {
   DEFAULT_CSS_CLASS_NAME_PREFIX,
   DEFAULT_SHOULD_RENDER_STYLE_ELEMENTS,
   DEFAULT_CSS_RESET_ENABLED,
+  DEFAULT_CSS_FORCE_IMPORTANT,
 } from './css-runtime/constants'
 import { createMakeswiftStylesRegistry } from './css-runtime/utils'
 
@@ -22,6 +23,11 @@ export type RootStyleProps = {
    * Set to `false` when using `@layer`-based CSS frameworks like Tailwind.
    */
   enableCssReset?: boolean
+  /**
+   * Append `!important` to Makeswift-generated style rule declarations to
+   * increase their priority relative to external styles.
+   */
+  forceImportant?: boolean
 }
 
 export function RootStyleRegistry({
@@ -29,11 +35,13 @@ export function RootStyleRegistry({
   stylesRegistry,
   classNamePrefix = DEFAULT_CSS_CLASS_NAME_PREFIX,
   enableCssReset = DEFAULT_CSS_RESET_ENABLED,
+  forceImportant = DEFAULT_CSS_FORCE_IMPORTANT,
   shouldRenderStyleElements = DEFAULT_SHOULD_RENDER_STYLE_ELEMENTS,
 }: PropsWithChildren<{
   stylesRegistry: StylesRegistry
   classNamePrefix?: string
   enableCssReset?: boolean
+  forceImportant?: boolean
   shouldRenderStyleElements?: boolean
 }>) {
   useDynamicBrowserStyleUpdates(stylesRegistry)
@@ -42,6 +50,7 @@ export function RootStyleRegistry({
     <StylesContextProvider
       classNamePrefix={classNamePrefix}
       enableCssReset={enableCssReset}
+      forceImportant={forceImportant}
       stylesRegistry={stylesRegistry}
       shouldRenderStyleElements={shouldRenderStyleElements}
     >
@@ -54,6 +63,7 @@ export function DefaultRootStyleRegistry({
   children,
   classNamePrefix,
   enableCssReset,
+  forceImportant,
 }: PropsWithChildren<RootStyleProps>) {
   const [stylesRegistry] = useState(createMakeswiftStylesRegistry)
   return (
@@ -61,6 +71,7 @@ export function DefaultRootStyleRegistry({
       stylesRegistry={stylesRegistry}
       classNamePrefix={classNamePrefix}
       enableCssReset={enableCssReset}
+      forceImportant={forceImportant}
     >
       {children}
     </RootStyleRegistry>

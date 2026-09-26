@@ -90,6 +90,7 @@ function InnerRootStyleRegistry({
   const outerStylesProps: RootStyleProps = {
     classNamePrefix: outerStylesContext?.classNamePrefix,
     enableCssReset: outerStylesContext?.enableCssReset,
+    forceImportant: outerStylesContext?.forceImportant,
   }
 
   return (
