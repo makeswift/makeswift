@@ -77,4 +77,31 @@ describe('Controlled styles integration:', () => {
     expect(styleData.css).toBe(styleElementTextContent)
     expect(styleData.css).toMatchSnapshot('css')
   })
+
+  describe('appends `!important` when forceImportant=true', () =>
+    test.each(testCases)('$description', async ({ sampleData, controlDefinition, resources }) => {
+      const { runtime, stylesRegistry, render, namespace } = createControlledStylesTestFixtures({
+        siteVersion: TestWorkingSiteVersion,
+        controlDefinition,
+        sampleData,
+        forceImportant: true,
+      })
+
+      if (resources.length > 0) {
+        mockApiResourceRequests({ resources })
+      }
+
+      const store = runtime.getOrCreateStore({
+        siteVersion: TestWorkingSiteVersion,
+        locale: undefined,
+      })
+      store.dispatch(setBreakpoints([{ id: 'desktop' }]))
+
+      const postMessageMock = windowMocks.mockPostMessage()
+      await act(async () => testLibraryRender(render()))
+      postMessageMock.restore()
+
+      const css = [...stylesRegistry.getControlledStyles(namespace).values()].map(({ css }) => css)
+      expect(css).toMatchSnapshot('css')
+    }))
 })
