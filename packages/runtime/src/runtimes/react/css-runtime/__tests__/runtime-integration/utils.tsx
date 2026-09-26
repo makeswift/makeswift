@@ -36,12 +36,14 @@ export function createControlledStylesTestFixtures({
   siteVersion,
   controlDefinition,
   sampleData,
+  forceImportant,
 }: {
   siteVersion: SiteVersion
   controlDefinition: StyleV1Definition | StyleV2Definition<ControlDefinition, CSSObject>
   sampleData:
     | DataType<StyleV1Definition>
     | DataType<StyleV2Definition<ControlDefinition, CSSObject>>
+  forceImportant?: boolean
 }): RuntimeIntegrationTestFixture {
   const customComponentType = 'test-component-type'
   const domElementId = 'dom-element-test-id'
@@ -77,6 +79,7 @@ export function createControlledStylesTestFixtures({
   const { runtime, renderElementTree, stylesRegistry } = setup({
     siteVersion,
     registrationFns: [registrationFn],
+    forceImportant,
   })
   const render = () => {
     return renderElementTree(makeswiftPageComponent)
@@ -95,9 +98,11 @@ export function createControlledStylesTestFixtures({
 function setup({
   siteVersion,
   registrationFns,
+  forceImportant,
 }: {
   siteVersion: SiteVersion
   registrationFns: Array<(runtime: ReactRuntime) => void>
+  forceImportant?: boolean
 }) {
   const runtime = createReactRuntime()
   const stylesRegistry = createMakeswiftStylesRegistry()
@@ -110,6 +115,7 @@ function setup({
   }
   const rootStyleRegistryProps: Omit<ComponentProps<typeof RootStyleRegistry>, 'children'> = {
     stylesRegistry,
+    forceImportant,
   }
   const renderElementTree = (component: ReactNode) => (
     <TestProviders

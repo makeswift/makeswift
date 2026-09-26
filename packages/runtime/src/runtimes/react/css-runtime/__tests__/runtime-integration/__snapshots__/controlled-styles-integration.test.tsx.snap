@@ -5,3 +5,21 @@ exports[`Controlled styles integration: StyleV1Control.All (with no resources): 
 exports[`Controlled styles integration: StyleV1Control.Border (with resources): css 1`] = `"@media only screen{.ms-7skvv1{border-top:10px dashed hsla(360,100%,50%,1);border-right:5px dashed hsla(360,100%,50%,1);border-bottom:10px dashed hsla(360,100%,50%,1);border-left:5px dashed hsla(360,100%,50%,1);}}"`;
 
 exports[`Controlled styles integration: StyleV2 - nesting selector: css 1`] = `".ms-7skvv1:hover{background:purple;}@media only screen{.ms-7skvv1:hover{background:purple;}}"`;
+
+exports[`Controlled styles integration: appends \`!important\` when forceImportant=true StyleV1Control.All (with no resources): css 1`] = `
+[
+  ".ms-flsb67{max-width:100%!important;}@media only screen{.ms-flsb67{width:100%!important;margin-top:0px!important;margin-right:auto!important;margin-bottom:20px!important;margin-left:auto!important;padding-top:0px!important;padding-right:0px!important;padding-bottom:20px!important;padding-left:20px!important;border-top:0 solid black!important;border-right:0 solid black!important;border-bottom:0 solid black!important;border-left:0 solid black!important;border-top-left-radius:15px!important;border-top-right-radius:15px!important;border-bottom-right-radius:15px!important;border-bottom-left-radius:15px!important;font-family:"Dancing Script"!important;letter-spacing:1px!important;font-size:25px!important;font-weight:400!important;}}",
+]
+`;
+
+exports[`Controlled styles integration: appends \`!important\` when forceImportant=true StyleV1Control.Border (with resources): css 1`] = `
+[
+  "@media only screen{.ms-flsb67{border-top:10px dashed hsla(360,100%,50%,1)!important;border-right:5px dashed hsla(360,100%,50%,1)!important;border-bottom:10px dashed hsla(360,100%,50%,1)!important;border-left:5px dashed hsla(360,100%,50%,1)!important;}}",
+]
+`;
+
+exports[`Controlled styles integration: appends \`!important\` when forceImportant=true StyleV2 - nesting selector: css 1`] = `
+[
+  ".ms-flsb67:hover{background:purple!important;}@media only screen{.ms-flsb67:hover{background:purple!important;}}",
+]
+`;
