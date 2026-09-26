@@ -14,14 +14,16 @@ import { MakeswiftStyle } from '../components/makeswift-style'
  * such as those defined inline in builtin components.
  */
 export function useStyle(style: CSSObject) {
-  const { classNamePrefix, stylesRegistry } = useStylesContext()
+  const { classNamePrefix, forceImportant, stylesRegistry } = useStylesContext()
+  const serializedStyle = JSON.stringify(style)
   const className = generateClassName({
-    data: JSON.stringify(style),
+    data: forceImportant ? `${serializedStyle}-important` : serializedStyle,
     classNamePrefix,
   })
+
   let styleData = stylesRegistry.getUncontrolledClassStyles().get(className)
   if (styleData == null) {
-    const { css } = toCssStatements(style, className)
+    const { css } = toCssStatements(style, className, { forceImportant })
     styleData = {
       className,
       css,
@@ -29,11 +31,13 @@ export function useStyle(style: CSSObject) {
     }
     stylesRegistry.setUncontrolledClassStyle(styleData)
   }
+
   const styleElement = React.createElement(MakeswiftStyle, {
     key: className,
     href: className,
     css: styleData.css,
   })
+
   return {
     className,
     styleElement,

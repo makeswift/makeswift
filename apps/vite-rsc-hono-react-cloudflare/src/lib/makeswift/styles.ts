@@ -6,4 +6,5 @@ import type { RootStyleProps } from '@makeswift/runtime/unstable-framework-suppo
 // the RSC render context.
 export const rootStyleProps: RootStyleProps = {
   classNamePrefix: 'mswft',
+  forceImportant: true,
 }

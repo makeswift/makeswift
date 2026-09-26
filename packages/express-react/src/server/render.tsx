@@ -11,7 +11,7 @@ import {
 
 export function renderHtml(
   children: ReactNode,
-  { classNamePrefix, enableCssReset }: RootStyleProps = {},
+  { classNamePrefix, enableCssReset, forceImportant }: RootStyleProps = {},
 ): Promise<{ getStyles: () => string; html: string }> {
   const stylesRegistry = createMakeswiftStylesRegistry()
   const getStyles = () => stylesRegistry.serializeToHtmlStyleTags()
@@ -23,6 +23,7 @@ export function renderHtml(
       <RootStyleRegistry
         classNamePrefix={classNamePrefix}
         enableCssReset={enableCssReset}
+        forceImportant={forceImportant}
         stylesRegistry={stylesRegistry}
         shouldRenderStyleElements={false}
       >

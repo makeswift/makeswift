@@ -18,6 +18,7 @@ export function renderHtml(
     timeout,
     classNamePrefix,
     enableCssReset,
+    forceImportant,
     responseStatusCode,
     responseHeaders,
   }: RootStyleProps & {
@@ -37,6 +38,7 @@ export function renderHtml(
         stylesRegistry={stylesRegistry}
         classNamePrefix={classNamePrefix}
         enableCssReset={enableCssReset}
+        forceImportant={forceImportant}
         shouldRenderStyleElements={false}
       >
         {children}
