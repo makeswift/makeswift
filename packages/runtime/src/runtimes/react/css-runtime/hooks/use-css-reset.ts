@@ -6,28 +6,28 @@ import { MakeswiftStyle } from '../components/makeswift-style'
 import React from 'react'
 
 export function useCssReset({ styles }: { styles: Array<CSSObject> }) {
-  const { enableCssReset, stylesRegistry } = useStylesContext()
+  const { enableCssReset, forceImportant, stylesRegistry } = useStylesContext()
   if (!enableCssReset) return { styleElement: null }
-  const { content: rawContent, contentHash } = toRawCss(styles)
+
+  const { content: rawContent, contentHash } = toRawCss(styles, { forceImportant })
   let styleData = stylesRegistry.getCssResets().get(contentHash)
   if (styleData == null) {
-    const css = processCss({ content: rawContent })
     styleData = {
-      css,
+      css: processCss({ content: rawContent, forceImportant }),
       cssObjects: styles,
       contentHash,
     }
+
     stylesRegistry.setCssReset(styleData)
   }
-  const css = processCss({ content: rawContent })
-  const href = `makeswift-css-reset-${contentHash}`
 
   const styleElement = React.createElement(MakeswiftStyle, {
     key: contentHash,
-    href: href,
-    css,
+    href: `makeswift-css-reset-${contentHash}`,
+    css: styleData.css,
     precedence: MakeswiftStylePrecedence.RESET,
   })
+
   return {
     styleElement,
   }

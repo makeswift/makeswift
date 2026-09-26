@@ -6,7 +6,7 @@ import { StylesheetEngine } from '../stylesheet-engine'
 import { useDocumentKey } from '../../hooks/use-document-context'
 
 export function useControlledStyles({ namespace }: { namespace: string }) {
-  const { classNamePrefix, stylesRegistry } = useStylesContext()
+  const { classNamePrefix, forceImportant, stylesRegistry } = useStylesContext()
   const documentKey = useDocumentKey()
   if (documentKey == null) {
     throw new Error('Root document key not found when attempting to use controlled styles')
@@ -30,9 +30,10 @@ export function useControlledStyles({ namespace }: { namespace: string }) {
         propPathComponents,
         onDefineStyle,
         classNamePrefix,
+        forceImportant,
       })
     },
-    [classNamePrefix, stylesRegistry, namespace, documentKey],
+    [classNamePrefix, forceImportant, stylesRegistry, namespace, documentKey],
   )
 
   const styleElements = React.createElement(ControlledStyles, {
