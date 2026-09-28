@@ -9,7 +9,7 @@ export function useCssReset({ styles }: { styles: Array<CSSObject> }) {
   const { enableCssReset, forceImportant, stylesRegistry } = useStylesContext()
   if (!enableCssReset) return { styleElement: null }
 
-  const { content: rawContent, contentHash } = toRawCss(styles, { forceImportant })
+  const { content: rawContent, contentHash } = toRawCss(styles)
   let styleData = stylesRegistry.getCssResets().get(contentHash)
   if (styleData == null) {
     styleData = {

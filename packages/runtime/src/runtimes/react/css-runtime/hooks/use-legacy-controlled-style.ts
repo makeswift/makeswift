@@ -20,7 +20,7 @@ export function useLegacyControlledStyle(style: CSSObject, elementKey: string, p
   */
   const namespace = `${elementKey}-legacy-${propName}`
   const className = generateClassName({
-    data: `${documentKey}-${elementKey}-${propName}${forceImportant ? '-important' : ''}`,
+    data: `${documentKey}-${elementKey}-${propName}`,
     classNamePrefix,
   })
 

@@ -12,6 +12,10 @@ import {
 } from './css-runtime/constants'
 import { createMakeswiftStylesRegistry } from './css-runtime/utils'
 
+/**
+ * Style configuration must remain unchanged while the document is mounted.
+ * Changing it during development may require a full page reload.
+ */
 export type RootStyleProps = {
   /**
    * The prefix used for generated class names.

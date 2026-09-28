@@ -33,7 +33,7 @@ export function toCssStatements(
   className: string,
   { forceImportant = false }: SerializationOptions = {},
 ): { css: string; contentHash: string } {
-  const { content: rawCssContent, contentHash } = toRawCss([stylesObject], { forceImportant })
+  const { content: rawCssContent, contentHash } = toRawCss([stylesObject])
   const classNameRawCss = `.${className} {${rawCssContent}}`
   const css = processCss({ content: classNameRawCss, forceImportant })
   return { css, contentHash }
@@ -84,13 +84,10 @@ const appendImportant: Middleware = element => {
  * The resulting css content is "raw" in the sense that it hasn't been passed
  * through our css preprocessing layer.
  */
-export function toRawCss(
-  styles: Array<CSSObject>,
-  { forceImportant }: SerializationOptions,
-): { content: string; contentHash: string } {
+export function toRawCss(styles: Array<CSSObject>): { content: string; contentHash: string } {
   const { styles: serializedStyles, name } = emotionSerializeStyles(styles)
   return {
     content: serializedStyles,
-    contentHash: forceImportant ? `${name}-important` : name,
+    contentHash: name,
   }
 }

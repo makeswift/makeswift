@@ -83,7 +83,6 @@ export class StylesheetEngine implements Stylesheet {
   }
 
   key(): string {
-    const key = `${this.documentKey}-${this.elementKey}-${this.propPathComponents.join('.')}`
-    return this.forceImportant ? `${key}-important` : key
+    return `${this.documentKey}-${this.elementKey}-${this.propPathComponents.join('.')}`
   }
 }

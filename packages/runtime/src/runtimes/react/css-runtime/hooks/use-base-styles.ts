@@ -7,7 +7,7 @@ import { MakeswiftStyle } from '../components/makeswift-style'
 
 export function useBaseStyles({ styles }: { styles: CSSObject }) {
   const { forceImportant, stylesRegistry } = useStylesContext()
-  const { content: rawContent, contentHash } = toRawCss([styles], { forceImportant })
+  const { content: rawContent, contentHash } = toRawCss([styles])
   let styleData = stylesRegistry.getBaseStyles().get(contentHash)
   if (styleData == null) {
     const css = processCss({ content: rawContent, forceImportant })
