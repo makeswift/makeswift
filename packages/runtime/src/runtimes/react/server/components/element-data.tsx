@@ -55,6 +55,7 @@ export async function ServerElementData({
   const stylesheet = new StylesheetEngine({
     breakpointsData: getBreakpoints(state),
     classNamePrefix: context.rootStyleProps?.classNamePrefix,
+    forceImportant: context.rootStyleProps?.forceImportant,
     documentKey,
     elementKey: elementData.key,
     propPathComponents: [],

@@ -8,7 +8,7 @@ import { ControlledStyleData } from '../types'
 import { useDocumentKey } from '../../hooks/use-document-context'
 
 export function useLegacyControlledStyle(style: CSSObject, elementKey: string, propName: string) {
-  const { classNamePrefix, stylesRegistry } = useStylesContext()
+  const { classNamePrefix, forceImportant, stylesRegistry } = useStylesContext()
   const documentKey = useDocumentKey()
   if (documentKey == null) {
     throw new Error('Root document key not found when attempting to use legacy controlled styles')
@@ -24,7 +24,7 @@ export function useLegacyControlledStyle(style: CSSObject, elementKey: string, p
     classNamePrefix,
   })
 
-  const { css, contentHash } = toCssStatements(style, className)
+  const { css, contentHash } = toCssStatements(style, className, { forceImportant })
 
   const data: ControlledStyleData = {
     className,
