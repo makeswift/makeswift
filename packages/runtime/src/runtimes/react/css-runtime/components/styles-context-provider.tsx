@@ -6,6 +6,7 @@ import { StylesRegistry } from '../styles-registry'
 export type StylesContextValue = {
   classNamePrefix: string
   enableCssReset: boolean
+  forceImportant: boolean
   stylesRegistry: StylesRegistry
 
   /**
@@ -26,6 +27,7 @@ export function StylesContextProvider({
   children,
   classNamePrefix,
   enableCssReset,
+  forceImportant,
   stylesRegistry,
   shouldRenderStyleElements,
 }: PropsWithChildren<StylesContextValue>) {
@@ -34,6 +36,7 @@ export function StylesContextProvider({
       value={{
         classNamePrefix,
         enableCssReset,
+        forceImportant,
         stylesRegistry,
         shouldRenderStyleElements,
       }}

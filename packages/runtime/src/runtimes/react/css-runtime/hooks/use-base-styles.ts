@@ -6,11 +6,11 @@ import React from 'react'
 import { MakeswiftStyle } from '../components/makeswift-style'
 
 export function useBaseStyles({ styles }: { styles: CSSObject }) {
-  const { stylesRegistry } = useStylesContext()
+  const { forceImportant, stylesRegistry } = useStylesContext()
   const { content: rawContent, contentHash } = toRawCss([styles])
   let styleData = stylesRegistry.getBaseStyles().get(contentHash)
   if (styleData == null) {
-    const css = processCss({ content: rawContent })
+    const css = processCss({ content: rawContent, forceImportant })
     styleData = {
       css,
       cssObject: styles,

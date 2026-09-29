@@ -56,6 +56,16 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Style overrides test */
+#root span {
+  font-size: 10px;
+  color: blue;
+}
+
+span {
+  font-family: 'Times New Roman', Times, serif !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

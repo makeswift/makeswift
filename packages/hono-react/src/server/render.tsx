@@ -27,7 +27,7 @@ type RenderOptions = RootStyleProps &
 
 export async function renderHtml(
   children: ReactNode,
-  { classNamePrefix, enableCssReset, ...renderOptions }: RenderOptions = {},
+  { classNamePrefix, enableCssReset, forceImportant, ...renderOptions }: RenderOptions = {},
 ): Promise<{ getStyles: () => string; html: ReactDOMServerReadableStream }> {
   const stylesRegistry = createMakeswiftStylesRegistry()
 
@@ -35,6 +35,7 @@ export async function renderHtml(
     <RootStyleRegistry
       classNamePrefix={classNamePrefix}
       enableCssReset={enableCssReset}
+      forceImportant={forceImportant}
       stylesRegistry={stylesRegistry}
       shouldRenderStyleElements={false}
     >

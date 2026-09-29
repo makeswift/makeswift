@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`processCss when forceImportant=true does not append \`!important\` to descriptors 1`] = `"@font-face{font-family:Fancy;src:url(fancy.woff2);}"`;
+
+exports[`processCss when forceImportant=true does not append \`!important\` to keyframe declarations 1`] = `"@-webkit-keyframes fade{from{opacity:0;}to{opacity:1;}}@keyframes fade{from{opacity:0;}to{opacity:1;}}"`;
+
 exports[`toCssStatements declarations (properties with associated values) 1`] = `".my-red-circle{width:100px;height:100px;background-color:red;border-radius:50%;}"`;
 
 exports[`toCssStatements media queries 1`] = `"@media only screen and (min-width: 1281px){.my-responsive-font{font-family:Permanent Marker;font-size:24px;font-weight:404;line-height:1.5;}}@media only screen and (min-width: 1025px) and (max-width: 1280px){.my-responsive-font{font-family:Permanent Marker;font-size:22px;font-weight:403;line-height:1.5;}}@media only screen and (min-width: 769px) and (max-width: 1024px){.my-responsive-font{font-family:Permanent Marker;font-size:20px;font-weight:402;line-height:1.5;}}@media only screen and (min-width: 576px) and (max-width: 768px){.my-responsive-font{font-family:Permanent Marker;font-size:18px;font-weight:401;line-height:1.5;}}@media only screen and (max-width: 575px){.my-responsive-font{font-family:Permanent Marker;font-size:16px;font-weight:400;line-height:1.5;}}"`;
@@ -7,3 +11,11 @@ exports[`toCssStatements media queries 1`] = `"@media only screen and (min-width
 exports[`toCssStatements nesting selector (&) 1`] = `".my-purple-effect:hover{background:purple;}"`;
 
 exports[`toCssStatements rulesets (selectors with associated declarations) 1`] = `".my-parent .my-child-1{font-family:sans-serif;}.my-parent .my-child-1 .my-child-2{background-color:blue;}.my-parent div[data-status="active"]{background-color:green;}"`;
+
+exports[`toCssStatements when forceImportant=true appends \`!important\` to each declaration in declarations (properties with associated values) 1`] = `".my-red-circle{width:100px!important;height:100px!important;background-color:red!important;border-radius:50%!important;}"`;
+
+exports[`toCssStatements when forceImportant=true appends \`!important\` to each declaration in media queries 1`] = `"@media only screen and (min-width: 1281px){.my-responsive-font{font-family:Permanent Marker!important;font-size:24px!important;font-weight:404!important;line-height:1.5!important;}}@media only screen and (min-width: 1025px) and (max-width: 1280px){.my-responsive-font{font-family:Permanent Marker!important;font-size:22px!important;font-weight:403!important;line-height:1.5!important;}}@media only screen and (min-width: 769px) and (max-width: 1024px){.my-responsive-font{font-family:Permanent Marker!important;font-size:20px!important;font-weight:402!important;line-height:1.5!important;}}@media only screen and (min-width: 576px) and (max-width: 768px){.my-responsive-font{font-family:Permanent Marker!important;font-size:18px!important;font-weight:401!important;line-height:1.5!important;}}@media only screen and (max-width: 575px){.my-responsive-font{font-family:Permanent Marker!important;font-size:16px!important;font-weight:400!important;line-height:1.5!important;}}"`;
+
+exports[`toCssStatements when forceImportant=true appends \`!important\` to each declaration in nesting selector (&) 1`] = `".my-purple-effect:hover{background:purple!important;}"`;
+
+exports[`toCssStatements when forceImportant=true appends \`!important\` to each declaration in rulesets (selectors with associated declarations) 1`] = `".my-parent .my-child-1{font-family:sans-serif!important;}.my-parent .my-child-1 .my-child-2{background-color:blue!important;}.my-parent div[data-status="active"]{background-color:green!important;}"`;

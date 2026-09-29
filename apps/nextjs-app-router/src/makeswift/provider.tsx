@@ -22,7 +22,7 @@ export function MakeswiftProvider({
 }) {
   return (
     <ReactRuntimeProvider {...{ runtime, siteVersion, locale }}>
-      <RootStyleRegistry>{children}</RootStyleRegistry>
+      <RootStyleRegistry forceImportant={true}>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
   )
 }

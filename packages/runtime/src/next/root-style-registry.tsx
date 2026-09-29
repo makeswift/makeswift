@@ -11,9 +11,14 @@ export function NextRootStyleRegistry({
   children,
   classNamePrefix,
   enableCssReset,
+  forceImportant,
 }: PropsWithChildren<RootStyleProps>) {
   return (
-    <ReactRootStyleRegistry classNamePrefix={classNamePrefix} enableCssReset={enableCssReset}>
+    <ReactRootStyleRegistry
+      classNamePrefix={classNamePrefix}
+      enableCssReset={enableCssReset}
+      forceImportant={forceImportant}
+    >
       {children}
     </ReactRootStyleRegistry>
   )
