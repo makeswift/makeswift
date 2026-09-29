@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.0-canary.23
+
+### Patch Changes
+
+- 4bf5a0d: feat: add `forceImportant` option to `RootStyleRegistry` et al.
+
 ## 0.29.0-canary.22
 
 ### Patch Changes

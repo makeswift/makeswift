@@ -1,5 +1,13 @@
 # @makeswift/hono-react
 
+## 0.3.0-canary.24
+
+### Patch Changes
+
+- 4bf5a0d: feat: add `forceImportant` option to `RootStyleRegistry` et al.
+- Updated dependencies [4bf5a0d]
+  - @makeswift/runtime@0.29.0-canary.23
+
 ## 0.3.0-canary.23
 
 ### Patch Changes
