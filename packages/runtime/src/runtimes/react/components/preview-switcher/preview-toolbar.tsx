@@ -79,6 +79,10 @@ const styles = `
   transition: background 150ms;
 }
 
+.preview-toolbar-collapsed.show {
+  animation: slide-in 200ms ease-out;
+}
+
 .preview-toolbar-collapsed:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 2px;
@@ -174,12 +178,33 @@ function CloseIcon() {
   )
 }
 
-type ToolbarState = 'shown' | 'collapsing' | 'collapsed' | 'expanding'
+type AnimationState = 'shown' | 'initial-collapsed' | 'collapsing' | 'collapsed' | 'expanding'
 
-const toolbarAnimationClassName: Record<Exclude<ToolbarState, 'collapsed'>, string> = {
+const toolbarAnimationClassName: Record<
+  Exclude<AnimationState, 'initial-collapsed' | 'collapsed'>,
+  string
+> = {
   shown: 'show',
   collapsing: 'collapse',
   expanding: 'expand',
+}
+
+const SHOWN_STORAGE_KEY = 'makeswift-preview-toolbar-shown'
+
+function readStoredShown(): boolean {
+  try {
+    // Throws a SecurityError if session storage is disabled
+    return window.sessionStorage.getItem(SHOWN_STORAGE_KEY) !== 'false'
+  } catch {
+    return true
+  }
+}
+
+function writeStoredShown(shown: boolean) {
+  try {
+    // Throws a SecurityError if session storage is disabled
+    window.sessionStorage.setItem(SHOWN_STORAGE_KEY, String(shown))
+  } catch {}
 }
 
 export function PreviewToolbar() {
@@ -190,36 +215,44 @@ export function PreviewToolbar() {
     return currentUrl.toString()
   }, [])
 
-  const [state, setState] = useState<ToolbarState>('shown')
+  const [animationState, setAnimationState] = useState<AnimationState>(() =>
+    readStoredShown() ? 'shown' : 'initial-collapsed',
+  )
+
   const expandButtonRef = useRef<HTMLButtonElement>(null)
   const collapseButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Keep keyboard focus on the control that toggles back to the previous state
+  // Keep keyboard focus on the control that toggles back to the previous state.
   useEffect(() => {
-    if (state === 'collapsed') expandButtonRef.current?.focus()
-    if (state === 'expanding') collapseButtonRef.current?.focus()
-  }, [state])
+    if (animationState === 'collapsed') expandButtonRef.current?.focus()
+    if (animationState === 'expanding') collapseButtonRef.current?.focus()
+  }, [animationState])
+
+  const setShown = (shouldShow: boolean) => {
+    writeStoredShown(shouldShow)
+    setAnimationState(shouldShow ? 'expanding' : 'collapsing')
+  }
 
   const handleAnimationEnd = () => {
-    if (state === 'collapsing') setState('collapsed')
+    if (animationState === 'collapsing') setAnimationState('collapsed')
   }
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      {state === 'collapsed' ? (
+      {animationState === 'initial-collapsed' || animationState === 'collapsed' ? (
         <button
           ref={expandButtonRef}
           type="button"
-          className="floating preview-toolbar-collapsed"
+          className={`floating preview-toolbar-collapsed ${animationState === 'initial-collapsed' ? 'show' : ''}`}
           aria-label="Expand preview toolbar"
-          onClick={() => setState('expanding')}
+          onClick={() => setShown(true)}
         >
           <MakeswiftLogoIcon />
         </button>
       ) : (
         <div
-          className={`floating preview-toolbar ${toolbarAnimationClassName[state]}`}
+          className={`floating preview-toolbar ${toolbarAnimationClassName[animationState]}`}
           role="region"
           aria-label="Preview mode"
           onAnimationEnd={handleAnimationEnd}
@@ -237,7 +270,7 @@ export function PreviewToolbar() {
               type="button"
               className="toolbar-button collapse-button"
               aria-label="Collapse preview toolbar"
-              onClick={() => setState('collapsing')}
+              onClick={() => setShown(false)}
             >
               <CloseIcon />
             </button>
