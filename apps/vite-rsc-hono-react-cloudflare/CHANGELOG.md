@@ -1,11 +1,9 @@
-# @makeswift/vite-rsc
+# vite-rsc-hono-react-cloudflare
 
-## 0.0.1
+## 0.0.2
 
 ### Patch Changes
 
-- 0ddd912: Add the `serverOnly` wrapper for server component loaders and a corresponding Vite plugin removing inline server-only loaders from non-RSC module graphs.
-- bfb77ec: Initial alpha release. APIs are unstable and subject to change.
 - Updated dependencies [7fd1c5d]
 - Updated dependencies [83fcb61]
 - Updated dependencies [2619860]
@@ -19,15 +17,21 @@
 - Updated dependencies [4aef9ec]
 - Updated dependencies [4ca6840]
 - Updated dependencies [899684f]
+- Updated dependencies [0ddd912]
 - Updated dependencies [4499e95]
 - Updated dependencies [12403b9]
+- Updated dependencies [8f895de]
 - Updated dependencies [188f38a]
+- Updated dependencies [bfb77ec]
 - Updated dependencies [7f04c54]
 - Updated dependencies [76d508e]
 - Updated dependencies [25a7e1c]
 - Updated dependencies [4420803]
 - Updated dependencies [fd8597a]
+- Updated dependencies [eb46b49]
 - Updated dependencies [4c20df9]
 - Updated dependencies [4779c10]
 - Updated dependencies [dc91120]
   - @makeswift/runtime@0.29.0
+  - @makeswift/hono-react@0.3.0
+  - @makeswift/vite-rsc@0.0.1
