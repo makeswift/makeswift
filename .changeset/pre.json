@@ -19,6 +19,7 @@
   },
   "changesets": [
     "arr-1116-lowercase-click-label",
+    "arr-1132-floating-preview-toolbar",
     "bulk-global-element-introspection",
     "dark-items-drive",
     "eager-doors-sort",

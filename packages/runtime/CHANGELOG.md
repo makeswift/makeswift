@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.0-canary.26
+
+### Patch Changes
+
+- 83fcb61: Replaces the "Exit preview" button with a floating preview mode toolbar at the bottom of the page.
+
 ## 0.29.0-canary.25
 
 ### Patch Changes

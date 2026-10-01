@@ -1,5 +1,12 @@
 # @makeswift/vite-rsc
 
+## 0.0.1-canary.24
+
+### Patch Changes
+
+- Updated dependencies [83fcb61]
+  - @makeswift/runtime@0.29.0-canary.26
+
 ## 0.0.1-canary.23
 
 ### Patch Changes
