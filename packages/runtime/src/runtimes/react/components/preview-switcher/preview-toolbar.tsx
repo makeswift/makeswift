@@ -1,29 +1,87 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const styles = `
-.preview-toolbar {
+.floating {
   position: fixed;
   bottom: 16px;
-  left: 16px;
   right: 16px;
   z-index: 2147483647;
 
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 24px;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 8px 8px 8px 16px;
   background: #0f1225;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   box-shadow: 0 4px 12px 0 rgba(5, 12, 46, 0.15);
+}
+
+.preview-toolbar {
+  left: 16px;
+  gap: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 8px 8px 8px 16px;
 
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji';
   font-size: 13px;
   line-height: 22px;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+
+@keyframes slide-out-to-right {
+  to {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+
+.preview-toolbar.show {
+  animation: slide-in 200ms ease-out;
+}
+
+.preview-toolbar.expand {
+  animation: slide-in-from-right 200ms ease-out;
+}
+
+.preview-toolbar.collapse {
+  animation: slide-out-to-right 150ms ease-in forwards;
+}
+
+.preview-toolbar-collapsed {
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  cursor: pointer;
+  animation: slide-in-from-left 200ms ease-out;
+  transition: background 150ms;
+}
+
+.preview-toolbar-collapsed:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 .message {
@@ -41,27 +99,45 @@ const styles = `
   white-space: nowrap;
 }
 
-.view-live {
+.actions {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+}
+
+.toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 30px;
-  padding: 0 10px;
   border-radius: 6px;
-  color: #ffffff;
-  font-weight: 600;
-  text-decoration: none;
   transition: background 150ms;
 }
 
-.view-live:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.view-live:focus-visible {
+.toolbar-button:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: -2px;
+}
+
+.preview-toolbar-collapsed:hover,
+.toolbar-button:hover {
+  background: #272a3b;
+}
+
+.view-live {
+  padding: 0 10px;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.collapse-button {
+  width: 30px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
 .icon {
@@ -84,15 +160,26 @@ function MakeswiftLogoIcon() {
   )
 }
 
-function ArrowRightIcon() {
+function CloseIcon() {
   return (
     <svg className="icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
       <path
-        d="M1 5C0.447716 5 0 5.44771 0 6C0 6.55228 0.447716 7 1 7H8.58579L6.29289 9.29289C5.90237 9.68342 5.90237 10.3166 6.29289 10.7071C6.68342 11.0976 7.31658 11.0976 7.70711 10.7071L11.7071 6.70711C11.8946 6.51957 12 6.26522 12 6C12 5.73478 11.8946 5.48043 11.7071 5.29289L7.70711 1.29289C7.31658 0.902369 6.68342 0.902369 6.29289 1.29289C5.90237 1.68342 5.90237 2.31658 6.29289 2.70711L8.58579 5H1Z"
-        fill="#B8BAC7"
+        d="M3 3L9 9M9 3L3 9"
+        stroke="#B8BAC7"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
+}
+
+type ToolbarState = 'shown' | 'collapsing' | 'collapsed' | 'expanding'
+
+const toolbarAnimationClassName: Record<Exclude<ToolbarState, 'collapsed'>, string> = {
+  shown: 'show',
+  collapsing: 'collapse',
+  expanding: 'expand',
 }
 
 export function PreviewToolbar() {
@@ -103,19 +190,60 @@ export function PreviewToolbar() {
     return currentUrl.toString()
   }, [])
 
+  const [state, setState] = useState<ToolbarState>('shown')
+  const expandButtonRef = useRef<HTMLButtonElement>(null)
+  const collapseButtonRef = useRef<HTMLButtonElement>(null)
+
+  // Keep keyboard focus on the control that toggles back to the previous state
+  useEffect(() => {
+    if (state === 'collapsed') expandButtonRef.current?.focus()
+    if (state === 'expanding') collapseButtonRef.current?.focus()
+  }, [state])
+
+  const handleAnimationEnd = () => {
+    if (state === 'collapsing') setState('collapsed')
+  }
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <div className="preview-toolbar" role="region" aria-label="Preview mode">
-        <div className="message">
+      {state === 'collapsed' ? (
+        <button
+          ref={expandButtonRef}
+          type="button"
+          className="floating preview-toolbar-collapsed"
+          aria-label="Expand preview toolbar"
+          onClick={() => setState('expanding')}
+        >
           <MakeswiftLogoIcon />
-          <span className="label">You are in preview mode</span>
+        </button>
+      ) : (
+        <div
+          className={`floating preview-toolbar ${toolbarAnimationClassName[state]}`}
+          role="region"
+          aria-label="Preview mode"
+          onAnimationEnd={handleAnimationEnd}
+        >
+          <div className="message">
+            <MakeswiftLogoIcon />
+            <span className="label">You are in preview mode</span>
+          </div>
+          <div className="actions">
+            <a className="toolbar-button view-live" href={redirectLiveUrl}>
+              View live
+            </a>
+            <button
+              ref={collapseButtonRef}
+              type="button"
+              className="toolbar-button collapse-button"
+              aria-label="Collapse preview toolbar"
+              onClick={() => setState('collapsing')}
+            >
+              <CloseIcon />
+            </button>
+          </div>
         </div>
-        <a className="view-live" href={redirectLiveUrl}>
-          <span>View live</span>
-          <ArrowRightIcon />
-        </a>
-      </div>
+      )}
     </>
   )
 }
