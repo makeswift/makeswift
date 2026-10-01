@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.0-canary.24
+
+### Patch Changes
+
+- 4779c10: fix: switch `FallbackComponent` to inline styles so that the fallback doesn't access the style context, the absence of which may be the exact error we're trying to report
+
 ## 0.29.0-canary.23
 
 ### Patch Changes
