@@ -47,6 +47,16 @@ export const Element = memo(
     const ElementRegistration =
       useIsReadOnly() || isRegisterElementDisabled ? NoOp : BuilderElementRegistration
 
+    const ErrorFallback = useCallback(
+      ({ details }: { details: string }) => (
+        <FallbackComponent
+          text={`Error rendering component`}
+          details={`Error rendering component '${element.type}':\n${details}`}
+        />
+      ),
+      [element.type],
+    )
+
     return (
       <ElementRegistration
         componentHandle={imperativeHandleRef.current}
@@ -101,8 +111,4 @@ function useElementImperativeHandle(ref: Ref<ElementImperativeHandle>) {
 
 function NoOp({ children }: PropsWithChildren) {
   return children
-}
-
-function ErrorFallback() {
-  return <FallbackComponent text={`Error rendering component`} />
 }
