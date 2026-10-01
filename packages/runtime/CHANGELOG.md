@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.0-canary.25
+
+### Patch Changes
+
+- fd8597a: Render element type and error message as a part of the error fallback
+
 ## 0.29.0-canary.24
 
 ### Patch Changes
