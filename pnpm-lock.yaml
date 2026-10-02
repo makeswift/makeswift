@@ -612,6 +612,9 @@ importers:
       html-react-parser:
         specifier: ^5.0.10
         version: 5.0.10(react@19.2.3)
+      hugerte:
+        specifier: ^1.0.14
+        version: 1.0.14
       immutable:
         specifier: ^4.0.0-rc.12
         version: 4.0.0
@@ -6093,6 +6096,9 @@ packages:
   https-proxy-agent@7.0.6:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
+
+  hugerte@1.0.14:
+    resolution: {integrity: sha512-pwJAt+o6PLH2+jJkyl5kHG54GozXfeaXiyF66khdUqiOUijYhXygK1tgktUZYTk+9ALItrTeX9Icj34JHzMA0A==}
 
   human-id@4.2.0:
     resolution: {integrity: sha512-K3GbkIWqyvvlpfhBPlbEvD97TtqBpAYA4kt+cn2lD2x2HuohzZCibcA2nOlnJT6exqvJLggoB5nv2dNf192nEA==}
@@ -16433,6 +16439,8 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
+
+  hugerte@1.0.14: {}
 
   human-id@4.2.0: {}
 

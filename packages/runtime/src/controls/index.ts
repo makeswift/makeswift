@@ -67,5 +67,6 @@ export {
   HtmlTextDefinition as unstable_HtmlTextDefinition,
   HtmlTextControl as unstable_HtmlTextControl,
 } from './html-text'
+export * as unstable_htmlText from './html-text-namespace'
 export { Slot, SlotDefinition, SlotControl } from './slot'
 export { unstable_StyleV2, StyleV2Definition, StyleV2Control } from './style-v2/style-v2'
