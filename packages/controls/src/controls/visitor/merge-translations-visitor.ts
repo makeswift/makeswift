@@ -12,6 +12,7 @@ import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
 import { unstable_GalleryDefinition } from '../gallery'
 import { GroupDefinition } from '../group'
+import { HtmlTextDefinition } from '../html-text'
 import {
   IconRadioGroupConfig,
   IconRadioGroupDefinition,
@@ -109,6 +110,14 @@ abstract class MergeTranslationsVisitor extends ControlDefinitionVisitor<Data> {
     return mapValues(def.propDefs, (def, key) =>
       def.accept(this, propsData[key], translatedData[key]),
     )
+  }
+
+  visitHtmlText(
+    _def: HtmlTextDefinition,
+    data: DataType<HtmlTextDefinition> | undefined,
+    translatedData: Data,
+  ): Data {
+    return this.defaultMerge(data, translatedData)
   }
 
   visitIconRadioGroup<C extends IconRadioGroupConfig>(
