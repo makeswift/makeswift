@@ -63,5 +63,6 @@ export { Link, LinkDefinition, unstable_UrlLink, unstable_UrlLinkDefinition } fr
 export { unstable_TextFormat, unstable_TextFormatDefinition } from './text-format'
 export { RichTextV1Definition, RichTextV1Control } from './rich-text'
 export { RichText, RichTextV2Definition, RichTextV2Control } from './rich-text-v2'
+export * as unstable_pageBuilderHtml from './page-builder-html'
 export { Slot, SlotDefinition, SlotControl } from './slot'
 export { unstable_StyleV2, StyleV2Definition, StyleV2Control } from './style-v2/style-v2'
