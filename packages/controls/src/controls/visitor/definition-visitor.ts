@@ -6,6 +6,7 @@ import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
 import { unstable_GalleryDefinition } from '../gallery'
 import { GroupDefinition } from '../group'
+import { HtmlTextDefinition } from '../html-text'
 import {
   IconRadioGroupConfig,
   IconRadioGroupDefinition,
@@ -33,6 +34,7 @@ abstract class ControlDefinitionVisitor<R> {
   abstract visitGallery(def: unstable_GalleryDefinition, ...args: unknown[]): R
 
   abstract visitGroup(def: GroupDefinition, ...args: unknown[]): R
+  abstract visitHtmlText(def: HtmlTextDefinition, ...args: unknown[]): R
   abstract visitIconRadioGroup<C extends IconRadioGroupConfig>(
     def: IconRadioGroupDefinition<C>,
     ...args: unknown[]
