@@ -59,7 +59,8 @@ export {
   unstable_TypographyDefinition,
 } from '@makeswift/controls'
 
-export { Link, LinkDefinition } from './link'
+export { Link, LinkDefinition, unstable_UrlLink, unstable_UrlLinkDefinition } from './link'
+export { unstable_TextFormat, unstable_TextFormatDefinition } from './text-format'
 export { RichTextV1Definition, RichTextV1Control } from './rich-text'
 export { RichText, RichTextV2Definition, RichTextV2Control } from './rich-text-v2'
 export { Slot, SlotDefinition, SlotControl } from './slot'

@@ -66,3 +66,37 @@ export class LinkDefinition extends BaseLinkDefinition<MouseEventType> {
 export function Link(config?: { description?: string; label?: string }): LinkDefinition {
   return new LinkDefinition(config ?? {})
 }
+
+const URL_LINK_TYPE = 'makeswift::controls::unstable-url-link'
+
+/**
+ * A Link control that allows URLs only. The data is the Link data. The builder
+ * shows only the URL option for this type.
+ */
+export class unstable_UrlLinkDefinition extends LinkDefinition {
+  // `any`: the base class types `type` as the Link literal.
+  static readonly type: any = URL_LINK_TYPE
+
+  static deserialize(data: DeserializedRecord): unstable_UrlLinkDefinition {
+    if (data.type !== URL_LINK_TYPE) {
+      throw new Error(`UrlLink: expected type ${URL_LINK_TYPE}, got ${data.type}`)
+    }
+
+    const { config } = LinkDefinition.schema.definition.parse({
+      ...data,
+      type: LinkDefinition.type,
+    })
+    return new unstable_UrlLinkDefinition(config)
+  }
+
+  get controlType(): any {
+    return URL_LINK_TYPE
+  }
+}
+
+export function unstable_UrlLink(config?: {
+  description?: string
+  label?: string
+}): unstable_UrlLinkDefinition {
+  return new unstable_UrlLinkDefinition(config ?? {})
+}

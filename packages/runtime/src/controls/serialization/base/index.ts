@@ -31,6 +31,8 @@ import {
   TextAreaDefinition,
   TextInputDefinition,
   unstable_TypographyDefinition,
+  unstable_TextFormatDefinition,
+  unstable_UrlLinkDefinition,
 } from '../../index'
 
 import { BaseControlSerializationVisitor } from './visitor'
@@ -95,6 +97,8 @@ export function deserializeUnifiedControlDef(record: DeserializedRecord): Contro
     [TextAreaDefinition.type]: TextAreaDefinition.deserialize,
     [TextInputDefinition.type]: TextInputDefinition.deserialize,
     [unstable_TypographyDefinition.type]: unstable_TypographyDefinition.deserialize,
+    [unstable_TextFormatDefinition.type]: unstable_TextFormatDefinition.deserialize,
+    [unstable_UrlLinkDefinition.type]: unstable_UrlLinkDefinition.deserialize,
   } as const
 
   const deserialize = deserializeMethod[record.type] ?? null
