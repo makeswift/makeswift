@@ -40,6 +40,8 @@ import { pollBoxModel } from '../../../poll-box-model'
 import { withBuilder, withLocalChanges } from '../../../../../slate'
 import { NodeValue } from '../../node-value'
 
+import { type RichTextV2Plugin } from '../../../../../controls/rich-text-v2/plugin'
+
 import { useSyncDOMSelection } from './useSyncDOMSelection'
 import { RichTextV2Element } from './render-element'
 import { RichTextV2Leaf } from './render-leaf'
@@ -64,8 +66,25 @@ export const EditableTextV2Value = memo(function EditableTextV2Value({
   )
 })
 
-function EditableTextV2({ text, config, instanceKey, parentStylesheetKey }: Props) {
-  const plugins = useMemo(() => new RichTextV2Definition(config).plugins, [config])
+type EditableTextV2Props = Props & {
+  /** Plugins that replace the plugins of the config. */
+  plugins?: RichTextV2Plugin[]
+  /** The tag of the editor root. */
+  as?: 'span'
+}
+
+export function EditableTextV2({
+  text,
+  config,
+  instanceKey,
+  parentStylesheetKey,
+  plugins: customPlugins,
+  as,
+}: EditableTextV2Props) {
+  const plugins = useMemo(
+    () => customPlugins ?? new RichTextV2Definition(config).plugins,
+    [config, customPlugins],
+  )
   const control = useControlInstance(instanceKey, RichTextV2Control)
 
   const [editor] = useState(() =>
@@ -246,6 +265,7 @@ function EditableTextV2({ text, config, instanceKey, parentStylesheetKey }: Prop
       {slateResetStyleElement}
       <Slate editor={editor} value={initialValue}>
         <Editable
+          as={as}
           className={slateResetClass}
           decorate={decorate}
           renderLeaf={renderLeaf}
