@@ -1,5 +1,5 @@
 import { type KeyboardEvent } from 'react'
-import { type Editor, Path, Text, Transforms } from 'slate'
+import { type Editor, type NodeEntry, Path, Text, Transforms } from 'slate'
 import { type RenderElementProps } from 'slate-react'
 import isHotkey from 'is-hotkey'
 
@@ -10,34 +10,40 @@ import { type RenderElement, Plugin } from '../../controls/rich-text-v2/plugin'
 const BLOCK_ONE_PATH = [0]
 const BLOCK_TWO_PATH = [1]
 
+/**
+ * The inline mode rules: one root block of the default type, with no nested
+ * blocks. Returns `true` if it changed the tree, as `normalizeNode` expects.
+ */
+export function normalizeInlineMode(editor: Editor, [node, path]: NodeEntry): boolean {
+  /**
+   * Merge root nodes past the first one
+   */
+  if (Path.equals(BLOCK_TWO_PATH, path)) {
+    Transforms.mergeNodes(editor, { at: BLOCK_TWO_PATH })
+    return true
+  }
+  /**
+   * Unwrap non text nodes of first root node
+   */
+  if (Path.isAncestor(BLOCK_ONE_PATH, path) && Slate.isBlock(node)) {
+    Transforms.unwrapNodes(editor, { at: path })
+    return true
+  }
+  /**
+   * Update type of root nodes to be `text-block`
+   */
+  if (Path.equals(BLOCK_ONE_PATH, path)) {
+    Transforms.setNodes(editor, { type: Slate.BlockType.Default }, { at: path })
+    return true
+  }
+
+  return false
+}
+
 export function withInlineMode(editor: Editor): Editor {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
-    const [normalizationNode, normalizationPath] = entry
-
-    /**
-     * Merge root nodes past the first one
-     */
-    if (Path.equals(BLOCK_TWO_PATH, normalizationPath)) {
-      Transforms.mergeNodes(editor, { at: BLOCK_TWO_PATH })
-      return
-    }
-    /**
-     * Unwrap non text nodes of first root node
-     */
-    if (Path.isAncestor(BLOCK_ONE_PATH, normalizationPath) && Slate.isBlock(normalizationNode)) {
-      Transforms.unwrapNodes(editor, {
-        at: normalizationPath,
-      })
-      return
-    }
-    /**
-     * Update type of root nodes to be `text-block`
-     */
-    if (Path.equals(BLOCK_ONE_PATH, normalizationPath)) {
-      Transforms.setNodes(editor, { type: Slate.BlockType.Default }, { at: normalizationPath })
-      return
-    }
+    if (normalizeInlineMode(editor, entry)) return
 
     normalizeNode(entry)
   }
