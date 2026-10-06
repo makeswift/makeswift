@@ -17,24 +17,9 @@ This example includes a home page for listing products by category and a product
 
 ## Using this example
 
-To quickly try this example either [deploy to Vercel](#deploy-this-example-to-vercel) or [use our CLI](#use-this-example-locally-with-the-makeswift-cli).
+To quickly try this example [use our CLI](#use-this-example-locally-with-the-makeswift-cli).
 
 If you have already created a Shopify store and know you want to use this example, scroll down to ["Using your own Shopify store."](#using-your-own-shopify-store)
-
-### Deploy this example to Vercel
-
-Deploy your own with Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify&env=NEXT_PUBLIC_SHOPIFY_STORE_NAME,NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN&envDescription=Check%20the%20example%20README.md%20for%20details%20on%20where%20to%20find%20these%20values.&envLink=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fshopify%23using-your-own-shopify-store&project-name=makeswift-shopify-example&repository-name=makeswift-shopify-example&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq&external-id=ecommerce-shopify)
-
-Note: We have created an example store, so no Shopify account is required.
-
-```
-NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
-NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
-```
-
-With your deployment completed, [take a tour of your ecommerce store](#take-a-tour-of-your-ecommerce-store)
 
 ### Use this example locally with the Makeswift CLI
 
@@ -48,7 +33,12 @@ With your deployment completed, [take a tour of your ecommerce store](#take-a-to
 
 2. Log in or sign up for Makeswift
 
-3. Confirm the default env vars provided
+3. Confirm the default env vars provided. We have created an example store, so no Shopify account is required:
+
+   ```
+   NEXT_PUBLIC_SHOPIFY_STORE_NAME=makeswift-example
+   NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN=b434d672242174f77e306910462c3d67
+   ```
 
 Once completed, the CLI runs `yarn dev` and opens Makeswift for you. From there you can use provided custom ecommerce components.
 
@@ -83,12 +73,6 @@ Once you have given the example a try it's time to use your own Shopify store. H
     <img src="https://user-images.githubusercontent.com/20950876/184916524-667084c1-06a0-4fa3-8f4b-73aff5a88e65.png" width="600" />
 
 - `SHOPIFY_ACCESS_TOKEN` requires you to [register an app](https://www.shopify.com/partners/blog/17056443-how-to-generate-a-shopify-api-token)
-
-### Updating the deployed host on Vercel
-
-If you clicked the "Deploy" button earlier you can change the environment variable in vercel.com
-
-   <img src="https://user-images.githubusercontent.com/20950876/201371948-2258365c-18bb-4891-9d9f-26a66b2b3745.png" width="600" />
 
 ### Updating the locally running host
 
