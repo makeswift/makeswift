@@ -190,6 +190,21 @@ describe('HtmlTextControl', () => {
     expect(mounted.setFormat).toHaveBeenCalledWith('italic', true)
     expect(mounted.setLink).toHaveBeenCalledWith(link)
   })
+
+  test('the panel changes the whole text without an editor, and the editor first', () => {
+    const { control } = createControl()
+    const wholeText = editor()
+    const mounted = editor()
+    const message = { type: HtmlTextControl.SET_FORMAT, format: 'bold', on: true } as const
+
+    control.setWholeTextEditor(wholeText)
+    control.recv(message)
+    control.setEditor(mounted)
+    control.recv(message)
+
+    expect(wholeText.setFormat).toHaveBeenCalledTimes(1)
+    expect(mounted.setFormat).toHaveBeenCalledTimes(1)
+  })
 })
 
 describe('the link conversion', () => {

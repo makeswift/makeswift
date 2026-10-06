@@ -15,17 +15,21 @@ import {
 } from './formats'
 import { type HtmlTextDefinition } from './html-text'
 
-/** The editor of the host element in content mode. */
-export type HtmlTextEditorHandle = {
-  focus(): void
-  /** Replaces the content, for a change that did not come from this editor. */
-  setContent(html: string): void
+/** The editor that the panel changes: in content mode, or for the whole text. */
+export type HtmlTextPanelEditor = {
   /** The formats of the selected text. */
   formats(): HtmlTextFormats
   /** Turns a format on or off for the selected text. */
   setFormat(format: HtmlTextFormat, on: boolean): void
   /** Sets the link of the selected text. `null` removes the link. */
   setLink(link: HtmlTextLink | null): void
+}
+
+/** The editor of the host element in content mode. */
+export type HtmlTextEditorHandle = HtmlTextPanelEditor & {
+  focus(): void
+  /** Replaces the content, for a change that did not come from this editor. */
+  setContent(html: string): void
 }
 
 const messagePrefix = 'makeswift::controls::unstable-html-text::control-message'
@@ -97,6 +101,8 @@ export class HtmlTextControl extends ControlInstance<Message> {
   static readonly linkFromData = linkFromData
 
   private editor: HtmlTextEditorHandle | null = null
+  /** The editor for the whole text, in build mode. */
+  private wholeTextEditor: HtmlTextPanelEditor | null = null
   private pendingFocus = false
   private focusRequestListener: (() => void) | null = null
   /** The values that the editor sent, oldest first, until the builder echoes them. */
@@ -134,12 +140,12 @@ export class HtmlTextControl extends ControlInstance<Message> {
 
       // A panel change. The editor change event saves the new HTML.
       case HtmlTextControl.SET_FORMAT: {
-        this.editor?.setFormat(message.format, message.on)
+        this.panelEditor?.setFormat(message.format, message.on)
         break
       }
 
       case HtmlTextControl.SET_LINK: {
-        this.editor?.setLink(message.link)
+        this.panelEditor?.setLink(message.link)
         break
       }
     }
@@ -166,6 +172,11 @@ export class HtmlTextControl extends ControlInstance<Message> {
   // the server again. The editor has already changed the element.
   resolvesToRenderableNode(): boolean {
     return true
+  }
+
+  /** The editor that the panel changes. The editor of content mode comes first. */
+  private get panelEditor(): HtmlTextPanelEditor | null {
+    return this.editor ?? this.wholeTextEditor
   }
 
   setEditor(editor: HtmlTextEditorHandle): void {
@@ -199,9 +210,15 @@ export class HtmlTextControl extends ControlInstance<Message> {
     this.pendingFocus = false
   }
 
+  /** Sets the editor for the whole text, for the panel in build mode. */
+  setWholeTextEditor(editor: HtmlTextPanelEditor | null): void {
+    this.wholeTextEditor = editor
+    this.updateFormats()
+  }
+
   /** Sends the formats of the selected text to the panel, if they changed. */
   updateFormats(): void {
-    const formats = this.editor?.formats()
+    const formats = this.panelEditor?.formats()
     if (formats == null || deepEqual(formats, this.sentFormats)) return
 
     this.sentFormats = formats
