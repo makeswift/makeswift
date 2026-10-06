@@ -10,7 +10,12 @@
 import { type Editor } from 'hugerte'
 import isHotkey from 'is-hotkey'
 
-import { type HtmlTextFormats, anchorLink, htmlTextFormats } from '../../../../controls/html-text'
+import {
+  type HtmlTextFormats,
+  type HtmlTextPanelEditor,
+  anchorLink,
+  htmlTextFormats,
+} from '../../../../controls/html-text'
 
 import { type HtmlTextEditor, type HtmlTextEditorCallbacks } from './html-text'
 
@@ -39,6 +44,21 @@ export function loadHugeRte(): Promise<HugeRte> {
 
   return loading
 }
+
+/** The settings of every editor. */
+const BASE_SETTINGS = {
+  inline: true,
+  menubar: false,
+  toolbar: false,
+  contextmenu: false,
+  // Paste adds no markup. Paste is in the core since TinyMCE 6.
+  paste_as_text: true,
+  // The skin comes from the imported `skin.js`. The page CSS styles the text.
+  skin_url: 'default',
+  content_css: false,
+  // Keep the widget HTML as it is: no tag or attribute is removed.
+  valid_elements: '*[*]',
+} as const
 
 /** The attributes of an element, to put back after the editor stops. */
 function attributesOf(element: HTMLElement): Map<string, string> {
@@ -91,18 +111,8 @@ export async function mountHugeRte(
   const attributes = attributesOf(element)
 
   const editors: Editor[] = await hugerte.init({
+    ...BASE_SETTINGS,
     target: element,
-    inline: true,
-    menubar: false,
-    toolbar: false,
-    contextmenu: false,
-    // Paste adds no markup. Paste is in the core since TinyMCE 6.
-    paste_as_text: true,
-    // The skin comes from the imported `skin.js`. The page CSS styles the text.
-    skin_url: 'default',
-    content_css: false,
-    // Keep the widget HTML as it is: no tag or attribute is removed.
-    valid_elements: '*[*]',
     setup: (instance: Editor) => {
       instance.on('keydown', (event: KeyboardEvent) => {
         // The builder owns undo, so one undo stack holds every change.
@@ -200,5 +210,134 @@ export async function mountHugeRte(
       // host puts back the HTML of the value.
       restoreAttributes(element, attributes)
     },
+  }
+}
+
+/**
+ * The hidden editors for build mode, one for each tag name. The tag name of
+ * the host decides how HugeRTE parses the content, for example if it adds a
+ * `<p>`. So the hidden editor has the same tag name as the host.
+ */
+const hiddenEditors = new Map<string, Promise<Editor>>()
+
+function hiddenEditor(tagName: string): Promise<Editor> {
+  const key = tagName.toLowerCase()
+  let editor = hiddenEditors.get(key)
+
+  if (editor == null) {
+    editor = (async () => {
+      const hugerte = await loadHugeRte()
+      const element = document.createElement(key)
+
+      element.setAttribute('aria-hidden', 'true')
+      element.style.cssText = 'position: fixed; top: 0; left: -10000px; width: 1px;'
+      document.body.appendChild(element)
+
+      const [instance] = (await hugerte.init({ ...BASE_SETTINGS, target: element })) as Editor[]
+      if (instance == null) throw new Error('HugeRTE did not start')
+
+      return instance
+    })()
+
+    editor.catch(() => hiddenEditors.delete(key))
+    hiddenEditors.set(key, editor)
+  }
+
+  return editor
+}
+
+/** The text nodes that have text. HugeRTE can add zero-width characters. */
+function textNodesOf(root: HTMLElement): Text[] {
+  const walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+  const nodes: Text[] = []
+
+  while (walker.nextNode()) {
+    const node = walker.currentNode as Text
+
+    if (/[^\s\u200B\uFEFF]/.test(node.data)) nodes.push(node)
+  }
+
+  return nodes
+}
+
+/**
+ * The formats of all the text. A format is on only if all the text has it.
+ * `formatter.match` checks only the start of a selection, so check each text.
+ */
+function wholeTextFormatsOf(editor: Editor): HtmlTextFormats {
+  const body = editor.getBody()
+  const parents = textNodesOf(body).map(node => node.parentElement ?? body)
+  const anchors = parents.map(parent => editor.dom.getParent<HTMLAnchorElement>(parent, 'a[href]'))
+  const first = anchors.at(0)
+  const link =
+    first != null &&
+    anchors.every(anchor => anchor?.getAttribute('href') === first.getAttribute('href'))
+      ? anchorLink(first)
+      : null
+
+  return htmlTextFormats(
+    format =>
+      parents.length > 0 &&
+      parents.every(parent => editor.formatter.match(format, undefined, parent)),
+    link,
+  )
+}
+
+/**
+ * An editor for the whole text, without a selection. The panel uses it in
+ * build mode, as for a Makeswift RichText: a format applies to all the text.
+ *
+ * A hidden HugeRTE editor does the change, so the host element does not
+ * change until the value changes. The formats get a range of all the text,
+ * not a selection, so the selection of the page does not change. The link
+ * uses the same `link` format as the `mceInsertLink` command.
+ */
+export async function mountWholeTextEditor(
+  host: HTMLElement,
+  onChange: (html: string) => void,
+): Promise<HtmlTextPanelEditor> {
+  const editor = await hiddenEditor(host.tagName)
+
+  /** Loads the HTML of the host, and returns a range of all of it. */
+  const load = (): Range => {
+    editor.setContent(host.innerHTML)
+    editor.undoManager.clear()
+
+    const range = editor.dom.createRng()
+    range.selectNodeContents(editor.getBody())
+
+    return range
+  }
+
+  const change = (apply: (range: Range) => void) => {
+    apply(load())
+    onChange(editor.getContent())
+  }
+
+  return {
+    formats: () => {
+      load()
+      return wholeTextFormatsOf(editor)
+    },
+    setFormat: (format, on) =>
+      change(range => {
+        if (on) {
+          editor.formatter.apply(format, undefined, range)
+        } else {
+          editor.formatter.remove(format, undefined, range)
+        }
+      }),
+    setLink: link =>
+      change(range => {
+        editor.formatter.remove('link', undefined, range)
+
+        if (link != null) {
+          editor.formatter.apply(
+            'link',
+            { href: link.href, target: link.openInNewTab ? '_blank' : null },
+            range,
+          )
+        }
+      }),
   }
 }

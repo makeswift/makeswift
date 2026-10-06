@@ -52,7 +52,8 @@ function usePreloadEditor(control: HtmlTextControl | null): void {
  * anywhere in the builder: it renders nothing, and changes only the element.
  * It does nothing if the prop is not an `unstable_HtmlText` value.
  *
- * - Build mode: the element shows the value.
+ * - Build mode: the element shows the value. A panel format applies to the
+ *   whole text.
  * - Content mode: the editor starts on the element. A panel format applies
  *   to the selected text.
  *
@@ -107,6 +108,27 @@ export function HtmlText({
     element.innerHTML = data === original.current?.value ? original.current.html : data
     shownData.current = data
   }, [isEditing, data, element])
+
+  // Build mode: the panel changes the whole text, with a hidden editor. The
+  // element shows the value.
+  useEffect(() => {
+    if (isEditing || control == null) return
+
+    let stopped = false
+    import('./hugerte-editor')
+      .then(({ mountWholeTextEditor }) =>
+        mountWholeTextEditor(element, html => control.onLocalUserChange(html)),
+      )
+      .then(editor => {
+        if (!stopped) control.setWholeTextEditor(editor)
+      })
+      .catch((error: unknown) => console.error('HtmlText: the editor did not start', error))
+
+    return () => {
+      stopped = true
+      control.setWholeTextEditor(null)
+    }
+  }, [isEditing, control, element])
 
   // Build mode: a new value can have new formats. In content mode, the editor
   // reports a change of the formats.
