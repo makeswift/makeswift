@@ -47,5 +47,3 @@ To learn more about Next.js or Makeswift, take a look at the following resources
 - [Next.js](https://nextjs.org/) - Documentation and tutorials for Next.js
 - [Makeswift Docs](https://www.makeswift.com/docs) - Technical documentation for integrating Makeswift
 - [Makeswift Help Center](https://help.makeswift.com/) - Guides for using the Makeswift builder
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmakeswift%2Fmakeswift%2Ftree%2Fmain%2Fexamples%2Fbasic-typescript-pages&project-name=makeswift-nextjs-starter&repository-name=makeswift-nextjs-starter&redirect-url=https%3A%2F%2Fapp.makeswift.com&integration-ids=oac_51ryd7Pob5ZsyTFzNzVvpsGq&external-id=spark)
