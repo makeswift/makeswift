@@ -1,52 +1,12 @@
 # @makeswift/runtime
 
-## 0.29.0-canary.26
-
-### Patch Changes
-
-- 83fcb61: Replaces the "Exit preview" button with a floating preview mode toolbar at the bottom of the page.
-
-## 0.29.0-canary.25
-
-### Patch Changes
-
-- fd8597a: Render element type and error message as a part of the error fallback
-
-## 0.29.0-canary.24
-
-### Patch Changes
-
-- 4779c10: fix: switch `FallbackComponent` to inline styles so that the fallback doesn't access the style context, the absence of which may be the exact error we're trying to report
-
-## 0.29.0-canary.23
-
-### Patch Changes
-
-- 4bf5a0d: feat: add `forceImportant` option to `RootStyleRegistry` et al.
-
-## 0.29.0-canary.22
-
-### Patch Changes
-
-- dc91120: refactor: move RSC refresh requests tracking to the elements cache
-
-## 0.29.0-canary.21
-
-### Patch Changes
-
-- 188f38a: `getComponentSnapshot` now uses the `content/v1/element-trees` endpoint, which returns a `200` for regions that have no content yet. This will allow for caching empty regions on Next.js hosts. The experimental `unstable_enforceSuccess` option has been removed, as the new endpoint always returns a success response for well-formed requests.
-
-## 0.29.0-canary.20
-
-### Patch Changes
-
-- 2619860: Fetch global elements in bulk during introspection, to reduce request volume and avoid rate limiting on sites with many global elements.
-
-## 0.29.0-canary.19
+## 0.29.0
 
 ### Minor Changes
 
 - d2e58ac: Rebuilds the underlying mechanisms that are used to generate CSS and handle dynamic style updates to Makeswift content.
+
+  React 19 is now required. This is because the new CSS engine depends on stylesheet hoisting behaviors introduced in React 19. This also means that Next.js hosts should be on Next.js 15 or later, since earlier versions are incompatible with React 19.
 
   Prior to these changes, the `<RootStyleRegistry/>` could be omitted in certain scenarios (`nextjs-pages-router` hosts). This is no longer the case. A `<RootStyleRegistry/>` must always be present in your application's Makeswift provider tree as a child of the `<ReactRuntimeProvider/>` in order for Makeswift content to render.
 
@@ -60,138 +20,38 @@
 
 ### Patch Changes
 
-- Updated dependencies [84f48a8]
-  - @makeswift/controls@0.1.22-canary.6
-  - @makeswift/prop-controllers@0.4.16-canary.6
-
-## 0.28.10-canary.18
-
-### Patch Changes
-
-- Updated dependencies [c523616]
-  - @makeswift/controls@0.1.22-canary.5
-  - @makeswift/prop-controllers@0.4.16-canary.5
-
-## 0.28.10-canary.17
-
-### Patch Changes
-
 - 7fd1c5d: Lowercases "click" in the link plugin's "On click" label.
-
-## 0.28.10-canary.16
-
-### Patch Changes
-
-- fb56792: fix: retry transient API errors
-
-## 0.28.10-canary.15
-
-### Patch Changes
-
-- dd297ba: Allow controls inside multi-value controls to provide context values scoped to their item's subtree.
-- Updated dependencies [dd297ba]
-  - @makeswift/controls@0.1.22-canary.4
-  - @makeswift/prop-controllers@0.4.16-canary.4
-
-## 0.28.10-canary.14
-
-### Patch Changes
-
-- Updated dependencies [61a5c59]
-  - @makeswift/controls@0.1.22-canary.3
-  - @makeswift/prop-controllers@0.4.16-canary.3
-
-## 0.28.10-canary.13
-
-### Patch Changes
-
-- 4c20df9: feat: add an "Aspect ratio" control to the builtin Image component with Original, 16:9, 4:3, and 1:1 options. Original preserves the image's intrinsic dimensions (existing images are unaffected); fixed ratios crop to fill.
-
-## 0.28.10-canary.12
-
-### Patch Changes
-
-- 4ca6840: feat: RSC-enabled `RichText` prop rendering
-
-## 0.28.10-canary.11
-
-### Patch Changes
-
-- 4420803: Improve ergonomics for context value validation of unconstrained definitions. Context is now a required parameter for getOptions calls.
-- Updated dependencies [4420803]
-  - @makeswift/controls@0.1.22-canary.2
-  - @makeswift/prop-controllers@0.4.16-canary.2
-
-## 0.28.10-canary.10
-
-### Patch Changes
-
-- 4499e95: fix: builder style edits to RSC when the host SSRs a subtree that does not include `<head>`
-
-## 0.28.10-canary.9
-
-### Patch Changes
-
-- 7f04c54: The runtime now fetches table schemas via the Makeswift Host API REST endpoint instead of the GraphQL API, continuing the migration away from GraphQL/Builder API dependencies.
-
-## 0.28.10-canary.8
-
-### Patch Changes
-
-- 335fe80: Implement unstable context value API
-- Updated dependencies [335fe80]
-  - @makeswift/controls@0.1.22-canary.1
-  - @makeswift/prop-controllers@0.4.16-canary.1
-
-## 0.28.10-canary.7
-
-### Patch Changes
-
-- 4aef9ec: Fix comment typo on the rich text control instance editor onchange handler
-
-## 0.28.10-canary.6
-
-### Patch Changes
-
-- 12403b9: Add `unstable_injectedProps` option to server component registration to enable injection of `elementKey` et al into component props.
-
-## 0.28.10-canary.5
-
-### Patch Changes
-
-- e99744f: Exports `collectServerElements` and `ServerElementsProvider` for frameworks that have separate collection and rendering steps.
-
-## 0.28.10-canary.4
-
-### Patch Changes
-
-- Updated dependencies [0bdb44a]
-  - @makeswift/controls@0.1.22-canary.0
-  - @makeswift/prop-controllers@0.4.16-canary.0
-
-## 0.28.10-canary.3
-
-### Patch Changes
-
-- 76d508e: The built-in Form component now creates table records via the Makeswift Host API REST endpoint (proxied through the host's `/api/makeswift` route) instead of the GraphQL API, so Form submissions no longer require hitting the GraphQL/Builder API.
-
-## 0.28.10-canary.2
-
-### Patch Changes
-
-- 25a7e1c: File fetching now goes through the Host API's `GET v1/files/:id` REST endpoint instead of the GraphQL `file` query.
-
-## 0.28.10-canary.1
-
-### Patch Changes
-
+- 83fcb61: Replaces the "Exit preview" button with a floating preview mode toolbar at the bottom of the page.
+- 2619860: Fetch global elements in bulk during introspection, to reduce request volume and avoid rate limiting on sites with many global elements.
 - d2f7e6b: feat: core runtime infrastructure for React Server Components support
-
-## 0.28.10-canary.0
-
-### Patch Changes
-
+- 335fe80: Implement unstable context value API
+- dd297ba: Allow controls inside multi-value controls to provide context values scoped to their item's subtree.
+- fb56792: fix: retry transient API errors
+- 4bf5a0d: feat: add `forceImportant` option to `RootStyleRegistry` et al.
+- e99744f: Exports `collectServerElements` and `ServerElementsProvider` for frameworks that have separate collection and rendering steps.
+- 4aef9ec: Fix comment typo on the rich text control instance editor onchange handler
+- 4ca6840: feat: RSC-enabled `RichText` prop rendering
 - 899684f: fix: host CSS targeting `span` elements no longer overrides Makeswift text styles in the builder.
+- 4499e95: fix: builder style edits to RSC when the host SSRs a subtree that does not include `<head>`
+- 12403b9: Add `unstable_injectedProps` option to server component registration to enable injection of `elementKey` et al into component props.
+- 188f38a: `getComponentSnapshot` now uses the `content/v1/element-trees` endpoint, which returns a `200` for regions that have no content yet. This will allow for caching empty regions on Next.js hosts. The experimental `unstable_enforceSuccess` option has been removed, as the new endpoint always returns a success response for well-formed requests.
+- 7f04c54: The runtime now fetches table schemas via the Makeswift Host API REST endpoint instead of the GraphQL API, continuing the migration away from GraphQL/Builder API dependencies.
+- 76d508e: The built-in Form component now creates table records via the Makeswift Host API REST endpoint (proxied through the host's `/api/makeswift` route) instead of the GraphQL API, so Form submissions no longer require hitting the GraphQL/Builder API.
+- 25a7e1c: File fetching now goes through the Host API's `GET v1/files/:id` REST endpoint instead of the GraphQL `file` query.
+- 4420803: Improve ergonomics for context value validation of unconstrained definitions. Context is now a required parameter for getOptions calls.
+- fd8597a: Render element type and error message as a part of the error fallback
+- 4c20df9: feat: add an "Aspect ratio" control to the builtin Image component with Original, 16:9, 4:3, and 1:1 options. Original preserves the image's intrinsic dimensions (existing images are unaffected); fixed ratios crop to fill.
+- 4779c10: fix: switch `FallbackComponent` to inline styles so that the fallback doesn't access the style context, the absence of which may be the exact error we're trying to report
+- dc91120: refactor: move RSC refresh requests tracking to the elements cache
+- Updated dependencies [335fe80]
+- Updated dependencies [dd297ba]
+- Updated dependencies [84f48a8]
+- Updated dependencies [c523616]
+- Updated dependencies [4420803]
+- Updated dependencies [0bdb44a]
+- Updated dependencies [61a5c59]
+  - @makeswift/controls@0.1.22
+  - @makeswift/prop-controllers@0.4.16
 
 ## 0.28.9
 

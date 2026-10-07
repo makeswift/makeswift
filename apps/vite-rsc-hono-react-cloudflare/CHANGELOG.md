@@ -1,213 +1,37 @@
 # vite-rsc-hono-react-cloudflare
 
-## 0.0.2-canary.23
-
-### Patch Changes
-
-- Updated dependencies [83fcb61]
-  - @makeswift/runtime@0.29.0-canary.26
-  - @makeswift/hono-react@0.3.0-canary.27
-  - @makeswift/vite-rsc@0.0.1-canary.24
-
-## 0.0.2-canary.22
-
-### Patch Changes
-
-- Updated dependencies [fd8597a]
-  - @makeswift/runtime@0.29.0-canary.25
-  - @makeswift/hono-react@0.3.0-canary.26
-  - @makeswift/vite-rsc@0.0.1-canary.23
-
-## 0.0.2-canary.21
-
-### Patch Changes
-
-- Updated dependencies [4779c10]
-  - @makeswift/runtime@0.29.0-canary.24
-  - @makeswift/hono-react@0.3.0-canary.25
-  - @makeswift/vite-rsc@0.0.1-canary.22
-
-## 0.0.2-canary.20
-
-### Patch Changes
-
-- Updated dependencies [4bf5a0d]
-  - @makeswift/hono-react@0.3.0-canary.24
-  - @makeswift/runtime@0.29.0-canary.23
-  - @makeswift/vite-rsc@0.0.1-canary.21
-
-## 0.0.2-canary.19
-
-### Patch Changes
-
-- Updated dependencies [dc91120]
-  - @makeswift/runtime@0.29.0-canary.22
-  - @makeswift/hono-react@0.3.0-canary.23
-  - @makeswift/vite-rsc@0.0.1-canary.20
-
-## 0.0.2-canary.18
-
-### Patch Changes
-
-- Updated dependencies [188f38a]
-  - @makeswift/runtime@0.29.0-canary.21
-  - @makeswift/hono-react@0.3.0-canary.22
-  - @makeswift/vite-rsc@0.0.1-canary.19
-
-## 0.0.2-canary.17
-
-### Patch Changes
-
-- Updated dependencies [2619860]
-  - @makeswift/runtime@0.29.0-canary.20
-  - @makeswift/hono-react@0.3.0-canary.21
-  - @makeswift/vite-rsc@0.0.1-canary.18
-
-## 0.0.2-canary.16
-
-### Patch Changes
-
-- Updated dependencies [d2e58ac]
-- Updated dependencies [8f895de]
-  - @makeswift/runtime@0.29.0-canary.19
-  - @makeswift/hono-react@0.3.0-canary.20
-  - @makeswift/vite-rsc@0.0.1-canary.17
-
-## 0.0.2-canary.15
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.10-canary.18
-- @makeswift/hono-react@0.3.0-canary.19
-- @makeswift/vite-rsc@0.0.1-canary.16
-
-## 0.0.2-canary.14
+## 0.0.2
 
 ### Patch Changes
 
 - Updated dependencies [7fd1c5d]
-  - @makeswift/runtime@0.28.10-canary.17
-  - @makeswift/hono-react@0.3.0-canary.18
-  - @makeswift/vite-rsc@0.0.1-canary.15
-
-## 0.0.2-canary.13
-
-### Patch Changes
-
-- Updated dependencies [fb56792]
-  - @makeswift/runtime@0.28.10-canary.16
-  - @makeswift/hono-react@0.3.0-canary.17
-  - @makeswift/vite-rsc@0.0.1-canary.14
-
-## 0.0.2-canary.12
-
-### Patch Changes
-
-- Updated dependencies [0ddd912]
-  - @makeswift/vite-rsc@0.0.1-canary.13
-
-## 0.0.2-canary.11
-
-### Patch Changes
-
-- Updated dependencies [dd297ba]
-  - @makeswift/runtime@0.28.10-canary.15
-  - @makeswift/hono-react@0.3.0-canary.16
-  - @makeswift/vite-rsc@0.0.1-canary.12
-
-## 0.0.2-canary.10
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.10-canary.14
-- @makeswift/hono-react@0.3.0-canary.15
-- @makeswift/vite-rsc@0.0.1-canary.11
-
-## 0.0.2-canary.9
-
-### Patch Changes
-
-- Updated dependencies [4c20df9]
-  - @makeswift/runtime@0.28.10-canary.13
-  - @makeswift/hono-react@0.3.0-canary.14
-  - @makeswift/vite-rsc@0.0.1-canary.10
-
-## 0.0.2-canary.8
-
-### Patch Changes
-
-- Updated dependencies [4ca6840]
-  - @makeswift/runtime@0.28.10-canary.12
-  - @makeswift/hono-react@0.3.0-canary.13
-  - @makeswift/vite-rsc@0.0.1-canary.9
-
-## 0.0.2-canary.7
-
-### Patch Changes
-
-- Updated dependencies [4420803]
-  - @makeswift/runtime@0.28.10-canary.11
-  - @makeswift/hono-react@0.3.0-canary.12
-  - @makeswift/vite-rsc@0.0.1-canary.8
-
-## 0.0.2-canary.6
-
-### Patch Changes
-
-- Updated dependencies [4499e95]
-  - @makeswift/runtime@0.28.10-canary.10
-  - @makeswift/hono-react@0.3.0-canary.11
-  - @makeswift/vite-rsc@0.0.1-canary.7
-
-## 0.0.2-canary.5
-
-### Patch Changes
-
-- Updated dependencies [7f04c54]
-  - @makeswift/runtime@0.28.10-canary.9
-  - @makeswift/hono-react@0.3.0-canary.10
-  - @makeswift/vite-rsc@0.0.1-canary.6
-
-## 0.0.2-canary.4
-
-### Patch Changes
-
+- Updated dependencies [83fcb61]
+- Updated dependencies [2619860]
+- Updated dependencies [d2f7e6b]
 - Updated dependencies [335fe80]
-  - @makeswift/runtime@0.28.10-canary.8
-  - @makeswift/hono-react@0.3.0-canary.9
-  - @makeswift/vite-rsc@0.0.1-canary.5
-
-## 0.0.2-canary.3
-
-### Patch Changes
-
-- Updated dependencies [4aef9ec]
-  - @makeswift/runtime@0.28.10-canary.7
-  - @makeswift/hono-react@0.3.0-canary.8
-  - @makeswift/vite-rsc@0.0.1-canary.4
-
-## 0.0.2-canary.2
-
-### Patch Changes
-
-- Updated dependencies [12403b9]
-  - @makeswift/runtime@0.28.10-canary.6
-  - @makeswift/hono-react@0.3.0-canary.7
-  - @makeswift/vite-rsc@0.0.1-canary.3
-
-## 0.0.2-canary.1
-
-### Patch Changes
-
+- Updated dependencies [dd297ba]
+- Updated dependencies [fb56792]
+- Updated dependencies [d2e58ac]
+- Updated dependencies [4bf5a0d]
 - Updated dependencies [e99744f]
-  - @makeswift/runtime@0.28.10-canary.5
-  - @makeswift/hono-react@0.3.0-canary.6
-  - @makeswift/vite-rsc@0.0.1-canary.2
-
-## 0.0.2-canary.0
-
-### Patch Changes
-
-- @makeswift/runtime@0.28.10-canary.4
-- @makeswift/hono-react@0.3.0-canary.5
-- @makeswift/vite-rsc@0.0.1-canary.1
+- Updated dependencies [4aef9ec]
+- Updated dependencies [4ca6840]
+- Updated dependencies [899684f]
+- Updated dependencies [0ddd912]
+- Updated dependencies [4499e95]
+- Updated dependencies [12403b9]
+- Updated dependencies [8f895de]
+- Updated dependencies [188f38a]
+- Updated dependencies [bfb77ec]
+- Updated dependencies [7f04c54]
+- Updated dependencies [76d508e]
+- Updated dependencies [25a7e1c]
+- Updated dependencies [4420803]
+- Updated dependencies [fd8597a]
+- Updated dependencies [eb46b49]
+- Updated dependencies [4c20df9]
+- Updated dependencies [4779c10]
+- Updated dependencies [dc91120]
+  - @makeswift/runtime@0.29.0
+  - @makeswift/hono-react@0.3.0
+  - @makeswift/vite-rsc@0.0.1
