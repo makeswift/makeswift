@@ -272,3 +272,33 @@ describe('page pathnames', () => {
     expect(searchParams(request).get('locale')).toEqual(locale)
   })
 })
+
+describe('resources served without __typename', () => {
+  test.each([
+    {
+      name: 'file',
+      resource: makeFile('myFile'),
+      path: 'files',
+      fetch: (c: HostApiResourcesClient, id: string) => c.fetchFile(id),
+      read: (c: HostApiResourcesClient, id: string) => c.readFile(id),
+    },
+    {
+      name: 'table',
+      resource: makeTable('myTable'),
+      path: 'tables',
+      fetch: (c: HostApiResourcesClient, id: string) => c.fetchTable(id),
+      read: (c: HostApiResourcesClient, id: string) => c.readTable(id),
+    },
+  ])('stamps __typename on fetched $name so it is readable from the store', async t => {
+    const { __typename, ...withoutTypename } = t.resource
+    const client = createTestClient()
+
+    server.use(
+      http.get(`${baseUrl}/${t.path}/${t.resource.id}`, () => HttpResponse.json(withoutTypename)),
+    )
+
+    await t.fetch(client, t.resource.id)
+
+    expect(t.read(client, t.resource.id)).toEqual(t.resource)
+  })
+})
