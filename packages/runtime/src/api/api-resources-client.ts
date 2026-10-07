@@ -63,7 +63,9 @@ export abstract class ApiResourcesClient {
   }
 
   async fetchFile(fileId: string): Promise<File | null> {
-    const fetch = (id: string, version: SiteVersion | null) => this.fetchFileImpl(id, version)
+    // The REST `files` endpoint doesn't return `__typename`, which the API resources store requires.
+    const fetch = async (id: string, version: SiteVersion | null) =>
+      withTypename(APIResourceType.File, await this.fetchFileImpl(id, version))
 
     return await this.store.dispatch(fetchAPIResource(APIResourceType.File, fileId, fetch))
   }
@@ -223,7 +225,9 @@ export abstract class ApiResourcesClient {
   }
 
   async fetchTable(tableId: string): Promise<Table | null> {
-    const fetch = (id: string, version: SiteVersion | null) => this.fetchTableImpl(id, version)
+    // The REST `tables` endpoint doesn't return `__typename`, which the API resources store requires.
+    const fetch = async (id: string, version: SiteVersion | null) =>
+      withTypename(APIResourceType.Table, await this.fetchTableImpl(id, version))
 
     return await this.store.dispatch(fetchAPIResource(APIResourceType.Table, tableId, fetch))
   }
@@ -273,4 +277,11 @@ export abstract class ApiResourcesClient {
   ): Promise<PagePathnameSlice | null>
 
   protected abstract fetchTableImpl(id: string, version: SiteVersion | null): Promise<Table | null>
+}
+
+function withTypename<T extends APIResourceType, R extends object>(
+  typename: T,
+  resource: R | null,
+): (R & { __typename: T }) | null {
+  return resource == null ? null : { ...resource, __typename: typename }
 }
