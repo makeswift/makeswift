@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.1-canary.0
+
+### Patch Changes
+
+- df5a3d5: Enforce a typename for host api resource(file and table) requests
+
 ## 0.29.0
 
 ### Minor Changes
