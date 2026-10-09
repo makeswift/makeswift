@@ -12,6 +12,7 @@ import { ControlDefinition } from '../definition'
 import { FontDefinition } from '../font'
 import { unstable_GalleryDefinition } from '../gallery'
 import { GroupDefinition } from '../group'
+import { HtmlTextDefinition } from '../html-text'
 import {
   IconRadioGroupConfig,
   IconRadioGroupDefinition,
@@ -79,6 +80,9 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
   }
   visitImage<C extends ImageConfig>(def: ImageDefinition<C>): SerializedRecord {
     return this.serializeConfig(def, { version: def.version })
+  }
+  visitHtmlText(def: HtmlTextDefinition): SerializedRecord {
+    return this.serializeConfig(def)
   }
   visitLink(def: LinkDefinition<any>): SerializedRecord {
     return this.serializeConfig(def)
