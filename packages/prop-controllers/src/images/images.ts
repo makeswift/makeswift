@@ -12,7 +12,7 @@ import {
 } from '@makeswift/controls'
 import { P, match } from 'ts-pattern'
 import { imageDataV0Schema, imageDataV1Schema } from '../data'
-import { linkDataSchema } from '../link'
+import { copyLinkData, linkDataSchema } from '../link'
 
 const imagesDataV0ItemSchema = z.object({
   key: z.string(),
@@ -172,6 +172,7 @@ function copyImagesData(
         ...imagesPanelItem,
         props: {
           ...imagesPanelItem.props,
+          link: copyLinkData(imagesPanelItem.props.link, context),
           file: match(imagesPanelItem.props.file)
             .with({ type: 'makeswift-file', version: 1 }, (f) => {
               if (shouldRemoveResource(ContextResource.File, f.id, context)) {
@@ -194,6 +195,7 @@ function copyImagesData(
         ...imagesPanelItem,
         props: {
           ...imagesPanelItem.props,
+          link: copyLinkData(imagesPanelItem.props.link, context),
           file: match(imagesPanelItem.props.file)
             .with(P.string, (f) => {
               if (shouldRemoveResource(ContextResource.File, f, context)) {
