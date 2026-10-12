@@ -473,4 +473,141 @@ describe('copyImagesPropControllerData', () => {
       ])
     })
   })
+
+  describe('copies item links', () => {
+    test('replaces page ID in OPEN_PAGE link for v0 data', () => {
+      // Arrange
+      const data: ImagesDataV0 = [
+        {
+          key: 'key',
+          props: {
+            file: 'testId',
+            link: {
+              type: 'OPEN_PAGE',
+              payload: { pageId: 'pageId', openInNewTab: false },
+            },
+          },
+        },
+      ]
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          pageIds: { pageId: 'copiedPageId' },
+        }),
+        copyElement: (el) => el,
+      }
+
+      // Act
+      const result = copyImagesPropControllerData(data, context)
+
+      // Assert
+      expect(result).toEqual([
+        {
+          key: 'key',
+          props: {
+            file: 'testId',
+            link: {
+              type: 'OPEN_PAGE',
+              payload: { pageId: 'copiedPageId', openInNewTab: false },
+            },
+          },
+        },
+      ])
+    })
+
+    test('removes page ID marked for removal in OPEN_PAGE link for v1 data', () => {
+      // Arrange
+      const data: ImagesData = [
+        {
+          key: 'key',
+          version: 1,
+          props: {
+            link: {
+              type: 'OPEN_PAGE',
+              payload: { pageId: 'pageId', openInNewTab: false },
+            },
+          },
+        },
+      ]
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          pageIds: { pageId: null },
+        }),
+        copyElement: (el) => el,
+      }
+
+      // Act
+      const result = copyImagesPropControllerData(data, context)
+
+      // Assert
+      expect(result).toEqual([
+        {
+          key: 'key',
+          version: 1,
+          props: {
+            link: {
+              type: 'OPEN_PAGE',
+              payload: { pageId: undefined, openInNewTab: false },
+            },
+          },
+        },
+      ])
+    })
+
+    test('replaces element key in SCROLL_TO_ELEMENT link for v2 data', () => {
+      // Arrange
+      const data: ImagesPropControllerDataV2 = {
+        [ControlDataTypeKey]: ImagesPropControllerDataV2Type,
+        value: [
+          {
+            key: 'key',
+            version: 1,
+            props: {
+              link: {
+                type: 'SCROLL_TO_ELEMENT',
+                payload: {
+                  elementIdConfig: {
+                    elementKey: 'elementKey',
+                    propName: 'propName',
+                  },
+                  block: 'start',
+                },
+              },
+            },
+          },
+        ],
+      }
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          elementKeys: { elementKey: 'copiedElementKey' },
+        }),
+        copyElement: (el) => el,
+      }
+
+      // Act
+      const result = copyImagesPropControllerData(data, context)
+
+      // Assert
+      expect(result).toEqual({
+        [ControlDataTypeKey]: ImagesPropControllerDataV2Type,
+        value: [
+          {
+            key: 'key',
+            version: 1,
+            props: {
+              link: {
+                type: 'SCROLL_TO_ELEMENT',
+                payload: {
+                  elementIdConfig: {
+                    elementKey: 'copiedElementKey',
+                    propName: 'propName',
+                  },
+                  block: 'start',
+                },
+              },
+            },
+          },
+        ],
+      })
+    })
+  })
 })
