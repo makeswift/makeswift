@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.2-canary.1
+
+### Patch Changes
+
+- 44ecf8c: fix: `runtime/next` `fetch` export overwrites `init.next`
+
 ## 0.29.2-canary.0
 
 ### Patch Changes
