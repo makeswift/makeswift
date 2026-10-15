@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.23-canary.0
+
+### Patch Changes
+
+- 50b1799: Fixes component registration type rejecting `Group` with optional props.
+
 ## 0.1.22
 
 ### Patch Changes
