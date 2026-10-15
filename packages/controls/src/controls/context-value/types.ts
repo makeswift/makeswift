@@ -85,7 +85,7 @@ export type ProvidedIds<Def> = Def extends unknown
 type ProvidedIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
   KeyedContainer<infer Defs>,
 ]
-  ? { [K in keyof Defs]: ProvidedIds<Defs[K]> }[keyof Defs]
+  ? { [K in keyof Defs]-?: ProvidedIds<Defs[K]> }[keyof Defs]
   : [C] extends [MultiValueContainer<unknown>]
     ? never
     : ProvidedContextId<Def>
@@ -96,7 +96,7 @@ export type RequiredIds<Def> = Def extends unknown
 type RequiredIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
   KeyedContainer<infer Defs>,
 ]
-  ? { [K in keyof Defs]: RequiredIds<Defs[K]> }[keyof Defs]
+  ? { [K in keyof Defs]-?: RequiredIds<Defs[K]> }[keyof Defs]
   : [C] extends [MultiValueContainer<infer Item>]
     ? Exclude<RequiredIds<Item>, ProvidedIds<Item>>
     : ContextDependencyIds<Def>
@@ -107,7 +107,7 @@ export type AllProvidedIds<Def> = Def extends unknown
 type AllProvidedIdsImpl<Def, C = ContainerType<Def>> = [C] extends [
   KeyedContainer<infer Defs>,
 ]
-  ? { [K in keyof Defs]: AllProvidedIds<Defs[K]> }[keyof Defs]
+  ? { [K in keyof Defs]-?: AllProvidedIds<Defs[K]> }[keyof Defs]
   : [C] extends [MultiValueContainer<infer Item>]
     ? AllProvidedIds<Item>
     : ProvidedContextId<Def>
@@ -130,7 +130,7 @@ export type MismatchedProvidedIds<Def> = Def extends unknown
 type MismatchedProvidedIdsOf<Def, C = ContainerType<Def>> = [C] extends [
   KeyedContainer<infer Defs>,
 ]
-  ? { [K in keyof Defs]: MismatchedProvidedIds<Defs[K]> }[keyof Defs]
+  ? { [K in keyof Defs]-?: MismatchedProvidedIds<Defs[K]> }[keyof Defs]
   : [C] extends [MultiValueContainer<infer Item>]
     ? MismatchedProvidedIds<Item>
     : [ProvidedContext<Def>] extends [never]
@@ -143,7 +143,7 @@ type MismatchedProvidedIdsOf<Def, C = ContainerType<Def>> = [C] extends [
         : ProvidedContextId<Def>
 
 export type DuplicateIds<R, Scoped extends string = never> = {
-  [K in keyof R]:
+  [K in keyof R]-?:
     | DuplicateIdsWithin<
         R[K],
         Scoped | Extract<ProvidedIds<R[Exclude<keyof R, K>]>, string>
