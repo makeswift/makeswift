@@ -269,9 +269,3 @@ export type GlobalElementQueryVariables = Exact<{
 export type GlobalElementQueryResult = {
   globalElement: { __typename: 'GlobalElement'; id: string; data: Json } | null
 }
-
-export type CreateTableRecordMutationVariables = Exact<{
-  input: CreateTableRecordInput
-}>
-
-export type CreateTableRecordMutationResult = { createTableRecord: { tableRecord: { id: string } } }
