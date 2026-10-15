@@ -109,6 +109,7 @@ const page: Page = {
 const site: Site = {
   __typename: APIResourceType.Site,
   id: '[test-site-id]',
+  customFontFamilies: [],
   googleFonts: {
     edges: [],
   },
