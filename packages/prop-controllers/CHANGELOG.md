@@ -1,5 +1,13 @@
 # @makeswift/prop-controllers
 
+## 0.4.17
+
+### Patch Changes
+
+- e04804e: Fixes an issue where links set on the builtin Carousel component are not properly replaced when the component is copied across different contexts.
+- Updated dependencies [50b1799]
+  - @makeswift/controls@0.1.23
+
 ## 0.4.16
 
 ### Patch Changes

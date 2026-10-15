@@ -1,5 +1,15 @@
 # @makeswift/runtime
 
+## 0.29.2
+
+### Patch Changes
+
+- 44ecf8c: fix: `runtime/next` `fetch` export overwrites `init.next`
+- Updated dependencies [50b1799]
+- Updated dependencies [e04804e]
+  - @makeswift/controls@0.1.23
+  - @makeswift/prop-controllers@0.4.17
+
 ## 0.29.1
 
 ### Patch Changes
