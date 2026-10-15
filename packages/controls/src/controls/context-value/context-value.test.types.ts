@@ -356,6 +356,18 @@ describe('component props validation', () => {
       }),
     })
   })
+
+  test('accepts a Group with optional keys', () => {
+    const myGroup = (includeCheckbox: boolean) =>
+      Group({
+        props: {
+          text: Checkbox(),
+          ...(includeCheckbox && { selected: Checkbox() }),
+        },
+      })
+
+    register({ value: myGroup(true) })
+  })
 })
 
 describe('duplicate provider detection', () => {
