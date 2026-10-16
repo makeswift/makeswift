@@ -1,6 +1,11 @@
 import { type ThunkAction } from '@reduxjs/toolkit'
 
-import { type Element, type Document, EMBEDDED_DOCUMENT_TYPE } from '../modules/read-only-documents'
+import {
+  type Element,
+  type Document,
+  type EmbeddedDocumentMeta,
+  EMBEDDED_DOCUMENT_TYPE,
+} from '../modules/read-only-documents'
 
 import { SharedActionTypes } from './action-types'
 
@@ -17,7 +22,7 @@ type DocumentPayloadEmbeddedDocument = {
   type: string
   name: string
   rootElement: Element
-  meta: { allowLocaleFallback: boolean; requestedLocale: string | null; description?: string }
+  meta: EmbeddedDocumentMeta
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 

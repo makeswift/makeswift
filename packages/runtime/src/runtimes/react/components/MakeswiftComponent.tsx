@@ -6,6 +6,7 @@ import {
   componentDocumentToRootEmbeddedDocument,
   MakeswiftComponentSnapshot,
 } from '../../../client'
+import { type Data } from '../../../state/modules/read-only-documents'
 import { getRootElement } from '../../../state/read-only-state'
 
 import { useCacheData } from '../hooks/use-cache-data'
@@ -20,31 +21,36 @@ type Props = {
   label: string
   type: string
   description?: string
+  /** For internal Makeswift builder use only */
+  internal_MakeswiftBuilderData?: Data
 }
 
-export const MakeswiftComponent = memo(({ snapshot, label, type, description }: Props) => {
-  useCacheData(snapshot.cacheData)
+export const MakeswiftComponent = memo(
+  ({ snapshot, label, type, description, internal_MakeswiftBuilderData }: Props) => {
+    useCacheData(snapshot.cacheData)
 
-  const rootDocument = useMemo(
-    () =>
-      componentDocumentToRootEmbeddedDocument({
-        document: snapshot.document,
-        documentKey: snapshot.key,
-        name: label,
-        type,
-        description,
-        meta: snapshot.meta,
-      }),
-    [snapshot, label, type, description],
-  )
+    const rootDocument = useMemo(
+      () =>
+        componentDocumentToRootEmbeddedDocument({
+          document: snapshot.document,
+          documentKey: snapshot.key,
+          name: label,
+          type,
+          description,
+          internal_MakeswiftBuilderData,
+          meta: snapshot.meta,
+        }),
+      [snapshot, label, type, description, internal_MakeswiftBuilderData],
+    )
 
-  useRegisterDocument(rootDocument)
+    useRegisterDocument(rootDocument)
 
-  const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
+    const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
 
-  return (
-    <ActivityOrFallback suspenseFallback={builtinSuspense}>
-      <DocumentRoot rootDocument={rootDocument} />
-    </ActivityOrFallback>
-  )
-})
+    return (
+      <ActivityOrFallback suspenseFallback={builtinSuspense}>
+        <DocumentRoot rootDocument={rootDocument} />
+      </ActivityOrFallback>
+    )
+  },
+)

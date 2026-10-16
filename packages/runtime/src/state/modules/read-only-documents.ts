@@ -1,4 +1,4 @@
-import { type Element } from '@makeswift/controls'
+import { type Data, type Element } from '@makeswift/controls'
 
 import { type Action, type UnknownAction, type DocumentPayload, isKnownAction } from '../actions'
 
@@ -28,6 +28,13 @@ type BaseDocument = {
 
 export const EMBEDDED_DOCUMENT_TYPE = 'EMBEDDED_DOCUMENT' as const
 
+export type EmbeddedDocumentMeta = {
+  allowLocaleFallback: boolean
+  requestedLocale: string | null
+  description?: string
+  internal_MakeswiftBuilderData?: Data
+}
+
 export type EmbeddedDocument = {
   key: string
   locale: string | null
@@ -35,7 +42,7 @@ export type EmbeddedDocument = {
   type: string
   name: string
   rootElement: Element
-  meta: { allowLocaleFallback: boolean; requestedLocale: string | null; description?: string }
+  meta: EmbeddedDocumentMeta
   __type: typeof EMBEDDED_DOCUMENT_TYPE
 }
 
