@@ -18,6 +18,7 @@ export const RSCSnapshotRenderer = ({
   label,
   type,
   description,
+  internal_MakeswiftBuilderData,
   children,
 }: PropsWithChildren<ComponentProps<typeof MakeswiftComponent>>) => {
   const rootDocument = componentDocumentToRootEmbeddedDocument({
@@ -26,6 +27,7 @@ export const RSCSnapshotRenderer = ({
     name: label,
     type,
     description,
+    internal_MakeswiftBuilderData,
     meta: snapshot.meta,
   })
 
