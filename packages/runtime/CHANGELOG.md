@@ -1,25 +1,14 @@
 # @makeswift/runtime
 
-## 0.29.2-canary.2
-
-### Patch Changes
-
-- Updated dependencies [50b1799]
-  - @makeswift/controls@0.1.23-canary.0
-  - @makeswift/prop-controllers@0.4.17-canary.1
-
-## 0.29.2-canary.1
+## 0.29.2
 
 ### Patch Changes
 
 - 44ecf8c: fix: `runtime/next` `fetch` export overwrites `init.next`
-
-## 0.29.2-canary.0
-
-### Patch Changes
-
+- Updated dependencies [50b1799]
 - Updated dependencies [e04804e]
-  - @makeswift/prop-controllers@0.4.17-canary.0
+  - @makeswift/controls@0.1.23
+  - @makeswift/prop-controllers@0.4.17
 
 ## 0.29.1
 

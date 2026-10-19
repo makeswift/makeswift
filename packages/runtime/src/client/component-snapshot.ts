@@ -2,7 +2,11 @@ import { z } from 'zod'
 
 import { type CacheData } from '../api/api-resources-client'
 
-import { EMBEDDED_DOCUMENT_TYPE, type EmbeddedDocument } from '../state/modules/read-only-documents'
+import {
+  type Data,
+  EMBEDDED_DOCUMENT_TYPE,
+  type EmbeddedDocument,
+} from '../state/modules/read-only-documents'
 
 import { deterministicUUID } from '../utils/deterministic-uuid'
 
@@ -22,6 +26,7 @@ export function componentDocumentToRootEmbeddedDocument({
   name,
   type,
   description,
+  internal_MakeswiftBuilderData,
   meta,
 }: {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
@@ -29,6 +34,8 @@ export function componentDocumentToRootEmbeddedDocument({
   name: string
   type: string
   description?: string
+  /** For internal Makeswift builder use only */
+  internal_MakeswiftBuilderData?: Data
   meta: MakeswiftComponentMetadata
 }): EmbeddedDocument {
   const { data: rootElement, locale, id } = document
@@ -53,7 +60,7 @@ export function componentDocumentToRootEmbeddedDocument({
     id,
     type,
     name,
-    meta: { ...meta, description },
+    meta: { ...meta, description, internal_MakeswiftBuilderData },
     __type: EMBEDDED_DOCUMENT_TYPE,
   }
 
