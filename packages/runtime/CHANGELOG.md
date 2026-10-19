@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.0
+
+### Patch Changes
+
+- 83ee9b4: Add component snapshot metadata field for internal builder use
+
 ## 0.29.2
 
 ### Patch Changes

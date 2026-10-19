@@ -18,8 +18,6 @@
     "vite-rsc-hono-react-cloudflare": "0.0.1"
   },
   "changesets": [
-    "quiet-keys-wander",
-    "shiny-spies-join",
-    "young-lemons-change"
+    "kind-items-switch"
   ]
 }
