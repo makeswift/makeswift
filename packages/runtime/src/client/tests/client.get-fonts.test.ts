@@ -33,7 +33,7 @@ describe('getFonts', () => {
   test('successfully parses response containing no fonts', async () => {
     // Arrange
     const client = createTestClient()
-    const payload: GetFontsAPI = { googleFonts: [], siteId: TEST_SITE_ID }
+    const payload: GetFontsAPI = { customFontVariants: [], googleFonts: [], siteId: TEST_SITE_ID }
 
     server.use(
       http.get(baseUrl, () => HttpResponse.json(payload), {
@@ -52,6 +52,7 @@ describe('getFonts', () => {
     // Arrange
     const client = createTestClient()
     const payload: GetFontsAPI = {
+      customFontVariants: [],
       googleFonts: [
         { family: 'Roboto', variants: ['400', '700'] },
         { family: 'Open Sans', variants: ['400', '400italic', '700'] },
