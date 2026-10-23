@@ -48,6 +48,7 @@ export const Page = memo(
         <PageComponent
           key={snapshot.document.data.key}
           page={snapshot.document}
+          customFontVariants={snapshot.customFontVariants}
           rootDocument={rootDocument}
           metadata={metadata}
         />
