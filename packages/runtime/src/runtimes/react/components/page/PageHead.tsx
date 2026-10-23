@@ -1,12 +1,14 @@
 import { useMemo, useSyncExternalStore, ReactNode } from 'react'
 
-import { type MakeswiftPageDocument } from '../../../../client'
+import { type CustomFontVariant, type MakeswiftPageDocument } from '../../../../client'
 import { type Site } from '../../../../api'
 
 import { useApiResourcesClient } from '../../hooks/use-api-resources-client'
 import { useFrameworkContext } from '../hooks/use-framework-context'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { usePageSnippets } from '../hooks/use-page-snippets'
+
+import { CustomFontFaces } from '../CustomFontFaces'
 
 import { PageTitle, PageMeta, PageLink } from './head-tags'
 import { type PageMetadataSettings } from './page-seo-settings'
@@ -20,10 +22,15 @@ const defaultFavicon = {
 
 type Props = {
   document: MakeswiftPageDocument
+  customFontVariants?: CustomFontVariant[]
   metadata?: PageMetadataSettings
 }
 
-export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
+export function PageHead({
+  document: page,
+  customFontVariants = [],
+  metadata = {},
+}: Props): ReactNode {
   const {
     title: useTitle = false,
     favicon: useFavicon = false,
@@ -111,6 +118,7 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
           href={`https://fonts.googleapis.com/css?family=${fontFamilyParamValue}&display=swap`}
         />
       )}
+      <CustomFontFaces variants={customFontVariants} siteId={page.site.id} />
       {headSnippets.map(snippet => (
         <HeadSnippet key={snippet.id} snippet={snippet} />
       ))}

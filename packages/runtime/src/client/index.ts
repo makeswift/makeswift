@@ -55,7 +55,11 @@ import {
   type MakeswiftComponentSnapshot,
 } from './component-snapshot'
 
-import { type MakeswiftPageDocument, type MakeswiftPageSnapshot } from './page-snapshot'
+import {
+  type CustomFontVariant,
+  type MakeswiftPageDocument,
+  type MakeswiftPageSnapshot,
+} from './page-snapshot'
 
 import * as Schema from './schema'
 
@@ -595,10 +599,10 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     }
 
     const siteVersion = await siteVersionPromise
-    const response = await this.fetch(
-      `v4/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
-      siteVersion,
-    )
+    const [response, customFontVariants] = await Promise.all([
+      this.fetch(`v4/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`, siteVersion),
+      this.getCustomFontVariants(siteVersion),
+    ])
 
     if (!response.ok) {
       const failedBody = await failedResponseBody(response)
@@ -627,6 +631,21 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     return {
       document,
       cacheData,
+      customFontVariants,
+    }
+  }
+
+  // Custom fonts shouldn't keep the page from rendering, so a failure to fetch them is logged
+  // and treated as the site having none
+  private async getCustomFontVariants(
+    siteVersion: SiteVersion | null,
+  ): Promise<CustomFontVariant[]> {
+    try {
+      const fonts = await this.unstable_getFonts(siteVersion)
+      return fonts?.customFontVariants ?? []
+    } catch (error) {
+      console.error('Failed to fetch custom fonts for page snapshot', error)
+      return []
     }
   }
 
