@@ -74,6 +74,7 @@ export {
 export {
   type Snippet,
   type Font,
+  type CustomFontVariant,
   type MakeswiftPageDocument,
   type MakeswiftPageSnapshot,
   pageToRootDocument,
