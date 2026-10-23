@@ -37,3 +37,20 @@ export function PageLink({ precedence, ...props }: PageLinkProps) {
     </Head>
   )
 }
+
+type PageStyleProps = ReactCanaryLinkProps & {
+  // React dedupes hoisted styles by `href`, so it must change whenever `children` does
+  href: string
+  children: string
+}
+
+export function PageStyle({ href, precedence, children }: PageStyleProps) {
+  const { Head } = useFrameworkContext()
+  return (
+    <Head>
+      <style href={href} precedence={precedence}>
+        {children}
+      </style>
+    </Head>
+  )
+}
