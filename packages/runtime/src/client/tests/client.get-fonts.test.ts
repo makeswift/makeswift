@@ -73,6 +73,121 @@ describe('getFonts', () => {
     expect(result).toEqual(payload)
   })
 
+  test('successfully parses custom font variants contained in response', async () => {
+    // Arrange
+    const client = createTestClient()
+    const payload: GetFontsAPI = {
+      customFontVariants: [
+        {
+          id: 'variant-400',
+          family: 'Brand Sans',
+          weight: 400,
+          style: 'normal',
+          fileUrl: 'https://fonts.example.com/brand-400.woff2',
+          fileFormat: 'woff2',
+        },
+        {
+          id: 'variant-700-italic',
+          family: 'Brand Sans',
+          weight: 700,
+          style: 'italic',
+          fileUrl: 'https://fonts.example.com/brand-700-italic.woff',
+          fileFormat: 'woff',
+        },
+      ],
+      googleFonts: [{ family: 'Roboto', variants: ['400'] }],
+      siteId: TEST_SITE_ID,
+    }
+
+    server.use(
+      http.get(baseUrl, () => HttpResponse.json(payload), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const result = await client.unstable_getFonts(TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toEqual(payload)
+  })
+
+  test('defaults custom font variants to empty when the response omits them', async () => {
+    // Arrange
+    const client = createTestClient()
+    const payload = {
+      googleFonts: [{ family: 'Roboto', variants: ['400'] }],
+      siteId: TEST_SITE_ID,
+    }
+
+    server.use(
+      http.get(baseUrl, () => HttpResponse.json(payload), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const result = await client.unstable_getFonts(TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toEqual({ ...payload, customFontVariants: [] })
+  })
+
+  test.each([
+    { label: 'a file URL that is not a URL', override: { fileUrl: 'not a url' } },
+    { label: 'a non-numeric weight', override: { weight: '400' } },
+    { label: 'a missing family', override: { family: undefined } },
+  ])('skips and logs a custom font variant with $label', async ({ override }) => {
+    // Arrange
+    const client = createTestClient()
+    const validVariant = {
+      id: 'valid-variant',
+      family: 'Brand Sans',
+      weight: 400,
+      style: 'normal',
+      fileUrl: 'https://fonts.example.com/brand.woff2',
+      fileFormat: 'woff2',
+    }
+    const invalidVariant = { ...validVariant, id: 'invalid-variant', ...override }
+    const payload = {
+      customFontVariants: [validVariant, invalidVariant],
+      googleFonts: [{ family: 'Roboto', variants: ['400'] }],
+      siteId: TEST_SITE_ID,
+    }
+
+    server.use(
+      http.get(baseUrl, () => HttpResponse.json(payload), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const result = await client.unstable_getFonts(TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toEqual({ ...payload, customFontVariants: [validVariant] })
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Skipping invalid custom font variant', {
+      variant: JSON.parse(JSON.stringify(invalidVariant)),
+    })
+  })
+
+  test('returns null when the response is 404', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(baseUrl, () => HttpResponse.json('Not Found', { status: 404 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const result = await client.unstable_getFonts(TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toBeNull()
+  })
+
   test.each([
     { status: 400, statusText: 'Bad Request' },
     { status: 403, statusText: 'Forbidden' },
