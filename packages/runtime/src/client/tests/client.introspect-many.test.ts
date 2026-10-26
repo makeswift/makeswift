@@ -10,6 +10,7 @@ import {
   makeSwatch,
   makeFile,
   makeTable,
+  tableColumnNodeId,
   makeTypography,
   makePagePathnameSlice,
 } from '../../testing/fixtures/resources'
@@ -418,18 +419,19 @@ describe('introspectMany', () => {
       const fileB = makeFile('file-b')
 
       server.use(
-        http.post(`${runtime.apiOrigin}/graphql`, async ({ request }) => {
-          const body = (await request.clone().json()) as {
-            variables: { fileIds?: string[]; tableIds?: string[] }
-          }
-          const fileIds = body.variables.fileIds ?? []
-          return HttpResponse.json({
-            data: {
-              files: fileIds.map(id => ({ 'file-a': fileA, 'file-b': fileB })[id] ?? null),
-              tables: (body.variables.tableIds ?? []).map(() => null),
-            },
-          })
+        http.get(`${runtime.apiOrigin}/v1/files/bulk`, ({ request }) => {
+          const ids = new URL(request.url).searchParams.getAll('ids')
+          // The real endpoint doesn't return `__typename`
+          return HttpResponse.json(
+            ids.map(id => {
+              const file = { 'file-a': fileA, 'file-b': fileB }[id]
+              if (file == null) return null
+              const { __typename, ...rest } = file
+              return rest
+            }),
+          )
         }),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       const tree1 = componentTree('tree-1', { file: 'file-a' })
@@ -441,25 +443,17 @@ describe('introspectMany', () => {
       expect(results.get('tree-2')!.apiResources.File).toEqual([{ id: 'file-b', value: fileB }])
     })
 
-    test('deduplicates a shared file ID across trees in a single GraphQL request', async () => {
+    test('deduplicates a shared file ID across trees in a single bulk request', async () => {
       const client = createTestClient()
       const sharedFile = makeFile('shared')
-      const requestedFileIds: string[][] = []
+      const handler = jest.fn(({ request }: { request: Request }) => {
+        const ids = new URL(request.url).searchParams.getAll('ids')
+        return HttpResponse.json(ids.map(id => (id === 'shared' ? sharedFile : null)))
+      })
 
       server.use(
-        http.post(`${runtime.apiOrigin}/graphql`, async ({ request }) => {
-          const body = (await request.clone().json()) as {
-            variables: { fileIds?: string[]; tableIds?: string[] }
-          }
-          const fileIds = body.variables.fileIds ?? []
-          requestedFileIds.push(fileIds)
-          return HttpResponse.json({
-            data: {
-              files: fileIds.map(id => (id === 'shared' ? sharedFile : null)),
-              tables: (body.variables.tableIds ?? []).map(() => null),
-            },
-          })
-        }),
+        http.get(`${runtime.apiOrigin}/v1/files/bulk`, handler),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       const tree1 = componentTree('tree-1', { file: 'shared' })
@@ -467,7 +461,10 @@ describe('introspectMany', () => {
 
       const results = await client['introspectMany']([tree1, tree2], TestWorkingSiteVersion, null)
 
-      expect(requestedFileIds).toEqual([['shared']])
+      expect(handler).toHaveBeenCalledTimes(1)
+      expect(new URL(handler.mock.calls[0]![0].request.url).searchParams.getAll('ids')).toEqual([
+        'shared',
+      ])
       expect(results.get('tree-1')!.apiResources.File).toEqual([
         { id: 'shared', value: sharedFile },
       ])
@@ -548,18 +545,19 @@ describe('introspectMany', () => {
       const tableB = makeTable('table-b')
 
       server.use(
-        http.post(`${runtime.apiOrigin}/graphql`, async ({ request }) => {
-          const body = (await request.clone().json()) as {
-            variables: { fileIds?: string[]; tableIds?: string[] }
-          }
-          const tableIds = body.variables.tableIds ?? []
-          return HttpResponse.json({
-            data: {
-              files: (body.variables.fileIds ?? []).map(() => null),
-              tables: tableIds.map(id => ({ 'table-a': tableA, 'table-b': tableB })[id] ?? null),
-            },
-          })
+        http.get(`${runtime.apiOrigin}/v1/tables/bulk`, ({ request }) => {
+          const ids = new URL(request.url).searchParams.getAll('ids')
+          // The real endpoint doesn't return `__typename`
+          return HttpResponse.json(
+            ids.map(id => {
+              const table = { 'table-a': tableA, 'table-b': tableB }[id]
+              if (table == null) return null
+              const { __typename, ...rest } = table
+              return rest
+            }),
+          )
         }),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       const tree1 = componentTree('tree-1', { table: 'table-a' })
@@ -571,25 +569,61 @@ describe('introspectMany', () => {
       expect(results.get('tree-2')!.apiResources.Table).toEqual([{ id: 'table-b', value: tableB }])
     })
 
-    test('deduplicates a shared table ID across trees in a single GraphQL request', async () => {
+    test('restores each table column __typename from its node id', async () => {
       const client = createTestClient()
-      const sharedTable = makeTable('shared')
-      const requestedTableIds: string[][] = []
+      const checkboxId = tableColumnNodeId('CheckboxTableColumn', 'c1')
+      const selectId = tableColumnNodeId('MultipleSelectTableColumn', 's1')
+      const options = [{ id: 'o1', name: 'One' }]
 
       server.use(
-        http.post(`${runtime.apiOrigin}/graphql`, async ({ request }) => {
-          const body = (await request.clone().json()) as {
-            variables: { fileIds?: string[]; tableIds?: string[] }
-          }
-          const tableIds = body.variables.tableIds ?? []
-          requestedTableIds.push(tableIds)
-          return HttpResponse.json({
-            data: {
-              files: (body.variables.fileIds ?? []).map(() => null),
-              tables: tableIds.map(id => (id === 'shared' ? sharedTable : null)),
+        http.get(`${runtime.apiOrigin}/v1/tables/bulk`, () =>
+          HttpResponse.json([
+            {
+              id: 'table-a',
+              name: 'table table-a',
+              columns: [
+                { id: checkboxId, name: 'Agree' },
+                { id: selectId, name: 'Pick', options },
+              ],
             },
-          })
-        }),
+          ]),
+        ),
+        graphql.operation(() => HttpResponse.json({})),
+      )
+
+      const results = await client['introspectMany'](
+        [componentTree('tree-1', { table: 'table-a' })],
+        TestWorkingSiteVersion,
+        null,
+      )
+
+      expect(results.get('tree-1')!.apiResources.Table).toEqual([
+        {
+          id: 'table-a',
+          value: {
+            __typename: 'Table',
+            id: 'table-a',
+            name: 'table table-a',
+            columns: [
+              { __typename: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
+              { __typename: 'MultipleSelectTableColumn', id: selectId, name: 'Pick', options },
+            ],
+          },
+        },
+      ])
+    })
+
+    test('deduplicates a shared table ID across trees in a single bulk request', async () => {
+      const client = createTestClient()
+      const sharedTable = makeTable('shared')
+      const handler = jest.fn(({ request }: { request: Request }) => {
+        const ids = new URL(request.url).searchParams.getAll('ids')
+        return HttpResponse.json(ids.map(id => (id === 'shared' ? sharedTable : null)))
+      })
+
+      server.use(
+        http.get(`${runtime.apiOrigin}/v1/tables/bulk`, handler),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       const tree1 = componentTree('tree-1', { table: 'shared' })
@@ -597,7 +631,10 @@ describe('introspectMany', () => {
 
       const results = await client['introspectMany']([tree1, tree2], TestWorkingSiteVersion, null)
 
-      expect(requestedTableIds).toEqual([['shared']])
+      expect(handler).toHaveBeenCalledTimes(1)
+      expect(new URL(handler.mock.calls[0]![0].request.url).searchParams.getAll('ids')).toEqual([
+        'shared',
+      ])
       expect(results.get('tree-1')!.apiResources.Table).toEqual([
         { id: 'shared', value: sharedTable },
       ])
@@ -745,19 +782,15 @@ describe('introspectMany', () => {
           const ids = new URL(request.url).searchParams.getAll('ids')
           return HttpResponse.json(ids.map(id => makePagePathnameSlice(id)))
         }),
-        http.post(`${runtime.apiOrigin}/graphql`, async ({ request }) => {
-          const body = (await request.clone().json()) as {
-            variables: { fileIds?: string[]; tableIds?: string[] }
-          }
-          const fileIds = body.variables.fileIds ?? []
-          const tableIds = body.variables.tableIds ?? []
-          return HttpResponse.json({
-            data: {
-              files: fileIds.map(id => makeFile(id)),
-              tables: tableIds.map(id => makeTable(id)),
-            },
-          })
+        http.get(`${runtime.apiOrigin}/v1/files/bulk`, ({ request }) => {
+          const ids = new URL(request.url).searchParams.getAll('ids')
+          return HttpResponse.json(ids.map(id => makeFile(id)))
         }),
+        http.get(`${runtime.apiOrigin}/v1/tables/bulk`, ({ request }) => {
+          const ids = new URL(request.url).searchParams.getAll('ids')
+          return HttpResponse.json(ids.map(id => makeTable(id)))
+        }),
+        graphql.operation(() => HttpResponse.json({})),
       )
 
       // tree-a references Swatch/File/Typography/PagePathnameSlice. No Table.

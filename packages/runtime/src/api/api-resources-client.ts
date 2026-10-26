@@ -227,7 +227,7 @@ export abstract class ApiResourcesClient {
   async fetchTable(tableId: string): Promise<Table | null> {
     // The REST `tables` endpoint doesn't return `__typename`, which the API resources store requires.
     const fetch = async (id: string, version: SiteVersion | null) =>
-      withTypename(APIResourceType.Table, await this.fetchTableImpl(id, version))
+      withTableTypename(await this.fetchTableImpl(id, version))
 
     return await this.store.dispatch(fetchAPIResource(APIResourceType.Table, tableId, fetch))
   }
@@ -279,9 +279,38 @@ export abstract class ApiResourcesClient {
   protected abstract fetchTableImpl(id: string, version: SiteVersion | null): Promise<Table | null>
 }
 
-function withTypename<T extends APIResourceType, R extends object>(
+export function withTypename<T extends APIResourceType, R extends object>(
   typename: T,
   resource: R | null,
 ): (R & { __typename: T }) | null {
   return resource == null ? null : { ...resource, __typename: typename }
+}
+
+// A column's `id` is a node id, `base64("<typename>:<uuid>")`, so its typename survives the REST
+// endpoint even though `__typename` itself doesn't.
+function tableColumnTypename(columnId: string): Table['columns'][number]['__typename'] | undefined {
+  try {
+    return /^([^:]+):/.exec(atob(columnId))?.[1] as Table['columns'][number]['__typename']
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Like `withTypename` for a table, and also restores each column's `__typename`, which the Form
+ * control uses to pick the field type.
+ */
+export function withTableTypename(table: Table | null): Table | null {
+  const typed = withTypename(APIResourceType.Table, table)
+
+  if (typed == null) return null
+
+  return {
+    ...typed,
+    columns: typed.columns.map(column => {
+      const typename = tableColumnTypename(column.id)
+
+      return typename == null ? column : ({ ...column, __typename: typename } as typeof column)
+    }),
+  }
 }

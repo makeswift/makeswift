@@ -19,7 +19,7 @@ export type GlobalElementWithLocalized = {
   localized: LocalizedGlobalElement | null
 }
 
-const MAX_GLOBAL_ELEMENTS_PER_REQUEST = 100
+const MAX_BULK_IDS_PER_REQUEST = 100
 
 const RetryBackoffConfig = {
   MaxAttempts: 3,
@@ -174,8 +174,8 @@ export class MakeswiftRestAPIClient {
 
     const batches: string[][] = []
 
-    for (let i = 0; i < globalElementIds.length; i += MAX_GLOBAL_ELEMENTS_PER_REQUEST) {
-      batches.push(globalElementIds.slice(i, i + MAX_GLOBAL_ELEMENTS_PER_REQUEST))
+    for (let i = 0; i < globalElementIds.length; i += MAX_BULK_IDS_PER_REQUEST) {
+      batches.push(globalElementIds.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
     }
 
     const results = await Promise.all(batches.map(getGlobalElementsBatch))
@@ -224,6 +224,59 @@ export class MakeswiftRestAPIClient {
     const table = await response.json()
 
     return table
+  }
+
+  async getFiles(fileIds: string[]): Promise<(File | null)[]> {
+    if (fileIds.length === 0) return []
+
+    const batches: string[][] = []
+
+    for (let i = 0; i < fileIds.length; i += MAX_BULK_IDS_PER_REQUEST) {
+      batches.push(fileIds.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
+    }
+
+    const results = await Promise.all(
+      batches.map(ids => this.getUnversionedResourcesBatch<File>('files', ids)),
+    )
+
+    return results.flat()
+  }
+
+  async getTables(tableIds: string[]): Promise<(Table | null)[]> {
+    if (tableIds.length === 0) return []
+
+    const batches: string[][] = []
+
+    for (let i = 0; i < tableIds.length; i += MAX_BULK_IDS_PER_REQUEST) {
+      batches.push(tableIds.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
+    }
+
+    const results = await Promise.all(
+      batches.map(ids => this.getUnversionedResourcesBatch<Table>('tables', ids)),
+    )
+
+    return results.flat()
+  }
+
+  private async getUnversionedResourcesBatch<T>(
+    resource: 'files' | 'tables',
+    ids: string[],
+  ): Promise<(T | null)[]> {
+    const url = new URL(`v1/${resource}/bulk`, this.apiOrigin)
+
+    ids.forEach(id => url.searchParams.append('ids', id))
+
+    const response = await this.fetch(url.pathname + url.search, null)
+
+    if (!response.ok) {
+      const failedBody = await failedResponseBody(response)
+
+      throw new RestApiClientError(`Failed to get ${resource} for [${ids.join(', ')}]`, response, {
+        body: failedBody,
+      })
+    }
+
+    return await response.json()
   }
 
   async getPagePathnameSlices(

@@ -424,6 +424,156 @@ describe('getGlobalElements', () => {
   })
 })
 
+describe('getFiles', () => {
+  const resourceUrl = `${TestOrigins.apiOrigin}/v1/files/bulk`
+
+  test('returns an empty array without a request when given no ids', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(() => HttpResponse.json([]))
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getFiles([])
+
+    // Assert
+    expect(result).toEqual([])
+    expect(handler).not.toHaveBeenCalled()
+  })
+
+  test('sends all ids as repeated query params and returns the response in order, with nulls passed through', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const ids = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(ids.map(id => (id === 'b' ? null : { id, url: `${id}.png` })))
+    })
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getFiles(['a', 'b', 'c'])
+
+    // Assert
+    const url = new URL(handler.mock.calls[0]![0].request.url)
+    expect(url.searchParams.getAll('ids')).toEqual(['a', 'b', 'c'])
+    expect(result).toEqual([{ id: 'a', url: 'a.png' }, null, { id: 'c', url: 'c.png' }])
+  })
+
+  test('throws on other errors, attaching the details to the error', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(resourceUrl, () => HttpResponse.json('Bad request', { status: 400 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const error = await captureClientError(client.getFiles(['a', 'b']))
+
+    // Assert
+    expect(error.message).toBe('Failed to get files for [a, b]: 400 Bad Request')
+    expect(error.cause).toEqual({ body: 'Bad request' })
+  })
+
+  test('splits more than 100 ids across requests and preserves order', async () => {
+    // Arrange
+    const client = createTestClient()
+    const ids = Array.from({ length: 250 }, (_, i) => `id-${i}`)
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const requested = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(requested.map(id => ({ id })))
+    })
+    server.use(http.get(resourceUrl, handler))
+
+    // Act
+    const result = await client.getFiles(ids)
+
+    // Assert
+    expect(handler).toHaveBeenCalledTimes(3)
+    expect(
+      handler.mock.calls.map(([{ request }]) => new URL(request.url).searchParams.getAll('ids')),
+    ).toEqual([ids.slice(0, 100), ids.slice(100, 200), ids.slice(200)])
+    expect(result.map(file => file?.id)).toEqual(ids)
+  })
+})
+
+describe('getTables', () => {
+  const resourceUrl = `${TestOrigins.apiOrigin}/v1/tables/bulk`
+
+  test('returns an empty array without a request when given no ids', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(() => HttpResponse.json([]))
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getTables([])
+
+    // Assert
+    expect(result).toEqual([])
+    expect(handler).not.toHaveBeenCalled()
+  })
+
+  test('sends all ids as repeated query params and returns the response in order, with nulls passed through', async () => {
+    // Arrange
+    const client = createTestClient()
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const ids = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(ids.map(id => (id === 'b' ? null : { id, data: {} })))
+    })
+    server.use(http.get(resourceUrl, handler, { once: true }))
+
+    // Act
+    const result = await client.getTables(['a', 'b', 'c'])
+
+    // Assert
+    const url = new URL(handler.mock.calls[0]![0].request.url)
+    expect(url.searchParams.getAll('ids')).toEqual(['a', 'b', 'c'])
+    expect(result).toEqual([{ id: 'a', data: {} }, null, { id: 'c', data: {} }])
+  })
+
+  test('throws on other errors, attaching the details to the error', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(resourceUrl, () => HttpResponse.json('Bad request', { status: 400 }), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const error = await captureClientError(client.getTables(['a', 'b']))
+
+    // Assert
+    expect(error.message).toBe('Failed to get tables for [a, b]: 400 Bad Request')
+    expect(error.cause).toEqual({ body: 'Bad request' })
+  })
+
+  test('splits more than 100 ids across requests and preserves order', async () => {
+    // Arrange
+    const client = createTestClient()
+    const ids = Array.from({ length: 250 }, (_, i) => `id-${i}`)
+    const handler = jest.fn(({ request }: { request: Request }) => {
+      const requested = new URL(request.url).searchParams.getAll('ids')
+      return HttpResponse.json(requested.map(id => ({ id })))
+    })
+    server.use(http.get(resourceUrl, handler))
+
+    // Act
+    const result = await client.getTables(ids)
+
+    // Assert
+    expect(handler).toHaveBeenCalledTimes(3)
+    expect(
+      handler.mock.calls.map(([{ request }]) => new URL(request.url).searchParams.getAll('ids')),
+    ).toEqual([ids.slice(0, 100), ids.slice(100, 200), ids.slice(200)])
+    expect(result.map(table => table?.id)).toEqual(ids)
+  })
+})
+
 describe('getPagePathnameSlice', () => {
   const pageId = 'pageId'
   const locale = 'fr'

@@ -25,6 +25,10 @@ export const makeFile = (id: string): File => ({
   dimensions: { width: 100, height: 100 },
 })
 
+// The REST endpoints omit `__typename` and encode it in each column's node id instead.
+export const tableColumnNodeId = (typename: string, key: string) =>
+  Buffer.from(`${typename}:${key}`).toString('base64')
+
 export const makeTable = (id: string): Table => ({
   __typename: 'Table',
   id,

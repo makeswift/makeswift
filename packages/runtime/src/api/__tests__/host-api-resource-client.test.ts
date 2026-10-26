@@ -12,6 +12,7 @@ import {
   makeLocalizedGlobalElement,
   makePagePathnameSlice,
   makeTable,
+  tableColumnNodeId,
 } from '../../testing/fixtures/resources'
 
 import { type SiteVersion, ApiHandlerHeaders, deserializeSiteVersion } from '../site-version'
@@ -300,5 +301,39 @@ describe('resources served without __typename', () => {
     await t.fetch(client, t.resource.id)
 
     expect(t.read(client, t.resource.id)).toEqual(t.resource)
+  })
+})
+
+describe('fetchTable column typenames', () => {
+  test('restores each column __typename from its node id', async () => {
+    const client = createTestClient()
+    const checkboxId = tableColumnNodeId('CheckboxTableColumn', 'c1')
+    const selectId = tableColumnNodeId('SingleSelectTableColumn', 's1')
+    const options = [{ id: 'o1', name: 'One' }]
+
+    server.use(
+      http.get(`${baseUrl}/tables/myTable`, () =>
+        HttpResponse.json({
+          id: 'myTable',
+          name: 'table myTable',
+          columns: [
+            { id: checkboxId, name: 'Agree' },
+            { id: selectId, name: 'Pick', options },
+          ],
+        }),
+      ),
+    )
+
+    const table = await client.fetchTable('myTable')
+
+    expect(table).toEqual({
+      __typename: 'Table',
+      id: 'myTable',
+      name: 'table myTable',
+      columns: [
+        { __typename: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
+        { __typename: 'SingleSelectTableColumn', id: selectId, name: 'Pick', options },
+      ],
+    })
   })
 })
