@@ -1,4 +1,4 @@
-import { GetFontsAPI, MakeswiftClient } from '../../client'
+import { CustomFontVariant, GetFontsAPI, MakeswiftClient } from '../../client'
 import { http, HttpResponse } from 'msw'
 
 import { type RestApiClientError } from '../../api/rest-api-client'
@@ -33,7 +33,7 @@ describe('getFonts', () => {
   test('successfully parses response containing no fonts', async () => {
     // Arrange
     const client = createTestClient()
-    const payload: GetFontsAPI = { googleFonts: [], siteId: TEST_SITE_ID }
+    const payload: GetFontsAPI = { customFontVariants: [], googleFonts: [], siteId: TEST_SITE_ID }
 
     server.use(
       http.get(baseUrl, () => HttpResponse.json(payload), {
@@ -52,10 +52,48 @@ describe('getFonts', () => {
     // Arrange
     const client = createTestClient()
     const payload: GetFontsAPI = {
+      customFontVariants: [],
       googleFonts: [
         { family: 'Roboto', variants: ['400', '700'] },
         { family: 'Open Sans', variants: ['400', '400italic', '700'] },
       ],
+      siteId: TEST_SITE_ID,
+    }
+
+    server.use(
+      http.get(baseUrl, () => HttpResponse.json(payload), {
+        once: true,
+      }),
+    )
+
+    // Act
+    const result = await client.unstable_getFonts(TestWorkingSiteVersion)
+
+    // Assert
+    expect(result).toEqual(payload)
+  })
+
+  test('successfully parses custom font variants contained in response', async () => {
+    // Arrange
+    const client = createTestClient()
+    const customFontVariants: CustomFontVariant[] = [{
+      id: 'variantA',
+      family: 'foo',
+      weight: 400,
+      style: 'normal',
+      fileUrl: 'https://example.com/cloudFileName.woff2',
+      fileFormat: 'woff2',
+    }, {
+      id: 'variantB',
+      family: 'bar',
+      weight: 600,
+      style: 'italic',
+      fileUrl: 'https://example.com/cloudFileName.woff',
+      fileFormat: 'woff',
+    }]
+    const payload: GetFontsAPI = {
+      customFontVariants,
+      googleFonts: [],
       siteId: TEST_SITE_ID,
     }
 
