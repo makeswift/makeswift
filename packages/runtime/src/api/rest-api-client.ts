@@ -21,6 +21,16 @@ export type GlobalElementWithLocalized = {
 
 const MAX_BULK_IDS_PER_REQUEST = 100
 
+function chunkRequestIds(ids: string[]): string[][] {
+  const batches: string[][] = []
+
+  for (let i = 0; i < ids.length; i += MAX_BULK_IDS_PER_REQUEST) {
+    batches.push(ids.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
+  }
+
+  return batches
+}
+
 const RetryBackoffConfig = {
   MaxAttempts: 3,
   MaxDelayMs: 5_000,
@@ -172,11 +182,7 @@ export class MakeswiftRestAPIClient {
       return await response.json()
     }
 
-    const batches: string[][] = []
-
-    for (let i = 0; i < globalElementIds.length; i += MAX_BULK_IDS_PER_REQUEST) {
-      batches.push(globalElementIds.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
-    }
+    const batches = chunkRequestIds(globalElementIds)
 
     const results = await Promise.all(batches.map(getGlobalElementsBatch))
 
@@ -229,11 +235,7 @@ export class MakeswiftRestAPIClient {
   async getFiles(fileIds: string[]): Promise<(File | null)[]> {
     if (fileIds.length === 0) return []
 
-    const batches: string[][] = []
-
-    for (let i = 0; i < fileIds.length; i += MAX_BULK_IDS_PER_REQUEST) {
-      batches.push(fileIds.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
-    }
+    const batches = chunkRequestIds(fileIds)
 
     const results = await Promise.all(
       batches.map(ids => this.getUnversionedResourcesBatch<File>('files', ids)),
@@ -245,11 +247,7 @@ export class MakeswiftRestAPIClient {
   async getTables(tableIds: string[]): Promise<(Table | null)[]> {
     if (tableIds.length === 0) return []
 
-    const batches: string[][] = []
-
-    for (let i = 0; i < tableIds.length; i += MAX_BULK_IDS_PER_REQUEST) {
-      batches.push(tableIds.slice(i, i + MAX_BULK_IDS_PER_REQUEST))
-    }
+    const batches = chunkRequestIds(tableIds)
 
     const results = await Promise.all(
       batches.map(ids => this.getUnversionedResourcesBatch<Table>('tables', ids)),
