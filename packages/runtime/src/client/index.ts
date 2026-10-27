@@ -93,6 +93,8 @@ export type MakeswiftPage = z.infer<typeof Schema.pageData>
 export type MakeswiftGetPagesResult = z.infer<typeof Schema.getPagesResult>
 export type PreviewTokenPayload = z.infer<typeof Schema.previewTokenPayload>
 export type GetFontsAPI = z.infer<typeof Schema.fonts>
+export type CustomFontVariant = z.infer<typeof Schema.customFontVariant>
+export type GoogleFont = z.infer<typeof Schema.googleFont>
 
 type GetPagesParams = z.infer<typeof Schema.getPagesParams>
 type GetPageResult = z.infer<typeof Schema.getPageResult>
