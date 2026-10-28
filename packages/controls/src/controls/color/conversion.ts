@@ -13,11 +13,18 @@ export function swatchToColorString(
       : safeParseColor(defaultValue).rgb().string()
   }
 
-  return parseColor({
-    h: swatch.hue,
-    s: swatch.saturation,
-    l: swatch.lightness,
-  })
+  return hslToColorString(swatch, alpha)
+}
+
+export function hslToColorString(
+  {
+    hue,
+    saturation,
+    lightness,
+  }: { hue: number; saturation: number; lightness: number },
+  alpha: number,
+): string {
+  return parseColor({ h: hue, s: saturation, l: lightness })
     .alpha(alpha)
     .rgb()
     .string()
