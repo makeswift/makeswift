@@ -18,6 +18,7 @@
     "vite-rsc-hono-react-cloudflare": "0.0.1"
   },
   "changesets": [
+    "fair-views-invent",
     "kind-items-switch"
   ]
 }

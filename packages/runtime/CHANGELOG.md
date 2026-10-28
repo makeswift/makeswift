@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.1
+
+### Patch Changes
+
+- 065c327: Refactor the unversioned resources introspection to use the new bulk endpoints from the makeswift cdn.
+
 ## 0.29.3-canary.0
 
 ### Patch Changes
