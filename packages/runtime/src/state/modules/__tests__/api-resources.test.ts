@@ -112,6 +112,7 @@ const site: Site = {
   googleFonts: {
     edges: [],
   },
+  customFontFamilies: [],
 }
 
 describe('state / APIResources', () => {
