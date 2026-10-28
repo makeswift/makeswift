@@ -12,7 +12,6 @@ import {
   makeLocalizedGlobalElement,
   makePagePathnameSlice,
   makeTable,
-  tableColumnNodeId,
 } from '../../testing/fixtures/resources'
 
 import { type SiteVersion, ApiHandlerHeaders, deserializeSiteVersion } from '../site-version'
@@ -304,11 +303,11 @@ describe('resources served without __typename', () => {
   })
 })
 
-describe('fetchTable column typenames', () => {
-  test('restores each column __typename from its node id', async () => {
+describe('fetchTable column types', () => {
+  test('keeps the REST `type` of each column', async () => {
     const client = createTestClient()
-    const checkboxId = tableColumnNodeId('CheckboxTableColumn', 'c1')
-    const selectId = tableColumnNodeId('SingleSelectTableColumn', 's1')
+    const checkboxId = 'c1'
+    const selectId = 's1'
     const options = [{ id: 'o1', name: 'One' }]
 
     server.use(
@@ -317,8 +316,8 @@ describe('fetchTable column typenames', () => {
           id: 'myTable',
           name: 'table myTable',
           columns: [
-            { id: checkboxId, name: 'Agree' },
-            { id: selectId, name: 'Pick', options },
+            { id: checkboxId, name: 'Agree', type: 'CheckboxTableColumn' },
+            { id: selectId, name: 'Pick', type: 'SingleSelectTableColumn', options },
           ],
         }),
       ),
@@ -331,8 +330,8 @@ describe('fetchTable column typenames', () => {
       id: 'myTable',
       name: 'table myTable',
       columns: [
-        { __typename: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
-        { __typename: 'SingleSelectTableColumn', id: selectId, name: 'Pick', options },
+        { type: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
+        { type: 'SingleSelectTableColumn', id: selectId, name: 'Pick', options },
       ],
     })
   })

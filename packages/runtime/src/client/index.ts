@@ -10,7 +10,7 @@ import {
   type Typography,
 } from '../api/types'
 
-import { CacheData, withTableTypename, withTypename } from '../api/api-resources-client'
+import { CacheData, withTypename } from '../api/api-resources-client'
 
 import {
   MakeswiftRestAPIClient,
@@ -295,7 +295,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     return {
       swatches,
       files: files.map(file => withTypename(APIResourceType.File, file)),
-      tables: tables.map(withTableTypename),
+      tables: tables.map(table => withTypename(APIResourceType.Table, table)),
     }
   }
 

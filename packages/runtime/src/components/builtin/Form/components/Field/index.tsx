@@ -14,7 +14,7 @@ import PlaceholderTableField from './components/PlaceholderTableField'
 import { TableColumn } from '../../types'
 
 function getTypeMismatchErrorMessage(tableColumn: TableColumn | null | undefined, label: string) {
-  switch ((tableColumn || {}).__typename) {
+  switch ((tableColumn || {}).type) {
     case 'PhoneNumberTableColumn':
       return `${label} field must be a valid phone number.`
 
@@ -36,7 +36,7 @@ function getTypeMismatchErrorMessage(tableColumn: TableColumn | null | undefined
 }
 
 function getTableColumnField(tableColumn: TableColumn | null | undefined) {
-  switch ((tableColumn || {}).__typename) {
+  switch ((tableColumn || {}).type) {
     case 'SingleLineTextTableColumn':
       return SingleLineTextTableField
 

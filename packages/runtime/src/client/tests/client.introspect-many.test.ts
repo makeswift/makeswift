@@ -10,7 +10,6 @@ import {
   makeSwatch,
   makeFile,
   makeTable,
-  tableColumnNodeId,
   makeTypography,
   makePagePathnameSlice,
 } from '../../testing/fixtures/resources'
@@ -569,10 +568,10 @@ describe('introspectMany', () => {
       expect(results.get('tree-2')!.apiResources.Table).toEqual([{ id: 'table-b', value: tableB }])
     })
 
-    test('restores each table column __typename from its node id', async () => {
+    test('keeps the REST `type` of each table column', async () => {
       const client = createTestClient()
-      const checkboxId = tableColumnNodeId('CheckboxTableColumn', 'c1')
-      const selectId = tableColumnNodeId('MultipleSelectTableColumn', 's1')
+      const checkboxId = 'c1'
+      const selectId = 's1'
       const options = [{ id: 'o1', name: 'One' }]
 
       server.use(
@@ -582,8 +581,8 @@ describe('introspectMany', () => {
               id: 'table-a',
               name: 'table table-a',
               columns: [
-                { id: checkboxId, name: 'Agree' },
-                { id: selectId, name: 'Pick', options },
+                { id: checkboxId, name: 'Agree', type: 'CheckboxTableColumn' },
+                { id: selectId, name: 'Pick', type: 'MultipleSelectTableColumn', options },
               ],
             },
           ]),
@@ -605,8 +604,8 @@ describe('introspectMany', () => {
             id: 'table-a',
             name: 'table table-a',
             columns: [
-              { __typename: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
-              { __typename: 'MultipleSelectTableColumn', id: selectId, name: 'Pick', options },
+              { type: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
+              { type: 'MultipleSelectTableColumn', id: selectId, name: 'Pick', options },
             ],
           },
         },

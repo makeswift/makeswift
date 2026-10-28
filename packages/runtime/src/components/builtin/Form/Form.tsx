@@ -233,7 +233,7 @@ function ErrorMessage({ className, ...restOfProps }: ComponentPropsWithoutRef<'p
 }
 
 function getTableColumnDefaultValue(tableColumn: TableColumn) {
-  switch (tableColumn.__typename) {
+  switch (tableColumn.type) {
     case 'CheckboxTableColumn':
       return false
 
