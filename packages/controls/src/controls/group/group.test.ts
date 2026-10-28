@@ -376,7 +376,7 @@ describe('Group', () => {
     } as any as DataType<typeof group>
 
     const value = {
-      color: { swatchId: '[swatch-id]', alpha: 1 },
+      color: { type: 'swatch' as const, swatchId: '[swatch-id]', alpha: 1 },
       list: [17],
       link: {
         type: 'OPEN_PAGE',
@@ -433,7 +433,7 @@ describe('Group', () => {
     } as any as DataType<typeof group>
 
     const value = {
-      color: { swatchId: '[swatch-id]', alpha: 1 },
+      color: { type: 'swatch' as const, swatchId: '[swatch-id]', alpha: 1 },
       list: [17],
       link: {
         type: 'OPEN_PAGE',
