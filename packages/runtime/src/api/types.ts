@@ -5,11 +5,21 @@ import {
   PagePathnameSliceFragment,
   GlobalElementFragment as GlobalElement,
   LocalizedGlobalElementFragment as LocalizedGlobalElement,
-  TableFragment as Table,
+  TableFragment,
   SnippetFragment as Snippet,
   PageFragment as Page,
   SiteFragment as Site,
 } from './graphql/generated/types'
+
+// The REST `tables` endpoint returns each column's discriminator as `type` rather than the GraphQL
+// `__typename`.
+type WithColumnType<C> = C extends { __typename: infer T }
+  ? Omit<C, '__typename'> & { type: T }
+  : never
+
+type Table = Omit<TableFragment, 'columns'> & {
+  columns: Array<WithColumnType<TableFragment['columns'][number]>>
+}
 
 type PagePathnameSlice = PagePathnameSliceFragment & {
   basePageId?: string

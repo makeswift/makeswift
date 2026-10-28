@@ -1,21 +1,17 @@
 import { z } from 'zod'
 
 import {
-  type UnversionedResourcesQueryResult,
-  type UnversionedResourcesQueryVariables,
-} from '../api/graphql/generated/types'
-
-import {
   APIResourceType,
+  type File,
   type GlobalElement,
   type LocalizedGlobalElement,
   type Swatch,
+  type Table,
   type Typography,
 } from '../api/types'
 
-import { CacheData } from '../api/api-resources-client'
+import { CacheData, withTypename } from '../api/api-resources-client'
 
-import { MakeswiftGraphQLApiClient } from '../api/graphql-api-client'
 import {
   MakeswiftRestAPIClient,
   failedResponseBody,
@@ -102,7 +98,6 @@ type GetPagesParams = z.infer<typeof Schema.getPagesParams>
 type GetPageResult = z.infer<typeof Schema.getPageResult>
 
 export class MakeswiftClient extends MakeswiftRestAPIClient {
-  private graphqlClient: MakeswiftGraphQLApiClient
   private runtime: ReactRuntimeCore
 
   constructor(
@@ -125,10 +120,6 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       fetch: runtime.fetch,
       apiKey,
       apiOrigin: runtime.apiOrigin,
-    })
-
-    this.graphqlClient = new MakeswiftGraphQLApiClient({
-      endpoint: runtime.graphqlApiEndpoint,
     })
 
     this.runtime = runtime
@@ -285,16 +276,27 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
   private async getIntrospectedResources(
     {
       swatchIds,
-      ...unversionedResourceIds
-    }: UnversionedResourcesQueryVariables & { swatchIds: string[] },
+      fileIds,
+      tableIds,
+    }: { swatchIds: string[]; fileIds: string[]; tableIds: string[] },
     siteVersion: SiteVersion | null,
-  ): Promise<UnversionedResourcesQueryResult & { swatches: (Swatch | null)[] }> {
-    const unversionedResources =
-      await this.graphqlClient.getUnversionedResources(unversionedResourceIds)
+  ): Promise<{
+    swatches: (Swatch | null)[]
+    files: (File | null)[]
+    tables: (Table | null)[]
+  }> {
+    const [swatches, files, tables] = await Promise.all([
+      this.getSwatches(swatchIds, siteVersion),
+      this.getFiles(fileIds),
+      this.getTables(tableIds),
+    ])
 
-    const swatches = await this.getSwatches(swatchIds, siteVersion)
-
-    return { ...unversionedResources, swatches }
+    // The REST bulk endpoints don't return `__typename`, which the API resources store requires.
+    return {
+      swatches,
+      files: files.map(file => withTypename(APIResourceType.File, file)),
+      tables: tables.map(table => withTypename(APIResourceType.Table, table)),
+    }
   }
 
   private async introspect(

@@ -279,7 +279,7 @@ export abstract class ApiResourcesClient {
   protected abstract fetchTableImpl(id: string, version: SiteVersion | null): Promise<Table | null>
 }
 
-function withTypename<T extends APIResourceType, R extends object>(
+export function withTypename<T extends APIResourceType, R extends object>(
   typename: T,
   resource: R | null,
 ): (R & { __typename: T }) | null {
