@@ -11,6 +11,7 @@ export type Manifest = {
   clientSideNavigation: boolean
   elementFromPoint: boolean
   customBreakpoints: boolean
+  customFonts: boolean
   siteVersions: boolean
   unstable_siteVersions: boolean
   localizedPageSSR: boolean
@@ -34,6 +35,7 @@ export async function manifestHandler(
     clientSideNavigation: false,
     elementFromPoint: false,
     customBreakpoints: true,
+    customFonts: false,
     siteVersions: true,
     unstable_siteVersions: true,
     localizedPageSSR: true,

@@ -45,6 +45,7 @@ describe('MakeswiftApiHandler', () => {
         clientSideNavigation: false,
         elementFromPoint: false,
         customBreakpoints: true,
+        customFonts: false,
         siteVersions: true,
         unstable_siteVersions: true,
         localizedPageSSR: true,
