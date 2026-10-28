@@ -302,3 +302,37 @@ describe('resources served without __typename', () => {
     expect(t.read(client, t.resource.id)).toEqual(t.resource)
   })
 })
+
+describe('fetchTable column types', () => {
+  test('keeps the REST `type` of each column', async () => {
+    const client = createTestClient()
+    const checkboxId = 'c1'
+    const selectId = 's1'
+    const options = [{ id: 'o1', name: 'One' }]
+
+    server.use(
+      http.get(`${baseUrl}/tables/myTable`, () =>
+        HttpResponse.json({
+          id: 'myTable',
+          name: 'table myTable',
+          columns: [
+            { id: checkboxId, name: 'Agree', type: 'CheckboxTableColumn' },
+            { id: selectId, name: 'Pick', type: 'SingleSelectTableColumn', options },
+          ],
+        }),
+      ),
+    )
+
+    const table = await client.fetchTable('myTable')
+
+    expect(table).toEqual({
+      __typename: 'Table',
+      id: 'myTable',
+      name: 'table myTable',
+      columns: [
+        { type: 'CheckboxTableColumn', id: checkboxId, name: 'Agree' },
+        { type: 'SingleSelectTableColumn', id: selectId, name: 'Pick', options },
+      ],
+    })
+  })
+})

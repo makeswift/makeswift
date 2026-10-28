@@ -1,19 +1,19 @@
 export type SingleLineTextTableColumn = {
   id: string
   name: string
-  __typename: 'SingleLineTextTableColumn'
+  type: 'SingleLineTextTableColumn'
 }
 
 export type LongTextTableColumn = {
   id: string
   name: string
-  __typename: 'LongTextTableColumn'
+  type: 'LongTextTableColumn'
 }
 
 export type CheckboxTableColumn = {
   id: string
   name: string
-  __typename: 'CheckboxTableColumn'
+  type: 'CheckboxTableColumn'
 }
 
 export type MultipleSelectTableColumnOption = {
@@ -25,7 +25,7 @@ export type MultipleSelectTableColumn = {
   id: string
   name: string
   options: Array<MultipleSelectTableColumnOption>
-  __typename: 'MultipleSelectTableColumn'
+  type: 'MultipleSelectTableColumn'
 }
 
 export type SingleSelectTableColumnOption = {
@@ -37,31 +37,31 @@ export type SingleSelectTableColumn = {
   id: string
   name: string
   options: Array<SingleSelectTableColumnOption>
-  __typename: 'SingleSelectTableColumn'
+  type: 'SingleSelectTableColumn'
 }
 
 export type PhoneNumberTableColumn = {
   id: string
   name: string
-  __typename: 'PhoneNumberTableColumn'
+  type: 'PhoneNumberTableColumn'
 }
 
 export type EmailTableColumn = {
   id: string
   name: string
-  __typename: 'EmailTableColumn'
+  type: 'EmailTableColumn'
 }
 
 export type URLTableColumn = {
   id: string
   name: string
-  __typename: 'URLTableColumn'
+  type: 'URLTableColumn'
 }
 
 export type NumberTableColumn = {
   id: string
   name: string
-  __typename: 'NumberTableColumn'
+  type: 'NumberTableColumn'
 }
 
 export type TableColumn =
