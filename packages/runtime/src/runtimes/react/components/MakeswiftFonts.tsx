@@ -1,4 +1,5 @@
 import { type GetFontsAPI } from '../../../client'
+import { CustomFontFaces } from './CustomFontFaces'
 import { GoogleFontLink } from './GoogleFontLink'
 
 type Props = {
@@ -6,5 +7,8 @@ type Props = {
 }
 
 export function MakeswiftFonts({ fonts }: Props) {
-  return <GoogleFontLink fonts={fonts.googleFonts} siteId={fonts.siteId} />
+  return <>
+    <GoogleFontLink fonts={fonts.googleFonts} siteId={fonts.siteId} />
+    <CustomFontFaces siteId={fonts.siteId} customFontVariants={fonts.customFontVariants} />
+  </>
 }
