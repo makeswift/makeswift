@@ -1,7 +1,13 @@
 import { createReplacementContext } from '@makeswift/controls'
+import { ControlDataTypeKey, type ResponsiveValue } from '../prop-controllers'
 import {
+  Shadows,
+  ShadowsData,
   ShadowsPropControllerData,
   copyShadowsPropControllerData,
+  createShadowsPropControllerDataFromResponsiveShadowsData,
+  getShadowsPropControllerDataResponsiveShadowsData,
+  getShadowsPropControllerDataSwatchIds,
 } from './shadows'
 
 describe('copyShadowsPropControllerData', () => {
@@ -125,5 +131,79 @@ describe('copyShadowsPropControllerData', () => {
         deviceId: 'tablet',
       },
     ])
+  })
+})
+
+describe('v2 shadows data', () => {
+  const value: ResponsiveValue<ShadowsData> = [
+    {
+      deviceId: 'desktop',
+      value: [
+        {
+          id: '1',
+          payload: {
+            color: { type: 'swatch', swatchId: 'swatch-id-1', alpha: 1 },
+          },
+        },
+        {
+          id: '2',
+          payload: {
+            color: {
+              type: 'inline',
+              hue: 238,
+              saturation: 87,
+              lightness: 49,
+              alpha: 0.5,
+            },
+          },
+        },
+      ],
+    },
+  ]
+  const data = createShadowsPropControllerDataFromResponsiveShadowsData(
+    Shadows(),
+    value,
+  )
+
+  test('is written by the current descriptor', () => {
+    expect(data).toEqual({
+      [ControlDataTypeKey]: 'prop-controllers::shadows::v2',
+      value,
+    })
+  })
+
+  test('is read', () => {
+    expect(getShadowsPropControllerDataResponsiveShadowsData(data)).toBe(value)
+  })
+
+  test('returns only swatch ids', () => {
+    expect(getShadowsPropControllerDataSwatchIds(data)).toEqual(['swatch-id-1'])
+  })
+
+  test('copies swatches and leaves inline colors as is', () => {
+    expect(
+      copyShadowsPropControllerData(data, {
+        replacementContext: createReplacementContext({
+          swatchIds: { 'swatch-id-1': 'new-swatch-id' },
+        }),
+        copyElement: (el) => el,
+      }),
+    ).toEqual({
+      [ControlDataTypeKey]: 'prop-controllers::shadows::v2',
+      value: [
+        {
+          deviceId: 'desktop',
+          value: [
+            {
+              id: '1',
+              payload: {
+                color: { type: 'swatch', swatchId: 'new-swatch-id', alpha: 1 },
+              },
+            },
+            value[0].value[1],
+          ],
+        },
+      ],
+    })
   })
 })
