@@ -13,12 +13,39 @@ import { Number } from '../number'
 
 import { Group, GroupDefinition } from './group'
 
+type ExpectedColorData =
+  | {
+      type: 'swatch'
+      swatchId: string
+      alpha: number
+      [ControlDataTypeKey]: 'color::v2'
+    }
+  | {
+      type: 'inline'
+      hue: number
+      saturation: number
+      lightness: number
+      alpha: number
+      [ControlDataTypeKey]: 'color::v2'
+    }
+  | {
+      swatchId: string
+      alpha: number
+      [ControlDataTypeKey]?: 'color::v1'
+    }
+
+type ExpectedColorValue =
+  | { type: 'swatch'; swatchId: string; alpha: number }
+  | {
+      type: 'inline'
+      hue: number
+      saturation: number
+      lightness: number
+      alpha: number
+    }
+
 type ExpectedPropsDataType = {
-  color: {
-    swatchId: string
-    alpha: number
-    [ControlDataTypeKey]?: 'color::v1'
-  }
+  color: ExpectedColorData
   list: {
     id: string
     type?: string
@@ -89,7 +116,7 @@ describe('Group Types', () => {
 
       type Value = ValueType<typeof def>
       expectTypeOf<Value>().toEqualTypeOf<{
-        color: { swatchId: string; alpha: number }
+        color: ExpectedColorValue
         list: number[]
       }>()
 

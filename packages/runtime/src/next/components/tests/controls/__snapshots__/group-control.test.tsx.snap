@@ -86,9 +86,10 @@ exports[`Page Group (heterogenous properties): snapshot 1`] = `
                       "value": true,
                     },
                     "color": {
-                      "@@makeswift/type": "color::v1",
+                      "@@makeswift/type": "color::v2",
                       "alpha": 0.5,
                       "swatchId": "[swatch-test-id]",
+                      "type": "swatch",
                     },
                     "image": {
                       "id": "[file-test-id]",

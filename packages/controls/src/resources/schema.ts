@@ -14,6 +14,21 @@ export const colorData = z.object({
   alpha: z.number(),
 })
 
+export const swatchColorData = colorData.extend({ type: z.literal('swatch') })
+
+export const inlineColorData = z.object({
+  type: z.literal('inline'),
+  hue: z.number(),
+  saturation: z.number(),
+  lightness: z.number(),
+  alpha: z.number(),
+})
+
+export const colorDataV2 = z.discriminatedUnion('type', [
+  swatchColorData,
+  inlineColorData,
+])
+
 export const resolvedColorData = z.object({
   swatch,
   alpha: z.number(),
