@@ -73,4 +73,6 @@ export function pageToRootDocument(pageDocument: MakeswiftPageDocument): Documen
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
   cacheData: CacheData
+  // Missing from snapshots created by older runtime versions
+  customFontVariants?: CustomFontVariant[]
 }
