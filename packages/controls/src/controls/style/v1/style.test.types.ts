@@ -1,5 +1,6 @@
 import { expectTypeOf } from 'expect-type'
 
+import { ControlDataTypeKey } from '../../../common'
 import {
   type DataType,
   type ResolvedValueType,
@@ -26,9 +27,9 @@ describe('Style Types', () => {
       )[]
     }>()
 
-    type Data = DataType<typeof def>
+    type Value = ValueType<typeof def>
 
-    expectTypeOf<Data['width']>().toEqualTypeOf<
+    expectTypeOf<Value['width']>().toEqualTypeOf<
       | {
           value:
             | {
@@ -53,7 +54,7 @@ describe('Style Types', () => {
       | null
       | undefined
 
-    expectTypeOf<Data['margin']>().toEqualTypeOf<
+    expectTypeOf<Value['margin']>().toEqualTypeOf<
       | {
           value: {
             marginTop: Margin
@@ -75,7 +76,7 @@ describe('Style Types', () => {
       | null
       | undefined
 
-    expectTypeOf<Data['padding']>().toEqualTypeOf<
+    expectTypeOf<Value['padding']>().toEqualTypeOf<
       | {
           value: {
             paddingTop: Padding
@@ -94,8 +95,12 @@ describe('Style Types', () => {
           width: number | null | undefined
           style: 'dotted' | 'dashed' | 'solid'
           color?:
+            | { type: 'swatch'; swatchId: string; alpha: number }
             | {
-                swatchId: string
+                type: 'inline'
+                hue: number
+                saturation: number
+                lightness: number
                 alpha: number
               }
             | null
@@ -104,7 +109,7 @@ describe('Style Types', () => {
       | null
       | undefined
 
-    expectTypeOf<Data['border']>().branded.toEqualTypeOf<
+    expectTypeOf<Value['border']>().branded.toEqualTypeOf<
       | {
           value: {
             borderTop: Border
@@ -129,7 +134,7 @@ describe('Style Types', () => {
       | null
       | undefined
 
-    expectTypeOf<Data['borderRadius']>().toEqualTypeOf<
+    expectTypeOf<Value['borderRadius']>().toEqualTypeOf<
       | {
           value: {
             borderTopLeftRadius?: BorderRadius
@@ -157,7 +162,7 @@ describe('Style Types', () => {
       fontStyle: 'italic'[]
     }
 
-    expectTypeOf<Data['textStyle']>().toEqualTypeOf<
+    expectTypeOf<Value['textStyle']>().toEqualTypeOf<
       | {
           value: TextStyle
           deviceId: string
@@ -165,8 +170,35 @@ describe('Style Types', () => {
       | undefined
     >()
 
-    type Value = ValueType<typeof def>
-    expectTypeOf<Value>().toEqualTypeOf<Data>()
+    type Data = DataType<typeof def>
+    type V1Data = Extract<Data, { [ControlDataTypeKey]: string }>
+    type V0Data = Exclude<Data, V1Data>
+
+    expectTypeOf<V1Data>().branded.toEqualTypeOf<
+      Value & { [ControlDataTypeKey]: 'style::v1' }
+    >()
+
+    type V0Border =
+      | {
+          width: number | null | undefined
+          style: 'dotted' | 'dashed' | 'solid'
+          color?: { swatchId: string; alpha: number } | null | undefined
+        }
+      | null
+      | undefined
+
+    expectTypeOf<V0Data['border']>().branded.toEqualTypeOf<
+      | {
+          value: {
+            borderTop: V0Border
+            borderRight: V0Border
+            borderBottom: V0Border
+            borderLeft: V0Border
+          }
+          deviceId: string
+        }[]
+      | undefined
+    >()
 
     type Resolved = ResolvedValueType<typeof def>
     expectTypeOf<Resolved>().toEqualTypeOf<string>()
