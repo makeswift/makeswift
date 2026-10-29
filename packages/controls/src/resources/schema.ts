@@ -34,6 +34,11 @@ export const resolvedColorData = z.object({
   alpha: z.number(),
 })
 
+export const resolvedInlineColorData = z.object({
+  swatch: swatch.omit({ id: true }),
+  alpha: z.number(),
+})
+
 export const file = z.object({
   id: z.string(),
   name: z.string(),

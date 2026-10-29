@@ -1,7 +1,7 @@
 import { match, P } from 'ts-pattern'
 import { z } from 'zod'
 
-import { mapValues, nullToUndefined } from '../../../lib/functional'
+import { mapValues } from '../../../lib/functional'
 import { StableValue } from '../../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../../lib/zod'
 
@@ -10,8 +10,12 @@ import { responsiveValue } from '../../../common/schema'
 import { type CopyContext } from '../../../context'
 import { Targets, type IntrospectionTarget } from '../../../introspection'
 import {
+  copyColorDataV1,
+  copyColorDataV2,
+  resolveInlineColorData,
   ResourceSchema,
-  type ColorData,
+  toColorDataV1,
+  toColorDataV2,
   type ResolvedColorData,
 } from '../../../resources'
 import { type ResourceResolver } from '../../../resources/resolver'
@@ -28,7 +32,7 @@ import { ControlDefinitionVisitor } from '../../visitor'
 
 import * as StyleSchema from './schema'
 import { StyleControl } from './style-control'
-import { type BorderData, type BorderSideData } from './types'
+import { type BorderData } from './types'
 
 type Config = z.infer<typeof Definition.schema.config>
 
@@ -97,13 +101,13 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const version = z.literal(1).optional()
 
-    const value = dataSchema(ResourceSchema.colorData)
+    const value = dataSchema(ResourceSchema.colorDataV2)
     const data = z.union([
       // first, as zod would otherwise parse it as v0 data and drop its data type
       value.extend({ [ControlDataTypeKey]: z.literal(this.v1DataType) }),
       dataSchema(ResourceSchema.colorData),
     ])
-    const resolvedData = dataSchema(ResourceSchema.resolvedColorData)
+    const resolvedData = dataSchema(StyleSchema.resolvedBorderColor)
     const resolvedValue = z.string()
 
     const definition = z.object({
@@ -169,13 +173,32 @@ class Definition<C extends Config> extends ControlDefinition<
         Definition.dataSignature.v1,
         ({ [ControlDataTypeKey]: _, ...value }) => value,
       )
-      .otherwise((v0) => v0)
+      .otherwise(({ border, ...v0 }) => ({
+        ...v0,
+        ...(border && {
+          border: mapBorderSides(border, (side) => ({
+            ...side,
+            color: side.color && toColorDataV2(side.color),
+          })),
+        }),
+      }))
   }
 
   toData(value: ValueType<C>): DataType<C> {
     return match(this.version)
       .with(1, () => ({ ...Definition.dataSignature.v1, ...value }))
-      .with(undefined, () => value)
+      .with(undefined, () => {
+        const { border, ...rest } = value
+        return {
+          ...rest,
+          ...(border && {
+            border: mapBorderSides(border, (side) => ({
+              ...side,
+              color: side.color && toColorDataV1(side.color),
+            })),
+          }),
+        }
+      })
       .exhaustive()
   }
 
@@ -185,17 +208,23 @@ class Definition<C extends Config> extends ControlDefinition<
   ): DataType<C> | undefined {
     if (data == null) return data
 
-    return {
-      ...data,
-      border: mapBorderSides(data.border, (side) =>
-        side.color == null
-          ? side
-          : {
-              ...side,
-              color: Color().copyData(side.color, context),
-            },
-      ),
-    }
+    return match(data)
+      .with(Definition.dataSignature.v1, (v1) => ({
+        ...v1,
+        border: mapBorderSides(v1.border, (side) =>
+          side.color == null
+            ? side
+            : { ...side, color: copyColorDataV2(side.color, context) },
+        ),
+      }))
+      .otherwise((v0) => ({
+        ...v0,
+        border: mapBorderSides(v0.border, (side) =>
+          side.color == null
+            ? side
+            : { ...side, color: copyColorDataV1(side.color, context) },
+        ),
+      }))
   }
 
   resolveValueFromData(): undefined {
@@ -214,10 +243,19 @@ class Definition<C extends Config> extends ControlDefinition<
       string,
       Resolvable<ResolvedColorData | undefined>
     >(
-      [...borderColors(value?.border)].map((color) => [
-        color.swatchId,
-        Color().resolveSwatch(nullToUndefined(color), resolver),
-      ]),
+      [...borderColors(value?.border)].flatMap((color) =>
+        color.type === 'swatch'
+          ? [
+              [
+                color.swatchId,
+                Color().resolveSwatch(
+                  { swatchId: color.swatchId, alpha: color.alpha },
+                  resolver,
+                ),
+              ],
+            ]
+          : [],
+      ),
     )
 
     const resolvedColor = (swatchId: string | undefined) =>
@@ -225,9 +263,12 @@ class Definition<C extends Config> extends ControlDefinition<
 
     const resolvedStyle = (value: ValueType<C>) => ({
       ...value,
-      border: mapBorderSides(value.border, (side) => ({
+      border: mapBorderSides(value.border, ({ color, ...side }) => ({
         ...side,
-        color: resolvedColor(side?.color?.swatchId),
+        color:
+          color?.type === 'inline'
+            ? resolveInlineColorData(color)
+            : resolvedColor(color?.swatchId),
       })),
     })
 
@@ -290,9 +331,13 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 }
 
-function* borderColors(
-  responsibeBorder: ResponsiveValue<BorderData> | undefined,
-): Generator<ColorData> {
+type ResponsiveBorder<Side> = ResponsiveValue<
+  Record<keyof BorderData, Side | null | undefined>
+>
+
+function* borderColors<Color>(
+  responsibeBorder: ResponsiveBorder<{ color?: Color | null }> | undefined,
+): Generator<Color> {
   for (const deviceBorder of responsibeBorder ?? []) {
     const sides = deviceBorder.value
     for (const side of Object.values(sides)) {
@@ -303,16 +348,14 @@ function* borderColors(
   }
 }
 
-function mapBorderSides<R>(
-  responsibeBorder: ResponsiveValue<BorderData> | undefined,
-  callback: (side: BorderSideData) => R,
+function mapBorderSides<Side, R>(
+  responsibeBorder: ResponsiveBorder<Side> | undefined,
+  callback: (side: Side) => R,
 ) {
   return responsibeBorder?.map((deviceBorder) => ({
     ...deviceBorder,
-    value: mapValues(
-      deviceBorder.value,
-      (side: BorderSideData | undefined | null) =>
-        side == null ? side : callback(side),
+    value: mapValues(deviceBorder.value, (side: Side | undefined | null) =>
+      side == null ? side : callback(side),
     ),
   }))
 }
