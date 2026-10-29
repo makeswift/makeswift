@@ -19,6 +19,7 @@
   },
   "changesets": [
     "fair-views-invent",
+    "inline-colors-color",
     "kind-items-switch"
   ]
 }

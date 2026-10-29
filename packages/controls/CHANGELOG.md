@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.24-canary.0
+
+### Patch Changes
+
+- 3baeed2: Allow for inline color data for the `Color` control.
+
 ## 0.1.23
 
 ### Patch Changes

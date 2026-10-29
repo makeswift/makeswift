@@ -1,5 +1,14 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.2
+
+### Patch Changes
+
+- 3baeed2: Allow for inline color data for the `Color` control.
+- Updated dependencies [3baeed2]
+  - @makeswift/controls@0.1.24-canary.0
+  - @makeswift/prop-controllers@0.4.18-canary.0
+
 ## 0.29.3-canary.1
 
 ### Patch Changes

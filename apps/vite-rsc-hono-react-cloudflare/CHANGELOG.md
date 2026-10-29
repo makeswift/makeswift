@@ -1,5 +1,14 @@
 # vite-rsc-hono-react-cloudflare
 
+## 0.0.5-canary.2
+
+### Patch Changes
+
+- Updated dependencies [3baeed2]
+  - @makeswift/runtime@0.29.3-canary.2
+  - @makeswift/hono-react@0.3.3-canary.2
+  - @makeswift/vite-rsc@0.0.4-canary.2
+
 ## 0.0.5-canary.1
 
 ### Patch Changes
