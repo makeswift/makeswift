@@ -5,7 +5,7 @@ import { mapValues, nullToUndefined } from '../../../lib/functional'
 import { StableValue } from '../../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../../lib/zod'
 
-import { type ResponsiveValue } from '../../../common'
+import { ControlDataTypeKey, type ResponsiveValue } from '../../../common'
 import { responsiveValue } from '../../../common/schema'
 import { type CopyContext } from '../../../context'
 import { Targets, type IntrospectionTarget } from '../../../introspection'
@@ -47,6 +47,11 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>,
   InstanceType<C>
 > {
+  private static readonly v1DataType = 'style::v1' as const
+  private static readonly dataSignature = {
+    v1: { [ControlDataTypeKey]: this.v1DataType },
+  } as const
+
   static readonly type = 'makeswift::controls::style' as const
   static readonly Property = {
     Width: `${this.type}::property::width`,
@@ -90,20 +95,27 @@ class Definition<C extends Config> extends ControlDefinition<
         textStyle: responsiveValue(StyleSchema.textStyle).optional(),
       })
 
-    const data = dataSchema(ResourceSchema.colorData)
-    const resolvedData = dataSchema(ResourceSchema.resolvedColorData)
+    const version = z.literal(1).optional()
 
-    const value = data
+    const value = dataSchema(ResourceSchema.colorData)
+    const data = z.union([
+      // first, as zod would otherwise parse it as v0 data and drop its data type
+      value.extend({ [ControlDataTypeKey]: z.literal(this.v1DataType) }),
+      dataSchema(ResourceSchema.colorData),
+    ])
+    const resolvedData = dataSchema(ResourceSchema.resolvedColorData)
     const resolvedValue = z.string()
 
     const definition = z.object({
       type,
       config,
+      version,
     })
 
     return {
       type,
       config,
+      version,
       definition,
       data,
       resolvedData,
@@ -119,8 +131,15 @@ class Definition<C extends Config> extends ControlDefinition<
       )
     }
 
-    const { config } = Definition.schema.definition.parse(data)
-    return Style(config)
+    const { config, version } = Definition.schema.definition.parse(data)
+    return new StyleDefinition(config, version)
+  }
+
+  constructor(
+    config: C,
+    readonly version: z.infer<typeof Definition.schema.version>,
+  ) {
+    super(config)
   }
 
   get controlType() {
@@ -140,11 +159,24 @@ class Definition<C extends Config> extends ControlDefinition<
   }
 
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
-    return this.schema.data.optional().parse(data)
+    return this.toValue(this.schema.data.optional().parse(data))
+  }
+
+  private toValue(data: DataType<C> | undefined): ValueType<C> | undefined {
+    return match(data)
+      .with(undefined, () => undefined)
+      .with(
+        Definition.dataSignature.v1,
+        ({ [ControlDataTypeKey]: _, ...value }) => value,
+      )
+      .otherwise((v0) => v0)
   }
 
   toData(value: ValueType<C>): DataType<C> {
-    return value
+    return match(this.version)
+      .with(1, () => ({ ...Definition.dataSignature.v1, ...value }))
+      .with(undefined, () => value)
+      .exhaustive()
   }
 
   copyData(
@@ -176,11 +208,13 @@ class Definition<C extends Config> extends ControlDefinition<
     stylesheet: Stylesheet,
     control?: InstanceType<C>,
   ): Resolvable<ResolvedValueType<C> | undefined> {
+    const value = this.toValue(data)
+
     const resolvedColors = new Map<
       string,
       Resolvable<ResolvedColorData | undefined>
     >(
-      [...borderColors(data?.border)].map((color) => [
+      [...borderColors(value?.border)].map((color) => [
         color.swatchId,
         Color().resolveSwatch(nullToUndefined(color), resolver),
       ]),
@@ -189,9 +223,9 @@ class Definition<C extends Config> extends ControlDefinition<
     const resolvedColor = (swatchId: string | undefined) =>
       swatchId ? resolvedColors.get(swatchId)?.readStable() : undefined
 
-    const resolvedStyle = (data: DataType<C>) => ({
-      ...data,
-      border: mapBorderSides(data.border, (side) => ({
+    const resolvedStyle = (value: ValueType<C>) => ({
+      ...value,
+      border: mapBorderSides(value.border, (side) => ({
         ...side,
         color: resolvedColor(side?.color?.swatchId),
       })),
@@ -203,7 +237,7 @@ class Definition<C extends Config> extends ControlDefinition<
         stylesheet.defineStyle(
           {
             properties: this.config.properties,
-            styleData: data != null ? resolvedStyle(data) : {},
+            styleData: value != null ? resolvedStyle(value) : {},
           },
           (boxModel) => control?.changeBoxModel(boxModel),
         ),
@@ -232,7 +266,7 @@ class Definition<C extends Config> extends ControlDefinition<
       return []
     }
 
-    return Object.values(data)
+    return Object.values(this.toValue(data) ?? {})
       .flat()
       .flatMap((override) =>
         match(override.value)
@@ -297,6 +331,7 @@ export function Style(config?: Config): StyleDefinition<Config> {
     config ?? {
       properties: StyleDefinition.DefaultProperties,
     },
+    1,
   )
 }
 
