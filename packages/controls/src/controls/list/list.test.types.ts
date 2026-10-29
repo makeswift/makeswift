@@ -11,6 +11,37 @@ import { Color } from '../color'
 
 import { List } from './'
 
+type ExpectedColorData =
+  | {
+      type: 'swatch'
+      swatchId: string
+      alpha: number
+      [ControlDataTypeKey]: 'color::v2'
+    }
+  | {
+      type: 'inline'
+      hue: number
+      saturation: number
+      lightness: number
+      alpha: number
+      [ControlDataTypeKey]: 'color::v2'
+    }
+  | {
+      swatchId: string
+      alpha: number
+      [ControlDataTypeKey]?: 'color::v1'
+    }
+
+type ExpectedColorValue =
+  | { type: 'swatch'; swatchId: string; alpha: number }
+  | {
+      type: 'inline'
+      hue: number
+      saturation: number
+      lightness: number
+      alpha: number
+    }
+
 describe('List Types', () => {
   describe('infers types from control definitions', () => {
     test('List of Colors', () => {
@@ -28,12 +59,7 @@ describe('List Types', () => {
         label?: string
         description?: string
         getItemLabel?: (
-          item?:
-            | {
-                swatchId: string
-                alpha: number
-              }
-            | undefined,
+          item?: ExpectedColorValue | undefined,
         ) => string | Promise<string>
       }>()
 
@@ -42,18 +68,12 @@ describe('List Types', () => {
         {
           id: string
           type?: string
-          value?: {
-            swatchId: string
-            alpha: number
-            [ControlDataTypeKey]?: 'color::v1'
-          }
+          value?: ExpectedColorData
         }[]
       >()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<
-        { swatchId: string; alpha: number }[]
-      >()
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedColorValue[]>()
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<(string | undefined)[]>()
@@ -79,12 +99,7 @@ describe('List Types', () => {
         label?: string
         description?: string
         getItemLabel?: (
-          item?:
-            | {
-                swatchId: string
-                alpha: number
-              }[]
-            | undefined,
+          item?: ExpectedColorValue[] | undefined,
         ) => string | Promise<string>
       }>()
 
@@ -96,19 +111,13 @@ describe('List Types', () => {
           value?: {
             id: string
             type?: string
-            value?: {
-              swatchId: string
-              alpha: number
-              [ControlDataTypeKey]?: 'color::v1'
-            }
+            value?: ExpectedColorData
           }[]
         }[]
       >()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<
-        { swatchId: string; alpha: number }[][]
-      >()
+      expectTypeOf<Value>().toEqualTypeOf<ExpectedColorValue[][]>()
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<(string | undefined)[][]>()

@@ -28,7 +28,7 @@ describe('Page', () => {
       {
         value: {
           checkbox: true,
-          color: { swatchId, alpha: 0.5 },
+          color: { type: 'swatch', swatchId, alpha: 0.5 },
           image: {
             type: 'makeswift-file',
             id: fileId,

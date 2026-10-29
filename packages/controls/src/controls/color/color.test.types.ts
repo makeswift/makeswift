@@ -25,14 +25,39 @@ describe('Color Types', () => {
       }>()
 
       type Data = DataType<typeof def>
-      expectTypeOf<Data>().toEqualTypeOf<{
-        swatchId: string
-        alpha: number
-        [ControlDataTypeKey]?: 'color::v1' | undefined
-      }>()
+      expectTypeOf<Data>().toEqualTypeOf<
+        | {
+            type: 'swatch'
+            swatchId: string
+            alpha: number
+            [ControlDataTypeKey]: 'color::v2'
+          }
+        | {
+            type: 'inline'
+            hue: number
+            saturation: number
+            lightness: number
+            alpha: number
+            [ControlDataTypeKey]: 'color::v2'
+          }
+        | {
+            swatchId: string
+            alpha: number
+            [ControlDataTypeKey]?: 'color::v1' | undefined
+          }
+      >()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<{ swatchId: string; alpha: number }>()
+      expectTypeOf<Value>().toEqualTypeOf<
+        | { type: 'swatch'; swatchId: string; alpha: number }
+        | {
+            type: 'inline'
+            hue: number
+            saturation: number
+            lightness: number
+            alpha: number
+          }
+      >()
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string | undefined>()
@@ -51,14 +76,39 @@ describe('Color Types', () => {
       }>()
 
       type Data = DataType<typeof def>
-      expectTypeOf<Data>().toEqualTypeOf<{
-        swatchId: string
-        alpha: number
-        [ControlDataTypeKey]?: 'color::v1' | undefined
-      }>()
+      expectTypeOf<Data>().toEqualTypeOf<
+        | {
+            type: 'swatch'
+            swatchId: string
+            alpha: number
+            [ControlDataTypeKey]: 'color::v2'
+          }
+        | {
+            type: 'inline'
+            hue: number
+            saturation: number
+            lightness: number
+            alpha: number
+            [ControlDataTypeKey]: 'color::v2'
+          }
+        | {
+            swatchId: string
+            alpha: number
+            [ControlDataTypeKey]?: 'color::v1' | undefined
+          }
+      >()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<{ swatchId: string; alpha: number }>()
+      expectTypeOf<Value>().toEqualTypeOf<
+        | { type: 'swatch'; swatchId: string; alpha: number }
+        | {
+            type: 'inline'
+            hue: number
+            saturation: number
+            lightness: number
+            alpha: number
+          }
+      >()
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string>()
@@ -80,14 +130,39 @@ describe('Color Types', () => {
       }>()
 
       type Data = DataType<typeof def>
-      expectTypeOf<Data>().toEqualTypeOf<{
-        swatchId: string
-        alpha: number
-        [ControlDataTypeKey]?: 'color::v1' | undefined
-      }>()
+      expectTypeOf<Data>().toEqualTypeOf<
+        | {
+            type: 'swatch'
+            swatchId: string
+            alpha: number
+            [ControlDataTypeKey]: 'color::v2'
+          }
+        | {
+            type: 'inline'
+            hue: number
+            saturation: number
+            lightness: number
+            alpha: number
+            [ControlDataTypeKey]: 'color::v2'
+          }
+        | {
+            swatchId: string
+            alpha: number
+            [ControlDataTypeKey]?: 'color::v1' | undefined
+          }
+      >()
 
       type Value = ValueType<typeof def>
-      expectTypeOf<Value>().toEqualTypeOf<{ swatchId: string; alpha: number }>()
+      expectTypeOf<Value>().toEqualTypeOf<
+        | { type: 'swatch'; swatchId: string; alpha: number }
+        | {
+            type: 'inline'
+            hue: number
+            saturation: number
+            lightness: number
+            alpha: number
+          }
+      >()
 
       type Resolved = ResolvedValueType<typeof def>
       expectTypeOf<Resolved>().toEqualTypeOf<string>()

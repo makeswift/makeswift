@@ -217,7 +217,7 @@ describe('Shape', () => {
     } as any as DataType<typeof shape>
 
     const value = {
-      color: { swatchId: '[swatch-id]', alpha: 1 },
+      color: { type: 'swatch' as const, swatchId: '[swatch-id]', alpha: 1 },
       list: [17],
       link: {
         type: 'OPEN_PAGE',

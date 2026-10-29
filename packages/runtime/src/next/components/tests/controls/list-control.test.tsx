@@ -23,6 +23,7 @@ describe('Page', () => {
       {
         value: [
           {
+            type: 'swatch' as const,
             swatchId,
             alpha: 0.5,
           },

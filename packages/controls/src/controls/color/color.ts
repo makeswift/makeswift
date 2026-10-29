@@ -11,7 +11,12 @@ import {
   shouldRemoveResource,
   type CopyContext,
 } from '../../context'
-import { ResourceSchema } from '../../resources'
+import {
+  ResourceSchema,
+  toColorDataV2,
+  toLegacyColorData,
+  type ColorDataV2,
+} from '../../resources'
 import { type ResourceResolver } from '../../resources/resolver'
 import { type DeserializedRecord } from '../../serialization'
 
@@ -23,7 +28,11 @@ import {
 import { DefaultControlInstance, type ControlInstanceArgs } from '../instance'
 import { ControlDefinitionVisitor } from '../visitor'
 
-import { safeColorString, swatchToColorString } from './conversion'
+import {
+  hslToColorString,
+  safeColorString,
+  swatchToColorString,
+} from './conversion'
 
 type Config = z.infer<typeof Definition.schema.relaxed.config>
 
@@ -57,24 +66,34 @@ class Definition<C extends Config> extends ControlDefinition<
   ResolvedValueType<C>
 > {
   private static readonly v1DataType = 'color::v1' as const
+  private static readonly v2DataType = 'color::v2' as const
   private static readonly dataSignature = {
     v1: { [ControlDataTypeKey]: this.v1DataType },
+    v2: { [ControlDataTypeKey]: this.v2DataType },
   } as const
 
   static readonly type = 'makeswift::controls::color' as const
 
   static get schema() {
     const type = z.literal(this.type)
-    const version = z.literal(1).optional()
-    const value = ResourceSchema.colorData
+    const version = z.union([z.literal(1), z.literal(2)]).optional()
+    const value = ResourceSchema.colorDataV2
     const resolvedSwatchValue = ResourceSchema.resolvedColorData
 
     const schemas = <R>(resolvedValue: SchemaType<R>) => {
-      const data = value.merge(
-        z.object({
-          [ControlDataTypeKey]: z.literal(this.v1DataType).optional(),
-        }),
-      )
+      const v1DataType = z.object({
+        [ControlDataTypeKey]: z.literal(this.v1DataType).optional(),
+      })
+      const v2DataType = z.object({
+        [ControlDataTypeKey]: z.literal(this.v2DataType),
+      })
+      const data = z.union([
+        z.discriminatedUnion('type', [
+          ResourceSchema.swatchColorData.merge(v2DataType),
+          ResourceSchema.inlineColorData.merge(v2DataType),
+        ]),
+        ResourceSchema.colorData.merge(v1DataType),
+      ])
 
       const config = z.object({
         label: z.string().optional(),
@@ -151,20 +170,27 @@ class Definition<C extends Config> extends ControlDefinition<
   fromData(data: DataType<C> | undefined): ValueType<C> | undefined {
     const inputSchema = this.dataSchema.optional()
     return match(data satisfies z.infer<typeof inputSchema>)
-      .with(Definition.dataSignature.v1, ({ swatchId, alpha }) => ({
-        swatchId,
-        alpha,
-      }))
-      .otherwise((value) => value)
+      .with(undefined, () => undefined)
+      .with(
+        Definition.dataSignature.v2,
+        ({ [ControlDataTypeKey]: _, ...value }) => value,
+      )
+      .otherwise((data) => toColorDataV2(data))
   }
 
   toData(value: ValueType<C>): DataType<C> {
+    const colorValue: ColorDataV2 = value
+
     return match(this.version)
+      .with(2, () => ({
+        ...Definition.dataSignature.v2,
+        ...colorValue,
+      }))
       .with(1, () => ({
         ...Definition.dataSignature.v1,
-        ...value,
+        ...toLegacyColorData(colorValue),
       }))
-      .with(undefined, () => value)
+      .with(undefined, () => toLegacyColorData(colorValue))
       .exhaustive()
   }
 
@@ -174,29 +200,25 @@ class Definition<C extends Config> extends ControlDefinition<
   ): DataType<C> | undefined {
     if (data == null) return data
 
-    const currentSwatchId = data.swatchId
-    if (shouldRemoveResource(ContextResource.Swatch, currentSwatchId, ctx)) {
-      return undefined
-    }
-
-    const inputSchema = this.dataSchema.optional()
+    const inputSchema = this.dataSchema
     return match(data satisfies z.infer<typeof inputSchema>)
-      .with(Definition.dataSignature.v1, (val) => ({
-        ...val,
-        swatchId: replaceResourceIfNeeded(
-          ContextResource.Swatch,
-          val.swatchId,
-          ctx,
-        ),
-      }))
-      .otherwise((val) => ({
-        ...val,
-        swatchId: replaceResourceIfNeeded(
-          ContextResource.Swatch,
-          val.swatchId,
-          ctx,
-        ),
-      }))
+      .with({ type: 'inline' }, (inline) => inline)
+      .otherwise((swatch) => {
+        if (
+          shouldRemoveResource(ContextResource.Swatch, swatch.swatchId, ctx)
+        ) {
+          return undefined
+        }
+
+        return {
+          ...swatch,
+          swatchId: replaceResourceIfNeeded(
+            ContextResource.Swatch,
+            swatch.swatchId,
+            ctx,
+          ),
+        }
+      })
   }
 
   resolveSwatch(
@@ -204,7 +226,10 @@ class Definition<C extends Config> extends ControlDefinition<
     resolver: ResourceResolver,
   ): Resolvable<ResolvedSwatchValueType<C> | undefined> {
     const value = this.fromData(data)
-    const swatchSub = resolver.resolveSwatch(value?.swatchId)
+
+    const swatchSub = resolver.resolveSwatch(
+      value?.type === 'swatch' ? value.swatchId : undefined,
+    )
 
     const stableValue = StableValue({
       name: `${Definition.type}:swatch`,
@@ -239,16 +264,20 @@ class Definition<C extends Config> extends ControlDefinition<
     resolver: ResourceResolver,
   ): Resolvable<ResolvedValueType<C> | undefined> {
     const value = this.fromData(data)
-    const swatch = resolver.resolveSwatch(value?.swatchId)
+    const swatch = resolver.resolveSwatch(
+      value?.type === 'swatch' ? value.swatchId : undefined,
+    )
 
     const stableValue = StableValue({
       name: Definition.type,
       read: () =>
-        swatchToColorString(
-          swatch.readStable(),
-          value?.alpha ?? 1,
-          this.config.defaultValue,
-        ),
+        value?.type === 'inline'
+          ? hslToColorString(value, value.alpha)
+          : swatchToColorString(
+              swatch.readStable(),
+              value?.alpha ?? 1,
+              this.config.defaultValue,
+            ),
       deps: [swatch],
     })
 
@@ -315,6 +344,6 @@ export function Color<D extends ColorDefaultValueInput = undefined>(
 ): ColorDefinition<NormedConfig<D>> {
   return new ColorDefinition<NormedConfig<D>>(
     config ? normalizeConfig(config) : {},
-    1,
+    2,
   )
 }

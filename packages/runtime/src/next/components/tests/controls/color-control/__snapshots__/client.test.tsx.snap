@@ -491,3 +491,315 @@ exports[`color data v1 with swatch null reading swatch from cache: snapshot 1`] 
   },
 }
 `;
+
+exports[`color data v2 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} fetching swatch: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+
+exports[`color data v2 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} fetching swatch: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "color::v2",
+                  "alpha": 0.5,
+                  "swatchId": "[swatch-test-id]",
+                  "type": "swatch",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`color data v2 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} reading swatch from cache: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+
+exports[`color data v2 with swatch {"__typename": "Swatch", "hue": 238, "lightness": 49, "saturation": 87} reading swatch from cache: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {
+      "Swatch": [
+        {
+          "id": "[swatch-test-id]",
+          "value": {
+            "__typename": "Swatch",
+            "hue": 238,
+            "id": "[swatch-test-id]",
+            "lightness": 49,
+            "saturation": 87,
+          },
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "color::v2",
+                  "alpha": 0.5,
+                  "swatchId": "[swatch-test-id]",
+                  "type": "swatch",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`color data v2 with swatch null fetching swatch: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+
+exports[`color data v2 with swatch null fetching swatch: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "color::v2",
+                  "alpha": 0.5,
+                  "swatchId": "[swatch-test-id]",
+                  "type": "swatch",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`color data v2 with swatch null reading swatch from cache: resolvedValue 1`] = `"rgb(255, 0, 0)"`;
+
+exports[`color data v2 with swatch null reading swatch from cache: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {
+      "Swatch": [
+        {
+          "id": "[swatch-test-id]",
+          "value": null,
+        },
+      ],
+    },
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "color::v2",
+                  "alpha": 0.5,
+                  "swatchId": "[swatch-test-id]",
+                  "type": "swatch",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
+
+exports[`inline color data renders without fetching a swatch: resolvedValue 1`] = `"rgba(16, 24, 234, 0.5)"`;
+
+exports[`inline color data renders without fetching a swatch: snapshot 1`] = `
+{
+  "cacheData": {
+    "apiResources": {},
+    "localizedResourcesMap": {},
+  },
+  "document": {
+    "data": {
+      "key": "00000000-0000-0000-0000-000000000000",
+      "props": {
+        "children": {
+          "columns": [
+            {
+              "deviceId": "desktop",
+              "value": {
+                "count": 12,
+                "spans": [
+                  [
+                    12,
+                  ],
+                ],
+              },
+            },
+          ],
+          "elements": [
+            {
+              "key": "11111111-1111-1111-1111-111111111111",
+              "props": {
+                "propKey": {
+                  "@@makeswift/type": "color::v2",
+                  "alpha": 0.5,
+                  "hue": 238,
+                  "lightness": 49,
+                  "saturation": 87,
+                  "type": "inline",
+                },
+              },
+              "type": "TestComponent",
+            },
+          ],
+        },
+      },
+      "type": "./components/Root/index.js",
+    },
+    "fonts": [],
+    "id": "test-page-id",
+    "locale": null,
+    "localizedPages": [],
+    "meta": {},
+    "seo": {},
+    "site": {
+      "id": "test-site-id",
+    },
+    "snippets": [],
+  },
+}
+`;
