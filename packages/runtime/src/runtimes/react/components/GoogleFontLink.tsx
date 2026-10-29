@@ -1,11 +1,10 @@
 'use client'
 
-import { useMemo, useSyncExternalStore } from 'react'
+import { useMemo } from 'react'
 
 import { type Font } from '../../../client'
-import { type Site } from '../../../api'
 import { useIsInBuilder } from '../hooks/use-is-in-builder'
-import { useApiResourcesClient } from '../hooks/use-api-resources-client'
+import { useCachedSite } from '../hooks/use-cached-site'
 
 import {
   getGoogleFontsParamFromFonts,
@@ -44,11 +43,4 @@ export function GoogleFontLink({ fonts, siteId }: Props) {
   }
 
   return <PageLink precedence={MakeswiftStylePrecedence.MEDIUM} rel="stylesheet" href={url} />
-}
-
-function useCachedSite(siteId: string | null): Site | null {
-  const client = useApiResourcesClient()
-  const getSnapshot = () => (siteId == null ? null : client.readSite(siteId))
-
-  return useSyncExternalStore(client.subscribe, getSnapshot, getSnapshot)
 }

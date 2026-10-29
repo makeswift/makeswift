@@ -1,7 +1,11 @@
+import { type z } from 'zod'
+
 import { type SnippetLocation } from '../api/graphql/generated/types'
 import { type CacheData } from '../api/api-resources-client'
 
 import { type Element, type Document } from '../state/read-only-state'
+
+import { type fonts } from './schema'
 
 export type Snippet = {
   id: string
@@ -13,6 +17,8 @@ export type Snippet = {
 }
 
 export type Font = { family: string; variants: string[] }
+
+export type CustomFontVariant = z.infer<typeof fonts>['customFontVariants'][number]
 
 type Meta = {
   title?: string | null
