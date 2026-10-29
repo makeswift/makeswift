@@ -13,7 +13,7 @@ export const boxComponentData = ({
   key: 'a87eab9c-1c2b-462e-8f79-e836dd836271',
   props: {
     backgrounds: {
-      '@@makeswift/type': 'prop-controllers::backgrounds::v2',
+      '@@makeswift/type': 'prop-controllers::backgrounds::v3',
       value: [
         {
           deviceId: 'desktop',
@@ -99,4 +99,10 @@ export const imageBackgroundData = (imageId: string): BackgroundData => ({
     size: 'contain',
   },
   type: 'image',
+})
+
+export const inlineColorBackgroundData = (): BackgroundData => ({
+  id: '3f6b4a0e-2a35-4f1c-9d2c-7e2b1c5d9a41',
+  payload: { type: 'inline', hue: 238, saturation: 87, lightness: 49, alpha: 0.5 },
+  type: 'color',
 })
