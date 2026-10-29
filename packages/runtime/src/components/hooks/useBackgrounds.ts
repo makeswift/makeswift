@@ -2,14 +2,14 @@ import { useMemo } from 'react'
 
 import { ColorValue as Color } from '../utils/types'
 import { type ResponsiveValue } from '@makeswift/controls'
+import { resolveColor } from '../utils/resolveColor'
 import { isNonNullable } from '../utils/isNonNullable'
 import { useFiles, useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import { match, P } from 'ts-pattern'
 import {
   ResponsiveBackgroundsData,
-  getBackgroundsPropControllerDataResponsiveBackgroundsData,
-  getBackgroundsPropControllerFileIds,
-  getBackgroundsPropControllerSwatchIds,
+  getResponsiveBackgroundsDataFileIds,
+  getResponsiveBackgroundsDataSwatchIds,
 } from '@makeswift/prop-controllers'
 
 type BackgroundColorData = Color
@@ -59,12 +59,11 @@ export type BackgroundsData = Array<BackgroundData>
 export type BackgroundsPropControllerValue = ResponsiveValue<BackgroundsData>
 
 export function useBackgrounds(
-  data: ResponsiveBackgroundsData | undefined,
+  value: ResponsiveBackgroundsData | undefined,
 ): BackgroundsPropControllerValue | undefined {
-  const value = getBackgroundsPropControllerDataResponsiveBackgroundsData(data)
-  const fileIds = getBackgroundsPropControllerFileIds(data)
+  const fileIds = getResponsiveBackgroundsDataFileIds(value)
   const files = useFiles(fileIds)
-  const swatchIds = getBackgroundsPropControllerSwatchIds(data)
+  const swatchIds = getResponsiveBackgroundsDataSwatchIds(value)
   const swatches = useSwatches(swatchIds)
 
   return useMemo(() => {
@@ -139,10 +138,7 @@ export function useBackgrounds(
           }
 
           if (bg.type === 'color' && bg.payload != null) {
-            const { swatchId, alpha } = bg.payload
-            const swatch = swatches.filter(isNonNullable).find(s => s && s.id === swatchId)
-
-            return { id: bg.id, type: 'color', payload: { swatch, alpha } }
+            return { id: bg.id, type: 'color', payload: resolveColor(bg.payload, swatches) }
           }
 
           if (bg.type === 'gradient' && bg.payload != null && bg.payload.stops.length > 0) {
@@ -154,10 +150,7 @@ export function useBackgrounds(
                 isRadial: bg.payload.isRadial,
                 stops: bg.payload.stops.map(({ color, ...restOfStop }) => ({
                   ...restOfStop,
-                  color: color && {
-                    swatch: swatches.filter(isNonNullable).find(s => s && s.id === color.swatchId),
-                    alpha: color.alpha,
-                  },
+                  color: color && resolveColor(color, swatches),
                 })),
               },
             }
@@ -165,14 +158,15 @@ export function useBackgrounds(
 
           if (bg.type === 'video' && bg.payload != null) {
             const { maskColor, ...restOfPayload } = bg.payload
-            const swatch = maskColor && swatches.find(s => s && s.id === maskColor.swatchId)
+            const resolvedMaskColor = maskColor && resolveColor(maskColor, swatches)
 
             return {
               id: bg.id,
               type: 'video',
               payload: {
                 ...restOfPayload,
-                maskColor: swatch && maskColor && { swatch, alpha: maskColor.alpha },
+                // unlike other backgrounds, a mask color without a swatch isn't rendered
+                maskColor: resolvedMaskColor?.swatch && resolvedMaskColor,
               },
             }
           }
