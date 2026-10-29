@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.3
+
+### Patch Changes
+
+- 05c635b: Update the host API type for site fonts to include custom font variants
+
 ## 0.29.3-canary.2
 
 ### Patch Changes
