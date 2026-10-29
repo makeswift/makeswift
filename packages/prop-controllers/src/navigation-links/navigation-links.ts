@@ -1,4 +1,5 @@
 import { match } from 'ts-pattern'
+import { ResourceSchema, type ColorDataV2 } from '@makeswift/controls'
 import {
   ControlDataTypeKey,
   CopyContext,
@@ -7,11 +8,16 @@ import {
   Schema,
 } from '../prop-controllers'
 import { z } from 'zod'
-import { colorDataSchema } from '../data'
+import { colorDataSchema, type ColorData } from '../data'
 import { textStyleDataSchema } from '../text-style'
 import { copyLinkData, linkDataSchema } from '../link'
 import {
   copyResponsiveColorData,
+  getResponsiveColorDataSwatchIds,
+  responsiveColorDataSchema,
+  toResponsiveColorDataV1,
+  toResponsiveColorDataV2,
+  type ResponsiveColor,
   type ResponsiveColorData,
 } from '../responsive-color'
 
@@ -29,23 +35,6 @@ const buttonShapeSchema = z.enum(['pill', 'rounded', 'square'])
 
 const buttonSizeSchema = z.enum(['small', 'medium', 'large'])
 
-const navigationButtonSchema = z.object({
-  id: z.string(),
-  type: z.literal('button'),
-  payload: z.object({
-    label: z.string(),
-    link: linkDataSchema.optional(),
-    variant: Schema.responsiveValue(buttonVariantSchema).optional(),
-    shape: Schema.responsiveValue(buttonShapeSchema).optional(),
-    size: Schema.responsiveValue(buttonSizeSchema).optional(),
-    textColor: Schema.responsiveValue(colorDataSchema).optional(),
-    color: Schema.responsiveValue(colorDataSchema).optional(),
-    textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
-  }),
-})
-
-export type NavigationButtonData = z.infer<typeof navigationButtonSchema>
-
 const navigationDropdownCaretTypeSchema = z.union([
   z.literal('caret'),
   z.literal('plus'),
@@ -53,41 +42,75 @@ const navigationDropdownCaretTypeSchema = z.union([
   z.literal('chevron-down'),
 ])
 
-const navigationDropdownLinkSchema = z.object({
-  id: z.string(),
-  payload: z.object({
-    label: z.string(),
-    link: linkDataSchema.optional(),
-    color: Schema.responsiveValue(colorDataSchema).optional(),
-    textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
-  }),
-})
+const navigationButtonSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    id: z.string(),
+    type: z.literal('button'),
+    payload: z.object({
+      label: z.string(),
+      link: linkDataSchema.optional(),
+      variant: Schema.responsiveValue(buttonVariantSchema).optional(),
+      shape: Schema.responsiveValue(buttonShapeSchema).optional(),
+      size: Schema.responsiveValue(buttonSizeSchema).optional(),
+      textColor: responsiveColorDataSchema(color).optional(),
+      color: responsiveColorDataSchema(color).optional(),
+      textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
+    }),
+  })
 
-const navigationDropdownSchema = z.object({
-  id: z.string(),
-  type: z.literal('dropdown'),
-  payload: z.object({
-    label: z.string(),
-    caret: navigationDropdownCaretTypeSchema.optional(),
-    links: z.array(navigationDropdownLinkSchema).optional(),
-    variant: Schema.responsiveValue(buttonVariantSchema).optional(),
-    shape: Schema.responsiveValue(buttonShapeSchema).optional(),
-    size: Schema.responsiveValue(buttonSizeSchema).optional(),
-    textColor: Schema.responsiveValue(colorDataSchema).optional(),
-    color: Schema.responsiveValue(colorDataSchema).optional(),
-    textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
-  }),
-})
+const navigationDropdownLinkSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    id: z.string(),
+    payload: z.object({
+      label: z.string(),
+      link: linkDataSchema.optional(),
+      color: responsiveColorDataSchema(color).optional(),
+      textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
+    }),
+  })
 
-export type NavigationDropdownData = z.infer<typeof navigationDropdownSchema>
+const navigationDropdownSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    id: z.string(),
+    type: z.literal('dropdown'),
+    payload: z.object({
+      label: z.string(),
+      caret: navigationDropdownCaretTypeSchema.optional(),
+      links: z.array(navigationDropdownLinkSchema(color)).optional(),
+      variant: Schema.responsiveValue(buttonVariantSchema).optional(),
+      shape: Schema.responsiveValue(buttonShapeSchema).optional(),
+      size: Schema.responsiveValue(buttonSizeSchema).optional(),
+      textColor: responsiveColorDataSchema(color).optional(),
+      color: responsiveColorDataSchema(color).optional(),
+      textStyle: Schema.responsiveValue(textStyleDataSchema).optional(),
+    }),
+  })
 
-const navigationLinksDataSchema = z.array(
-  z.union([navigationButtonSchema, navigationDropdownSchema]),
-)
+const navigationLinksDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.array(
+    z.union([navigationButtonSchema(color), navigationDropdownSchema(color)]),
+  )
 
-export type NavigationLinksData = z.infer<typeof navigationLinksDataSchema>
+type NavigationLinks<Color> = z.infer<
+  ReturnType<typeof navigationLinksDataSchema<z.ZodType<Color>>>
+>
 
-const navigationLinksPropControllerDataV0Schema = navigationLinksDataSchema
+export type NavigationLinksData = NavigationLinks<ColorDataV2>
+
+export type NavigationButtonData = Extract<
+  NavigationLinksData[number],
+  { type: 'button' }
+>
+
+export type NavigationDropdownData = Extract<
+  NavigationLinksData[number],
+  { type: 'dropdown' }
+>
+
+type NavigationLinksDataV1 = NavigationLinks<ColorData>
+
+const navigationLinksPropControllerDataV0Schema =
+  navigationLinksDataSchema(colorDataSchema)
 
 export type NavigationLinksPropControllerDataV0 = z.infer<
   typeof navigationLinksPropControllerDataV0Schema
@@ -98,16 +121,30 @@ export const NavigationLinksPropControllerDataV1Type =
 
 const navigationLinksPropControllerDataV1Schema = z.object({
   [ControlDataTypeKey]: z.literal(NavigationLinksPropControllerDataV1Type),
-  value: navigationLinksDataSchema,
+  value: navigationLinksDataSchema(colorDataSchema),
 })
 
 export type NavigationLinksPropControllerDataV1 = z.infer<
   typeof navigationLinksPropControllerDataV1Schema
 >
 
+/** v2 colors are either a swatch or an inline color */
+export const NavigationLinksPropControllerDataV2Type =
+  'prop-controllers::navigation-links::v2'
+
+const navigationLinksPropControllerDataV2Schema = z.object({
+  [ControlDataTypeKey]: z.literal(NavigationLinksPropControllerDataV2Type),
+  value: navigationLinksDataSchema(ResourceSchema.colorDataV2),
+})
+
+export type NavigationLinksPropControllerDataV2 = z.infer<
+  typeof navigationLinksPropControllerDataV2Schema
+>
+
 export const navigationLinksPropControllerDataSchema = z.union([
   navigationLinksPropControllerDataV0Schema,
   navigationLinksPropControllerDataV1Schema,
+  navigationLinksPropControllerDataV2Schema,
 ])
 
 export type NavigationLinksPropControllerData = z.infer<
@@ -133,10 +170,22 @@ type NavigationLinksDescriptorV1<
   options: U
 }
 
+type NavigationLinksDescriptorV2<
+  _T = NavigationLinksPropControllerData,
+  U extends NavigationLinksOptions = NavigationLinksOptions,
+> = {
+  type: typeof Types.NavigationLinks
+  version: 2
+  options: U
+}
+
 export type NavigationLinksDescriptor<
   _T = NavigationLinksPropControllerData,
   U extends NavigationLinksOptions = NavigationLinksOptions,
-> = NavigationLinksDescriptorV0<_T, U> | NavigationLinksDescriptorV1<_T, U>
+> =
+  | NavigationLinksDescriptorV0<_T, U>
+  | NavigationLinksDescriptorV1<_T, U>
+  | NavigationLinksDescriptorV2<_T, U>
 
 export type ResolveNavigationLinksPropControllerValue<
   T extends NavigationLinksDescriptor,
@@ -151,18 +200,80 @@ export type ResolveNavigationLinksPropControllerValue<
 export function NavigationLinks(
   options: NavigationLinksOptions = {},
 ): NavigationLinksDescriptor<NavigationLinksPropControllerData> {
-  return { type: Types.NavigationLinks, version: 1, options }
+  return { type: Types.NavigationLinks, version: 2, options }
 }
+
+function mapNavigationLinksColors<From, To>(
+  data: NavigationLinks<From>,
+  callback: (color: ResponsiveColor<From>) => ResponsiveColor<To>,
+): NavigationLinks<To>
+// zod's types can't be narrowed while `Color` is a type parameter
+function mapNavigationLinksColors(
+  data: NavigationLinks<unknown>,
+  callback: (color: ResponsiveColor<unknown>) => ResponsiveColor<unknown>,
+): NavigationLinks<unknown> {
+  const map = (color: ResponsiveColor<unknown> | undefined) =>
+    color === undefined ? undefined : callback(color)
+
+  return data.map((item) => {
+    switch (item.type) {
+      case 'button':
+        return {
+          ...item,
+          payload: {
+            ...item.payload,
+            color: map(item.payload.color),
+            textColor: map(item.payload.textColor),
+          },
+        }
+
+      case 'dropdown':
+        return {
+          ...item,
+          payload: {
+            ...item.payload,
+            color: map(item.payload.color),
+            textColor: map(item.payload.textColor),
+            links: item.payload.links?.map((link) => ({
+              ...link,
+              payload: { ...link.payload, color: map(link.payload.color) },
+            })),
+          },
+        }
+    }
+  })
+}
+
+const toNavigationLinksDataV2 = (
+  data: NavigationLinksDataV1,
+): NavigationLinksData =>
+  mapNavigationLinksColors<ColorData, ColorDataV2>(
+    data,
+    toResponsiveColorDataV2,
+  )
+
+const toNavigationLinksDataV1 = (
+  data: NavigationLinksData,
+): NavigationLinksDataV1 =>
+  mapNavigationLinksColors<ColorDataV2, ColorData>(
+    data,
+    toResponsiveColorDataV1,
+  )
 
 export function getNavigationLinksPropControllerDataNavigationLinksData(
   data: NavigationLinksPropControllerData | undefined,
 ): NavigationLinksData | undefined {
   return match(data)
+    .with(undefined, () => undefined)
+    .with(
+      { [ControlDataTypeKey]: NavigationLinksPropControllerDataV2Type },
+      (v2) => v2.value,
+    )
     .with(
       { [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type },
-      (v1) => v1.value,
+      (v1) => toNavigationLinksDataV2(v1.value),
     )
-    .otherwise((v0) => v0)
+    .otherwise((v0) => toNavigationLinksDataV2(v0))
 }
 
 export function createNavigationLinksPropControllerDataFromNavigationLinksData(
@@ -171,14 +282,22 @@ export function createNavigationLinksPropControllerDataFromNavigationLinksData(
 ): NavigationLinksPropControllerData {
   return match(definition)
     .with(
+      { version: 2 },
+      () =>
+        ({
+          [ControlDataTypeKey]: NavigationLinksPropControllerDataV2Type,
+          value: navigationLinksData,
+        }) as const,
+    )
+    .with(
       { version: 1 },
       () =>
         ({
           [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type,
-          value: navigationLinksData,
+          value: toNavigationLinksDataV1(navigationLinksData),
         }) as const,
     )
-    .otherwise(() => navigationLinksData)
+    .otherwise(() => toNavigationLinksDataV1(navigationLinksData))
 }
 
 export function getNavigationLinksPropControllerPageIds(
@@ -234,8 +353,7 @@ export function getNavigationLinksPropControllerSwatchIds(
 
   const value = getNavigationLinksPropControllerDataNavigationLinksData(data)
   const swatchIds = (color: ResponsiveColorData | undefined) =>
-    color?.map((override) => override.value).map((color) => color.swatchId) ??
-    []
+    color == null ? [] : getResponsiveColorDataSwatchIds(color)
 
   return (
     value?.flatMap(({ type, payload }) => {
@@ -313,15 +431,20 @@ export function copyNavigationLinksPropControllerData(
   data: NavigationLinksPropControllerData | undefined,
   context: CopyContext,
 ): NavigationLinksPropControllerData | undefined {
+  const copy = (data: NavigationLinksDataV1) =>
+    toNavigationLinksDataV1(
+      copyNavigationLinksData(toNavigationLinksDataV2(data), context),
+    )
+
   return match(data)
     .with(undefined, () => undefined)
     .with(
-      { [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type },
-      (v1) =>
-        ({
-          [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type,
-          value: copyNavigationLinksData(v1.value, context),
-        }) as const,
+      { [ControlDataTypeKey]: NavigationLinksPropControllerDataV2Type },
+      (v2) => ({ ...v2, value: copyNavigationLinksData(v2.value, context) }),
     )
-    .otherwise((v0) => copyNavigationLinksData(v0, context))
+    .with(
+      { [ControlDataTypeKey]: NavigationLinksPropControllerDataV1Type },
+      (v1) => ({ ...v1, value: copy(v1.value) }),
+    )
+    .otherwise((v0) => copy(v0))
 }
