@@ -1,5 +1,17 @@
 # @makeswift/runtime
 
+## 0.29.3
+
+### Patch Changes
+
+- 065c327: Refactor the unversioned resources introspection to use the new bulk endpoints from the makeswift cdn.
+- 3baeed2: Allow for inline color data for the `Color` control.
+- 83ee9b4: Add component snapshot metadata field for internal builder use
+- 05c635b: Update the host API type for site fonts to include custom font variants
+- Updated dependencies [3baeed2]
+  - @makeswift/controls@0.1.24
+  - @makeswift/prop-controllers@0.4.18
+
 ## 0.29.2
 
 ### Patch Changes
