@@ -1,4 +1,4 @@
-import { toColorDataV2, toLegacyColorData } from './color-data'
+import { toColorDataV1, toColorDataV2 } from './color-data'
 
 describe('color data', () => {
   test('toColorDataV2 converts swatch color data', () => {
@@ -9,15 +9,15 @@ describe('color data', () => {
     })
   })
 
-  test('toColorData converts swatch colors', () => {
+  test('toColorDataV1 converts swatch colors', () => {
     expect(
-      toLegacyColorData({ type: 'swatch', swatchId: 'swatch-id-1', alpha: 1 }),
+      toColorDataV1({ type: 'swatch', swatchId: 'swatch-id-1', alpha: 1 }),
     ).toEqual({ swatchId: 'swatch-id-1', alpha: 1 })
   })
 
-  test('toColorData throws for inline colors', () => {
+  test('toColorDataV1 throws for inline colors', () => {
     expect(() =>
-      toLegacyColorData({
+      toColorDataV1({
         type: 'inline',
         hue: 238,
         saturation: 87,

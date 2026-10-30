@@ -13,8 +13,8 @@ import {
 } from '../../context'
 import {
   ResourceSchema,
+  toColorDataV1,
   toColorDataV2,
-  toLegacyColorData,
   type ColorDataV2,
 } from '../../resources'
 import { type ResourceResolver } from '../../resources/resolver'
@@ -188,9 +188,9 @@ class Definition<C extends Config> extends ControlDefinition<
       }))
       .with(1, () => ({
         ...Definition.dataSignature.v1,
-        ...toLegacyColorData(colorValue),
+        ...toColorDataV1(colorValue),
       }))
-      .with(undefined, () => toLegacyColorData(colorValue))
+      .with(undefined, () => toColorDataV1(colorValue))
       .exhaustive()
   }
 
