@@ -4,6 +4,7 @@ import {
   ClassStyleData,
   ControlledStyleData,
   CssResetData,
+  FontFaceData,
   KeyframesData,
   MakeswiftStylePrecedence,
   OnControlledStyleDataWrite,
@@ -27,6 +28,9 @@ export class StylesRegistry {
   // Keyed by content hash
   private baseStyles: Map<string, BaseStylesData>
 
+  // Keyed by content hash
+  private fontFaces: Map<string, FontFaceData>
+
   // Keyed by class name
   private controlledStylesInitialData: Map<string, ControlledStyleData>
   private controlledStyleWriteListeners: Set<OnControlledStyleDataWrite>
@@ -37,6 +41,7 @@ export class StylesRegistry {
     this.keyframes = new Map()
     this.cssResets = new Map()
     this.baseStyles = new Map()
+    this.fontFaces = new Map()
     this.controlledStyleWriteListeners = new Set()
     this.controlledStylesInitialData = new Map()
   }
@@ -63,6 +68,10 @@ export class StylesRegistry {
 
   getBaseStyles(): ReadonlyMap<string, BaseStylesData> {
     return this.baseStyles
+  }
+
+  getFontFaces(): ReadonlyMap<string, FontFaceData> {
+    return this.fontFaces
   }
 
   /*
@@ -113,6 +122,10 @@ export class StylesRegistry {
 
   setBaseStyles(data: BaseStylesData) {
     this.baseStyles.set(data.contentHash, data)
+  }
+
+  setFontFace(data: FontFaceData) {
+    this.fontFaces.set(data.contentHash, data)
   }
 
   /*
@@ -246,11 +259,16 @@ export class StylesRegistry {
   }
 
   private getPropsForMediumPrecedenceStyles(): ComponentProps<typeof MakeswiftStyle> {
+    const fontFaces = this.getFontFaces()
     const styles = this.getUncontrolledClassStyles()
     const keyframes = this.getKeyframes()
 
     const hrefValues = new Array<string>()
     const allCss = new Array<string>()
+    for (const [contentHash, fontFaceData] of fontFaces.entries()) {
+      hrefValues.push(`makeswift-font-face-${contentHash}`)
+      allCss.push(fontFaceData.css)
+    }
     for (const [className, uncontrolledStyleData] of styles.entries()) {
       hrefValues.push(className)
       allCss.push(uncontrolledStyleData.css)
