@@ -1,8 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { ControlDataTypeKey } from '@makeswift/controls'
 import { Editor as SlateEditor } from 'slate'
 import { Text, Cursor, EditorV2, Paragraph, jsx, Code, Super, Sub } from '../../test-helpers'
+
+const v1 = { [ControlDataTypeKey]: 'typography::v1' as const }
 
 describe('GIVEN normalizing typography', () => {
   describe('GIVEN normalizing neutral', () => {
@@ -68,9 +71,9 @@ describe('GIVEN normalizing typography', () => {
       )
       const result = EditorV2(
         <Paragraph>
-          <Text typography={{ id: 'lmnop', style: [] }}>abc</Text>
+          <Text typography={{ ...v1, id: 'lmnop', style: [] }}>abc</Text>
           <Code>
-            <Text typography={{ id: 'lmnop', style: [] }}>
+            <Text typography={{ ...v1, id: 'lmnop', style: [] }}>
               <Cursor />
               xyz
             </Text>
@@ -100,7 +103,7 @@ describe('GIVEN normalizing typography', () => {
         </Paragraph>,
       )
       const result = EditorV2(
-        <Paragraph typography={{ id: 'lmnop', style: [] }}>
+        <Paragraph typography={{ ...v1, id: 'lmnop', style: [] }}>
           <Text>abc</Text>
           <Code>
             <Text>
@@ -109,6 +112,65 @@ describe('GIVEN normalizing typography', () => {
             </Text>
           </Code>
           <Text />
+        </Paragraph>,
+      )
+
+      editor.typographyNormalizationDirection = 'up'
+      SlateEditor.normalize(editor, { force: true })
+
+      expect(editor.children).toEqual(result.children)
+    })
+    it('WHEN v0 and v1 typographies are shared THEN they bubble up as v1', () => {
+      const swatchColor = { type: 'swatch' as const, swatchId: '[swatch-id]', alpha: 1 }
+      const inlineColor = {
+        type: 'inline' as const,
+        hue: 240,
+        saturation: 100,
+        lightness: 50,
+        alpha: 0.5,
+      }
+
+      const editor = EditorV2(
+        <Paragraph>
+          <Text
+            typography={{
+              style: [
+                {
+                  deviceId: 'desktop',
+                  value: { fontWeight: 400, color: { swatchId: '[swatch-id]', alpha: 1 } },
+                },
+              ],
+            }}
+          >
+            abc
+          </Text>
+          <Text
+            typography={{
+              ...v1,
+              style: [
+                { deviceId: 'desktop', value: { color: swatchColor } },
+                { deviceId: 'tablet', value: { color: inlineColor } },
+              ],
+            }}
+          >
+            xyz
+          </Text>
+        </Paragraph>,
+      )
+      const result = EditorV2(
+        <Paragraph
+          typography={{ ...v1, style: [{ deviceId: 'desktop', value: { color: swatchColor } }] }}
+        >
+          <Text
+            typography={{ ...v1, style: [{ deviceId: 'desktop', value: { fontWeight: 400 } }] }}
+          >
+            abc
+          </Text>
+          <Text
+            typography={{ ...v1, style: [{ deviceId: 'tablet', value: { color: inlineColor } }] }}
+          >
+            xyz
+          </Text>
         </Paragraph>,
       )
 
@@ -131,7 +193,7 @@ describe('GIVEN normalizing typography', () => {
         </Paragraph>,
       )
       const result = EditorV2(
-        <Paragraph typography={{ id: 'lmnop', style: [] }}>
+        <Paragraph typography={{ ...v1, id: 'lmnop', style: [] }}>
           <Text>abc</Text>
           <Code>
             <Text>
@@ -205,6 +267,7 @@ describe('GIVEN normalizing typography', () => {
         </Paragraph>,
       )
       const resultingTypography = {
+        ...v1,
         style: [
           {
             deviceId: 'desktop',
@@ -218,6 +281,7 @@ describe('GIVEN normalizing typography', () => {
       const result = EditorV2(
         <Paragraph
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'desktop',
@@ -243,6 +307,7 @@ describe('GIVEN normalizing typography', () => {
           <Text typography={resultingTypography}>e</Text>
           <Sub
             typography={{
+              ...v1,
               style: [
                 {
                   deviceId: 'desktop',
@@ -294,7 +359,7 @@ describe('GIVEN normalizing typography', () => {
       )
 
       const result = EditorV2(
-        <Paragraph typography={typography}>
+        <Paragraph typography={{ ...v1, ...typography }}>
           <Text>a</Text>
           <Code>
             <Text>b</Text>
