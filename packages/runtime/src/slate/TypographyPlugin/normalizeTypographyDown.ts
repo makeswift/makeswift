@@ -1,13 +1,14 @@
 import { Editor, Element, NodeEntry, Transforms } from 'slate'
-import { RichTextTypography, shallowMerge } from '@makeswift/controls'
+import { shallowMerge } from '@makeswift/controls'
 
 import { MakeswiftEditor } from '../types'
 import { TYPOGRAPHY_KEY } from '.'
+import { type TypographyValue, toTypographyData, toTypographyValue } from './typography-value'
 
 export function shallowMergeTypographies(
-  commonTypography?: RichTextTypography,
-  typography?: RichTextTypography,
-) {
+  commonTypography?: TypographyValue,
+  typography?: TypographyValue,
+): TypographyValue {
   const devices = [
     ...new Set(
       commonTypography?.style
@@ -42,12 +43,12 @@ export function normalizeTypographyDown(editor: MakeswiftEditor, entry: NodeEntr
       Transforms.unsetNodes(editor, TYPOGRAPHY_KEY, { at: normalizationPath })
       for (let i = 0; i < normalizationNode.children.length; i++) {
         const resultingTypography = shallowMergeTypographies(
-          normalizationNode.typography,
-          normalizationNode.children.at(i)?.typography,
+          toTypographyValue(normalizationNode.typography),
+          toTypographyValue(normalizationNode.children.at(i)?.typography),
         )
         Transforms.setNodes(
           editor,
-          { typography: resultingTypography },
+          { typography: toTypographyData(resultingTypography) },
           { at: [...normalizationPath, i] },
         )
       }

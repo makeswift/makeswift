@@ -2,6 +2,11 @@ import { z } from 'zod'
 
 import { responsiveValue } from '../../common/schema'
 
+export const colorData = z.object({
+  swatchId: z.string().nullable(),
+  alpha: z.number().nullable(),
+})
+
 export function responsiveStyle<C extends z.ZodTypeAny>(color: C) {
   return responsiveValue(
     z.object({
