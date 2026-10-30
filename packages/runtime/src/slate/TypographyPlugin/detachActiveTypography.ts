@@ -1,5 +1,6 @@
 import { Editor, Transforms, Text, Range } from 'slate'
-import { RichTextTypography } from '@makeswift/controls'
+
+import { type TypographyValue, toTypographyData } from './typography-value'
 
 type SetActiveTypographyIdOptions = {
   at?: Range
@@ -7,7 +8,7 @@ type SetActiveTypographyIdOptions = {
 
 export function detachActiveTypography(
   editor: Editor,
-  value: RichTextTypography['style'],
+  value: TypographyValue['style'],
   options?: SetActiveTypographyIdOptions,
 ) {
   Editor.withoutNormalizing(editor, () => {
@@ -42,9 +43,7 @@ export function detachActiveTypography(
           Transforms.setNodes(
             editor,
             {
-              typography: {
-                style: value,
-              },
+              typography: toTypographyData({ style: value }),
             },
             { at: path },
           )

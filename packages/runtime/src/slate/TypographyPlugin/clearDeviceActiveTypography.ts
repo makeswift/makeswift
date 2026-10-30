@@ -1,5 +1,6 @@
 import { Editor, Transforms, Text, Range } from 'slate'
-import { RichTextTypography } from '@makeswift/controls'
+
+import { type TypographyValue, toTypographyData, toTypographyValue } from './typography-value'
 
 type ClearDeviceActiveTypographyOptions = {
   at?: Range
@@ -39,16 +40,17 @@ export function clearDeviceActiveTypography(
 
       for (const [node, path] of textNodes) {
         if (Text.isText(node)) {
-          const typography: RichTextTypography = {
-            ...node.typography,
+          const currentTypography = toTypographyValue(node.typography)
+          const typography: TypographyValue = {
+            ...currentTypography,
             style:
-              node?.typography?.style.filter(({ deviceId }) => deviceId !== currentDeviceId) ?? [],
+              currentTypography?.style.filter(({ deviceId }) => deviceId !== currentDeviceId) ?? [],
           }
 
           Transforms.setNodes(
             editor,
             {
-              typography,
+              typography: toTypographyData(typography),
             },
             { at: path },
           )

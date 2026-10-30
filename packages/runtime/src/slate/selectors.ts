@@ -8,6 +8,7 @@ import {
 } from '@makeswift/controls'
 
 import { EditableBlockKey } from './BlockPlugin/types'
+import { type TypographyValue, toTypographyValue } from './TypographyPlugin/typography-value'
 
 import unhangRange from './utils/unhangRange'
 import shallowEqual from '../utils/shallowEqual'
@@ -107,9 +108,9 @@ export default function intersection<A extends Record<string, Data>, B extends A
 }
 
 const fuseTypographyMarks = (
-  values: Array<Slate.Typography | null | undefined>,
+  values: Array<TypographyValue | null | undefined>,
   breakpoints: Breakpoints,
-): Slate.Typography => {
+): TypographyValue => {
   const devices = [
     ...new Set(
       values
@@ -141,11 +142,8 @@ const fuseTypographyMarks = (
   }
 }
 
-export function getActiveTypographyMark(
-  editor: Editor,
-  breakpoints: Breakpoints,
-): Slate.Typography {
-  const active: Slate.Typography[] = []
+export function getActiveTypographyMark(editor: Editor, breakpoints: Breakpoints): TypographyValue {
+  const active: TypographyValue[] = []
 
   const textNodes = Editor.nodes(editor, {
     at: getSelection(editor),
@@ -154,7 +152,7 @@ export function getActiveTypographyMark(
 
   for (const [node] of textNodes) {
     if (Text.isText(node) && 'typography' in node && node.typography != undefined) {
-      active.push(node.typography)
+      active.push(toTypographyValue(node.typography))
     }
   }
   return active.length === 0 ? { style: [] } : fuseTypographyMarks(active, breakpoints)

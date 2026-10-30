@@ -1,9 +1,11 @@
+import { match } from 'ts-pattern'
 import { z } from 'zod'
 
 import { isNotNil, mapValues } from '../../lib/functional'
 import { StableValue } from '../../lib/stable-value'
 import { safeParse, type ParseResult } from '../../lib/zod'
 
+import { ControlDataTypeKey } from '../../common'
 import {
   ContextResource,
   replaceResourceIfNeeded,
@@ -41,29 +43,33 @@ class Definition extends ControlDefinition<
   ResolvedValueType,
   InstanceType
 > {
+  private static readonly v1DataType = 'typography::v1' as const
+  private static readonly dataSignature = {
+    v1: { [ControlDataTypeKey]: this.v1DataType },
+  } as const
+
   static readonly type = 'makeswift::controls::typography' as const
 
   static get schema() {
     const type = z.literal(Definition.type)
+    const version = z.literal(1).optional()
 
-    const data = Schema.typography(
-      z
-        .object({
-          swatchId: z.string().nullable(),
-          alpha: z.number().nullable(),
-        })
-        .nullable(),
-    )
-
-    const value = data
+    const value = Schema.typography(Schema.colorData.nullable())
+    const data = z.union([
+      // first, as zod would otherwise parse it as v0 data and drop its data type
+      value.extend({ [ControlDataTypeKey]: z.literal(this.v1DataType) }),
+      Schema.typography(Schema.colorData.nullable()),
+    ])
     const resolvedValue = z.string()
 
     const definition = z.object({
       type,
+      version,
     })
 
     return {
       type,
+      version,
       definition,
       data,
       value,
@@ -78,11 +84,11 @@ class Definition extends ControlDefinition<
       )
     }
 
-    Definition.schema.definition.parse(data)
-    return new (class Typography extends Definition {})()
+    const { version } = Definition.schema.definition.parse(data)
+    return new (class Typography extends Definition {})(version)
   }
 
-  constructor() {
+  constructor(readonly version: z.infer<typeof Definition.schema.version>) {
     super({})
   }
 
@@ -99,11 +105,28 @@ class Definition extends ControlDefinition<
   }
 
   fromData(data: DataType | undefined): ValueType | undefined {
-    return this.schema.data.optional().parse(data)
+    return this.toValue(this.schema.data.optional().parse(data))
+  }
+
+  /**
+   * Unlike `fromData`, doesn't parse the data, as typography stored in rich
+   * text nodes isn't validated.
+   */
+  toValue(data: DataType | undefined): ValueType | undefined {
+    return match(data)
+      .with(undefined, () => undefined)
+      .with(
+        Definition.dataSignature.v1,
+        ({ [ControlDataTypeKey]: _, ...value }) => value,
+      )
+      .otherwise((v0) => v0)
   }
 
   toData(value: ValueType): DataType {
-    return value
+    return match(this.version)
+      .with(1, () => ({ ...Definition.dataSignature.v1, ...value }))
+      .with(undefined, () => value)
+      .exhaustive()
   }
 
   copyData(
@@ -133,6 +156,7 @@ class Definition extends ControlDefinition<
     }
 
     return {
+      ...data,
       id: replaceTypographyId(data.id ?? null),
       style: data.style.map((override) => ({
         ...override,
@@ -173,19 +197,21 @@ class Definition extends ControlDefinition<
     stylesheet: Stylesheet,
     _control?: InstanceType,
   ): Resolvable<ResolvedValueType | undefined> {
-    const typographySub = resolver.resolveTypography(data?.id)
-    const typographyData = StableValue({
+    const value = this.toValue(data)
+
+    const typographySub = resolver.resolveTypography(value?.id)
+    const typographyValue = StableValue({
       name: `${Definition.type}:data`,
-      read: () => this.fragmentToData(typographySub.readStable()),
+      read: () => this.toValue(this.fragmentToData(typographySub.readStable())),
       deps: [typographySub],
     })
 
-    const overrideColors = resolveSwatches(data, resolver)
+    const overrideColors = resolveSwatches(value, resolver)
     const resolveSourceColors = (function () {
       let unsubscribes: (() => void)[] = []
       return () => {
         const sourceColors = resolveSwatches(
-          typographyData.readStable(),
+          typographyValue.readStable(),
           resolver,
         )
         unsubscribes.forEach((u) => u())
@@ -207,9 +233,9 @@ class Definition extends ControlDefinition<
           .map((c) => [c.swatch.id, c]),
       )
 
-      const typography = typographyData.readStable()
+      const typography = typographyValue.readStable()
       const source = typography?.style.map(withColor(colors)) ?? []
-      const override = data?.style.map(withColor(colors)) ?? []
+      const override = value?.style.map(withColor(colors)) ?? []
 
       return mergeStyles(source, override, stylesheet.breakpoints())
     }
@@ -217,7 +243,7 @@ class Definition extends ControlDefinition<
     const stableValue = StableValue({
       name: Definition.type,
       read: () => stylesheet.defineStyle(readResolved()),
-      deps: [typographyData, ...overrideColors],
+      deps: [typographyValue, ...overrideColors],
     })
 
     return {
@@ -229,7 +255,7 @@ class Definition extends ControlDefinition<
 
         await Promise.all(
           [
-            ...resolveSwatches(typographyData.readStable(), resolver),
+            ...resolveSwatches(typographyValue.readStable(), resolver),
             ...overrideColors,
           ].map((r) => r.triggerResolve()),
         )
@@ -279,11 +305,11 @@ class Definition extends ControlDefinition<
 }
 
 function resolveSwatches(
-  data: DataType | undefined,
+  value: ValueType | undefined,
   resolver: ResourceResolver,
 ): Resolvable<ResolvedColorData | undefined>[] {
   return (
-    data?.style.flatMap(({ value: { color } }) =>
+    value?.style.flatMap(({ value: { color } }) =>
       color?.swatchId
         ? [
             Color().resolveSwatch(
@@ -301,7 +327,7 @@ function resolveSwatches(
 
 function withColor(colors: Map<string, ResolvedColorData>) {
   return (
-    deviceRawTypographyValue: DataType['style'][number],
+    deviceRawTypographyValue: ValueType['style'][number],
   ): ResolvedStyle[number] => {
     const { value, deviceId } = deviceRawTypographyValue
 
@@ -336,5 +362,5 @@ export type { ResolvedStyle as ResolvedTypographyStyle }
 export class unstable_TypographyDefinition extends Definition {}
 
 export function unstable_Typography(): unstable_TypographyDefinition {
-  return new unstable_TypographyDefinition()
+  return new unstable_TypographyDefinition(1)
 }
