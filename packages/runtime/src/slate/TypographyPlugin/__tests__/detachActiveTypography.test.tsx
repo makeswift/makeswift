@@ -1,8 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { ControlDataTypeKey } from '@makeswift/controls'
 import { Editor, Paragraph, jsx, Text, Cursor, Anchor, Focus } from '../../test-helpers'
 import { TypographyActions } from '../'
+
+const v1 = { [ControlDataTypeKey]: 'typography::v1' as const }
 
 describe('GIVEN detachActiveTypography', () => {
   it('WHEN called THEN typography is detached', () => {
@@ -16,7 +19,7 @@ describe('GIVEN detachActiveTypography', () => {
     )
     const result = Editor(
       <Paragraph>
-        <Text typography={{ id: undefined, style: [{ deviceId: 'mobile', value: {} }] }}>
+        <Text typography={{ ...v1, id: undefined, style: [{ deviceId: 'mobile', value: {} }] }}>
           <Cursor />
           abc
         </Text>
@@ -39,7 +42,7 @@ describe('GIVEN detachActiveTypography', () => {
     )
     const result = Editor(
       <Paragraph>
-        <Text typography={{ id: undefined, style: [{ deviceId: 'mobile', value: {} }] }}>
+        <Text typography={{ ...v1, id: undefined, style: [{ deviceId: 'mobile', value: {} }] }}>
           <Cursor />
           abc
         </Text>
@@ -67,7 +70,7 @@ describe('GIVEN detachActiveTypography', () => {
     const result = Editor(
       <Paragraph>
         <Text>abc</Text>
-        <Text typography={{ id: undefined, style: [{ deviceId: 'mobile', value: {} }] }}>
+        <Text typography={{ ...v1, id: undefined, style: [{ deviceId: 'mobile', value: {} }] }}>
           <Anchor />
           fgh
         </Text>

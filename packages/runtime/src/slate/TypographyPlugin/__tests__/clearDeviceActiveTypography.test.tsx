@@ -1,8 +1,11 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { ControlDataTypeKey } from '@makeswift/controls'
 import { TypographyActions } from '../'
 import { jsx, Cursor, Editor, Paragraph, Text, Anchor, Focus } from '../../test-helpers'
+
+const v1 = { [ControlDataTypeKey]: 'typography::v1' as const }
 
 describe('GIVEN clearDeviceActiveTypography', () => {
   it('WHEN called on typography with id THEN typography style is cleared', () => {
@@ -25,7 +28,11 @@ describe('GIVEN clearDeviceActiveTypography', () => {
     const result = Editor(
       <Paragraph>
         <Text
-          typography={{ id: undefined, style: [{ deviceId: 'mobile', value: { italic: true } }] }}
+          typography={{
+            ...v1,
+            id: undefined,
+            style: [{ deviceId: 'mobile', value: { italic: true } }],
+          }}
         >
           abc
           <Cursor />
@@ -56,7 +63,11 @@ describe('GIVEN clearDeviceActiveTypography', () => {
     const result = Editor(
       <Paragraph>
         <Text
-          typography={{ id: 'lmnop', style: [{ deviceId: 'mobile', value: { italic: true } }] }}
+          typography={{
+            ...v1,
+            id: 'lmnop',
+            style: [{ deviceId: 'mobile', value: { italic: true } }],
+          }}
         >
           abc
           <Cursor />
@@ -104,7 +115,11 @@ describe('GIVEN clearDeviceActiveTypography', () => {
           abc
         </Text>
         <Text
-          typography={{ id: undefined, style: [{ deviceId: 'mobile', value: { italic: true } }] }}
+          typography={{
+            ...v1,
+            id: undefined,
+            style: [{ deviceId: 'mobile', value: { italic: true } }],
+          }}
         >
           <Anchor />
           fgh
