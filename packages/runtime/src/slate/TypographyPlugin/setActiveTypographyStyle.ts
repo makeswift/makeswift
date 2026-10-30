@@ -1,10 +1,7 @@
 import { Editor, Transforms, Text, Range } from 'slate'
-import {
-  type Breakpoints,
-  type BreakpointId,
-  findBreakpointOverride,
-  RichTextTypography,
-} from '@makeswift/controls'
+import { type Breakpoints, type BreakpointId, findBreakpointOverride } from '@makeswift/controls'
+
+import { type TypographyValue, toTypographyData, toTypographyValue } from './typography-value'
 
 type SetActiveTypographyStyleOptions = {
   at?: Range
@@ -47,7 +44,8 @@ export function setActiveTypographyStyle(
 
       for (const [node, path] of textNodes) {
         if (Text.isText(node)) {
-          const deviceOverrides = node?.typography?.style ?? []
+          const typography = toTypographyValue(node.typography)
+          const deviceOverrides = typography?.style ?? []
           const deviceStyle = findBreakpointOverride(
             breakpoints,
             deviceOverrides,
@@ -61,15 +59,15 @@ export function setActiveTypographyStyle(
             value: { ...deviceStyle.value, [prop]: value },
           }
 
-          const nextTypography: RichTextTypography = {
-            ...node.typography,
+          const nextTypography: TypographyValue = {
+            ...typography,
             style: [...deviceOverrides.filter(v => v.deviceId !== deviceId), nextDeviceStyle],
           }
 
           Transforms.setNodes(
             editor,
             {
-              typography: nextTypography,
+              typography: toTypographyData(nextTypography),
             },
             { at: path },
           )

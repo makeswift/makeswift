@@ -1,9 +1,12 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 
+import { ControlDataTypeKey } from '@makeswift/controls'
 import { TypographyActions } from '../'
 import { DEFAULT_BREAKPOINTS } from '../../../state/modules/breakpoints'
 import { jsx, Editor, Paragraph, Text, Cursor, Focus, Anchor } from '../../test-helpers'
+
+const v1 = { [ControlDataTypeKey]: 'typography::v1' as const }
 
 describe('GIVEN setActiveTypographyStyle', () => {
   it('WHEN called on text THEN text is converted', () => {
@@ -19,6 +22,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       <Paragraph>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
@@ -70,6 +74,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       <Paragraph>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
@@ -93,6 +98,61 @@ describe('GIVEN setActiveTypographyStyle', () => {
       'mobile',
       'italic',
       true,
+    )
+
+    expect(editor.children).toEqual(result.children)
+    expect(editor.selection).toEqual(result.selection)
+  })
+
+  it('WHEN called with an inline color on v0 typography THEN it is written as v1', () => {
+    const inlineColor = {
+      type: 'inline' as const,
+      hue: 240,
+      saturation: 100,
+      lightness: 50,
+      alpha: 0.5,
+    }
+
+    const editor = Editor(
+      <Paragraph>
+        <Text
+          typography={{
+            style: [
+              { deviceId: 'mobile', value: { color: { swatchId: '[swatch-id]', alpha: 1 } } },
+            ],
+          }}
+        >
+          abc
+          <Cursor />
+        </Text>
+      </Paragraph>,
+    )
+    const result = Editor(
+      <Paragraph>
+        <Text
+          typography={{
+            ...v1,
+            style: [
+              {
+                deviceId: 'mobile',
+                value: { color: { type: 'swatch', swatchId: '[swatch-id]', alpha: 1 } },
+              },
+              { deviceId: 'desktop', value: { color: inlineColor } },
+            ],
+          }}
+        >
+          abc
+          <Cursor />
+        </Text>
+      </Paragraph>,
+    )
+
+    TypographyActions.setActiveTypographyStyle(
+      editor,
+      DEFAULT_BREAKPOINTS,
+      'desktop',
+      'color',
+      inlineColor,
     )
 
     expect(editor.children).toEqual(result.children)
@@ -127,6 +187,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       <Paragraph>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
@@ -197,6 +258,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
       <Paragraph>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
@@ -212,6 +274,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
         </Text>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
@@ -257,6 +320,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
         <Text>abc</Text>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
@@ -303,6 +367,7 @@ describe('GIVEN setActiveTypographyStyle', () => {
         <Text>abc</Text>
         <Text
           typography={{
+            ...v1,
             style: [
               {
                 deviceId: 'mobile',
