@@ -1,5 +1,13 @@
 # @makeswift/prop-controllers
 
+## 0.4.18
+
+### Patch Changes
+
+- 3baeed2: Allow for inline color data for the `Color` control.
+- Updated dependencies [3baeed2]
+  - @makeswift/controls@0.1.24
+
 ## 0.4.17
 
 ### Patch Changes
