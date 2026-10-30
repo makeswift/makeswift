@@ -13,6 +13,7 @@ import {
   type CopyContext,
 } from '../../context'
 import { Targets, type IntrospectionTarget } from '../../introspection'
+import { resolveInlineColorData } from '../../resources'
 import { type ResourceResolver } from '../../resources/resolver'
 import {
   type ResolvedColorData,
@@ -35,6 +36,15 @@ type ValueType = z.infer<Schema['value']>
 type ResolvedValueType = z.infer<Schema['resolvedValue']>
 type InstanceType = DefaultControlInstance
 
+type ColorData = z.infer<typeof Schema.colorData>
+type ColorDataV2 = z.infer<typeof Schema.colorDataV2>
+
+type Typography<Color> = z.infer<
+  ReturnType<typeof Schema.typography<z.ZodType<Color | null>>>
+>
+type ResponsiveStyle<Color> = Typography<Color>['style']
+type DataTypeV0 = Typography<ColorData>
+
 class Definition extends ControlDefinition<
   typeof Definition.type,
   unknown,
@@ -54,7 +64,7 @@ class Definition extends ControlDefinition<
     const type = z.literal(Definition.type)
     const version = z.literal(1).optional()
 
-    const value = Schema.typography(Schema.colorData.nullable())
+    const value = Schema.typography(Schema.colorDataV2.nullable())
     const data = z.union([
       // first, as zod would otherwise parse it as v0 data and drop its data type
       value.extend({ [ControlDataTypeKey]: z.literal(this.v1DataType) }),
@@ -119,13 +129,19 @@ class Definition extends ControlDefinition<
         Definition.dataSignature.v1,
         ({ [ControlDataTypeKey]: _, ...value }) => value,
       )
-      .otherwise((v0) => v0)
+      .otherwise(({ style, ...v0 }) => ({
+        ...v0,
+        style: mapStyleColors(style, toColorDataV2),
+      }))
   }
 
   toData(value: ValueType): DataType {
     return match(this.version)
       .with(1, () => ({ ...Definition.dataSignature.v1, ...value }))
-      .with(undefined, () => value)
+      .with(undefined, () => ({
+        ...value,
+        style: mapStyleColors(value.style, toColorDataV1),
+      }))
       .exhaustive()
   }
 
@@ -155,36 +171,42 @@ class Definition extends ControlDefinition<
       return replaceResourceIfNeeded(ContextResource.Typography, id, context)
     }
 
-    return {
-      ...data,
-      id: replaceTypographyId(data.id ?? null),
-      style: data.style.map((override) => ({
-        ...override,
-        value: {
-          ...override.value,
-          ...(override.value.color == null
-            ? {}
-            : {
-                // Can't use Color().copyData() here as typography's color
-                // definition accepts null for swatchId and alpha, while Color
-                // Data does not.
-                color: {
-                  ...override.value.color,
-                  alpha: override.value.color.alpha ?? null,
-                  // We remove/replace resource references at the finest
-                  // granularity permitted by the data. In the case of
-                  // typography, the data does permit for a nullish swatch ID,
-                  // so we keep the other information (alpha) and only clear the
-                  // swatch ID. For other cases (ex: Color() data(), we have to
-                  // clear the entire data since swatch IDs can't be null.
-                  swatchId: replaceOverrideSwatchId(
-                    override.value.color.swatchId,
-                  ),
-                },
-              }),
-        },
-      })),
+    function copySwatchColor<
+      T extends { swatchId: string | null; alpha: number | null },
+    >(color: T): T {
+      // Can't use Color().copyData() here as typography's color definition
+      // accepts null for swatchId and alpha, while Color Data does not.
+      return {
+        ...color,
+        alpha: color.alpha ?? null,
+        // We remove/replace resource references at the finest granularity
+        // permitted by the data. In the case of typography, the data does
+        // permit for a nullish swatch ID, so we keep the other information
+        // (alpha) and only clear the swatch ID. For other cases (ex: Color()
+        // data(), we have to clear the entire data since swatch IDs can't be
+        // null.
+        swatchId: replaceOverrideSwatchId(color.swatchId),
+      }
     }
+
+    function copyTypography<Color>(
+      typography: Typography<Color>,
+      copyColor: (color: Color) => Color,
+    ): Typography<Color> {
+      return {
+        id: replaceTypographyId(typography.id ?? null),
+        style: mapStyleColors(typography.style, copyColor),
+      }
+    }
+
+    return match(data)
+      .with(Definition.dataSignature.v1, (v1) => ({
+        ...v1,
+        ...copyTypography(v1, (color: ColorDataV2) =>
+          color.type === 'inline' ? color : copySwatchColor(color),
+        ),
+      }))
+      .otherwise((v0) => ({ ...v0, ...copyTypography(v0, copySwatchColor) }))
   }
 
   resolveValueFromData(): undefined {
@@ -289,7 +311,7 @@ class Definition extends ControlDefinition<
     return []
   }
 
-  fragmentToData(fragment: TypographyFragment | null): DataType | undefined {
+  fragmentToData(fragment: TypographyFragment | null): DataTypeV0 | undefined {
     if (fragment == null) return undefined
     return {
       id: fragment.id,
@@ -298,7 +320,7 @@ class Definition extends ControlDefinition<
         value: mapValues(
           value,
           (prop) => prop ?? undefined,
-        ) as DataType['style'][number]['value'],
+        ) as DataTypeV0['style'][number]['value'],
       })),
     }
   }
@@ -310,7 +332,7 @@ function resolveSwatches(
 ): Resolvable<ResolvedColorData | undefined>[] {
   return (
     value?.style.flatMap(({ value: { color } }) =>
-      color?.swatchId
+      color?.type === 'swatch' && color.swatchId
         ? [
             Color().resolveSwatch(
               {
@@ -339,6 +361,13 @@ function withColor(colors: Map<string, ResolvedColorData>) {
       }
     }
 
+    if (value.color.type === 'inline') {
+      return {
+        deviceId,
+        value: { ...value, color: resolveInlineColorData(value.color) },
+      }
+    }
+
     const { swatchId, alpha } = value.color
     const baseColor = swatchId != null ? colors.get(swatchId) : undefined
 
@@ -356,6 +385,42 @@ function withColor(colors: Map<string, ResolvedColorData>) {
       },
     }
   }
+}
+
+function mapStyleColors<From, To>(
+  style: ResponsiveStyle<From>,
+  callback: (color: From) => To,
+): ResponsiveStyle<To>
+// zod's types can't be narrowed while `Color` is a type parameter
+function mapStyleColors(
+  style: ResponsiveStyle<unknown>,
+  callback: (color: unknown) => unknown,
+): ResponsiveStyle<unknown> {
+  return style.map(({ value: { color, ...value }, ...override }) => ({
+    ...override,
+    value:
+      color === undefined
+        ? value
+        : { ...value, color: color == null ? color : callback(color) },
+  }))
+}
+
+function toColorDataV2({ swatchId, alpha }: ColorData): ColorDataV2 {
+  return { type: 'swatch', swatchId, alpha }
+}
+
+/**
+ * Throws for inline colors, which data written by earlier versions can't
+ * represent.
+ */
+function toColorDataV1(color: ColorDataV2): ColorData {
+  if (color.type === 'inline') {
+    throw new Error(
+      `Inline colors can't be written as swatch color data: ${JSON.stringify(color)}`,
+    )
+  }
+
+  return { swatchId: color.swatchId, alpha: color.alpha }
 }
 
 export type { ResolvedStyle as ResolvedTypographyStyle }

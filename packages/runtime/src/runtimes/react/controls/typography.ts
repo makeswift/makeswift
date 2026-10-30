@@ -1,9 +1,12 @@
 import { CSSObject } from '@emotion/serialize'
 import {
+  unstable_Typography,
   unstable_TypographyDefinition,
   findBreakpointOverride,
+  resolveInlineColorData,
   shallowMergeFallbacks,
   type DataType,
+  type ValueType,
   type Breakpoints,
   type DeviceOverride,
   type ResponsiveValue,
@@ -48,7 +51,7 @@ type EnhancedColor = {
 }
 
 export type TypographyControlDataValue = Exclude<
-  DataType<unstable_TypographyDefinition>,
+  ValueType<unstable_TypographyDefinition>,
   undefined
 >['style'][number]['value']
 
@@ -57,16 +60,12 @@ type EnhancedTypographyValue = Omit<TypographyControlDataValue, keyof EnhancedCo
 export type EnhancedTypography = Array<DeviceOverride<EnhancedTypographyValue>>
 
 export function getTypographyStyleSwatchIds(
-  style:
-    | Exclude<DataType<unstable_TypographyDefinition>, undefined>['style']
-    | Typography['style']
-    | null
-    | undefined,
+  style: Exclude<ValueType<unstable_TypographyDefinition>, undefined>['style'] | null | undefined,
 ): string[] {
   return (
     style
       ?.map(override => override.value)
-      .flatMap(typographyStyle => typographyStyle.color?.swatchId)
+      .flatMap(({ color }) => (color?.type === 'swatch' ? color.swatchId : undefined))
       .filter(isNonNullable) ?? []
   )
 }
@@ -85,17 +84,28 @@ const withColor =
         value: nextValue,
       }
     }
+
+    if (value.color.type === 'inline') {
+      return {
+        deviceId,
+        value: { ...value, color: resolveInlineColorData(value.color) },
+      }
+    }
+
+    const { swatchId, alpha } = value.color
     return {
       deviceId,
       value: {
         ...value,
         color: {
-          swatch: swatches.find(s => s && s.id === value.color?.swatchId),
-          alpha: value.color?.alpha ?? undefined,
+          swatch: swatches.find(s => s && s.id === swatchId),
+          alpha: alpha ?? undefined,
         },
       },
     }
   }
+
+const typographyDefinition = unstable_Typography()
 
 const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
 
@@ -105,13 +115,16 @@ const getDeviceId = ({ deviceId }: DeviceOverride<unknown>) => deviceId
 export default function useEnhancedTypography(
   data?: DataType<unstable_TypographyDefinition> | null,
 ): EnhancedTypography {
-  const typography = typographyFragementToTypographyControlData(useTypography(data?.id ?? null))
+  const value = typographyDefinition.toValue(data ?? undefined)
+  const typography = typographyDefinition.toValue(
+    typographyFragementToTypographyControlData(useTypography(value?.id ?? null)),
+  )
   const source = typography?.style ?? []
-  const override = data?.style ?? []
+  const override = value?.style ?? []
   const breakpoints = useBreakpoints()
 
   const swatchIds = [
-    ...getTypographyStyleSwatchIds(data?.style),
+    ...getTypographyStyleSwatchIds(value?.style),
     ...getTypographyStyleSwatchIds(typography?.style),
   ]
   const swatches = useSwatches(swatchIds).filter(isNonNullable)
