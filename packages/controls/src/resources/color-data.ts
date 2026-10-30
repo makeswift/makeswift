@@ -8,7 +8,7 @@ export function toColorDataV2({ swatchId, alpha }: ColorData): SwatchColorData {
  * Throws for inline colors, which data written by earlier versions can't
  * represent.
  */
-export function toLegacyColorData(color: ColorDataV2): ColorData {
+export function toColorDataV1(color: ColorDataV2): ColorData {
   if (color.type === 'inline') {
     throw new Error(
       `Inline colors can't be written as swatch color data: ${JSON.stringify(color)}`,
