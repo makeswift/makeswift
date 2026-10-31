@@ -88,6 +88,7 @@ exports[`state / APIResources \`Actions.apiResourceFulfilled\` correctly populat
       "id": "[test-site-id]",
       "value": {
         "__typename": "Site",
+        "customFontFamilies": [],
         "googleFonts": {
           "edges": [],
         },
@@ -218,7 +219,36 @@ exports[`state / APIResources \`Actions.changeApiResource\` correctly updates th
       },
     },
   ],
-  "Site": [],
+  "Site": [
+    {
+      "id": "[test-site-id]",
+      "value": {
+        "__typename": "Site",
+        "customFontFamilies": [
+          {
+            "__typename": "SiteCustomFontFamily",
+            "family": "Inter",
+            "variants": [
+              {
+                "__typename": "CustomFontVariant",
+                "fileFormat": "woff2",
+                "fileName": "test-file-name",
+                "fontFileUrl": "https://cloudbuckets.com/bucket-file-id.woff2",
+                "id": "[test-custom-font-variant-id]",
+                "isActive": true,
+                "style": "normal",
+                "weight": 400,
+              },
+            ],
+          },
+        ],
+        "googleFonts": {
+          "edges": [],
+        },
+        "id": "[test-site-id]",
+      },
+    },
+  ],
   "Snippet": [],
   "Swatch": [
     {

@@ -71,3 +71,9 @@ export type BaseStylesData = {
   contentHash: string
   cssObject: CSSObject
 }
+
+export type FontFaceData = {
+  css: string
+  cssObject: CSSObject
+  contentHash: string
+}

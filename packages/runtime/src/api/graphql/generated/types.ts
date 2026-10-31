@@ -148,6 +148,20 @@ export type SiteFragment = {
       node: { family: string; variants: Array<{ specifier: string }> }
     } | null>
   }
+  customFontFamilies: Array<{
+    __typename: 'SiteCustomFontFamily'
+    family: string
+    variants: Array<{
+      __typename: 'CustomFontVariant'
+      id: string
+      weight: number
+      style: string
+      isActive: boolean
+      fileFormat: string
+      fileName: string
+      fontFileUrl: string
+    }>
+  }>
 }
 
 export type UnversionedResourcesQueryVariables = Exact<{
@@ -269,9 +283,3 @@ export type GlobalElementQueryVariables = Exact<{
 export type GlobalElementQueryResult = {
   globalElement: { __typename: 'GlobalElement'; id: string; data: Json } | null
 }
-
-export type CreateTableRecordMutationVariables = Exact<{
-  input: CreateTableRecordInput
-}>
-
-export type CreateTableRecordMutationResult = { createTableRecord: { tableRecord: { id: string } } }

@@ -112,6 +112,7 @@ const site: Site = {
   googleFonts: {
     edges: [],
   },
+  customFontFamilies: [],
 }
 
 describe('state / APIResources', () => {
@@ -200,6 +201,7 @@ describe('state / APIResources', () => {
         [globalElement, null],
         [localizedGlobalElement_fr_FR, 'fr-FR'],
         [localizedGlobalElement_it_IT, 'it-IT'],
+        [site, null],
       ] as [APIResource, string][]
     ).reduce(
       (state, [resource, locale]) =>
@@ -223,6 +225,30 @@ describe('state / APIResources', () => {
           'it-IT',
         ],
         [{ ...localizedGlobalElement_fr_FR, data: { prompt: 'hello world' } }, 'fr-FR'],
+        [
+          {
+            ...site,
+            customFontFamilies: [
+              {
+                __typename: 'SiteCustomFontFamily',
+                family: 'Inter',
+                variants: [
+                  {
+                    __typename: 'CustomFontVariant',
+                    id: '[test-custom-font-variant-id]',
+                    weight: 400,
+                    style: 'normal',
+                    isActive: true,
+                    fileFormat: 'woff2',
+                    fileName: 'test-file-name',
+                    fontFileUrl: 'https://cloudbuckets.com/bucket-file-id.woff2',
+                  },
+                ],
+              },
+            ],
+          },
+          null,
+        ],
       ] as [APIResource, string][]
     ).reduce(
       (state, [resource, locale]) =>
