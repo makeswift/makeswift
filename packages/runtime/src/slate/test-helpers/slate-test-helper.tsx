@@ -1,4 +1,5 @@
 import { Editor, createEditor } from 'slate'
+import { unstable_Typography } from '@makeswift/controls'
 import { createHyperscript, createEditor as createHyperscriptEditor } from 'slate-hyperscript'
 import { withReact } from 'slate-react'
 
@@ -43,12 +44,18 @@ export const createJsx = (createEditor: () => Editor) =>
     },
   })
 
-export const testEditorWithAllPlugins = () => withBlock(withTypography(withReact(createEditor())))
+export const testEditorWithAllPlugins = () =>
+  withBlock(withTypography(withReact(createEditor()), unstable_Typography()))
 
 export const jsx = createJsx(testEditorWithAllPlugins)
 
 export const jsxWithV2Editor = createJsx(() =>
-  withBlock(withTypography(withTextAlign(withInline(withLink(withReact(createEditor())))))),
+  withBlock(
+    withTypography(
+      withTextAlign(withInline(withLink(withReact(createEditor())))),
+      unstable_Typography(),
+    ),
+  ),
 )
 
 export const jsxWithV2InlineEditor = createJsx(() =>

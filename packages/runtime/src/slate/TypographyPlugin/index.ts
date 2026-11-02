@@ -1,5 +1,5 @@
 import { BaseEditor, Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
-import { unstable_Typography } from '@makeswift/controls'
+import { unstable_Typography, unstable_TypographyDefinition } from '@makeswift/controls'
 
 import { getValue } from './getValue'
 import { getSelection } from '../selectors'
@@ -15,7 +15,7 @@ export interface TypographyEditor extends BaseEditor {
   typographyNormalizationDirection?: 'up' | 'neutral' | 'down'
 }
 
-export function withTypography(editor: Editor) {
+export function withTypography(editor: Editor, definition: unstable_TypographyDefinition) {
   const { normalizeNode } = editor
   editor.normalizeNode = entry => {
     const [normalizationNode, normalizationPath] = entry
@@ -36,13 +36,16 @@ export function withTypography(editor: Editor) {
 
     if (normalizeSimilarText(editor, entry)) return
 
-    if (editor.typographyNormalizationDirection === 'up' && normalizeTypographyUp(editor, entry))
+    if (
+      editor.typographyNormalizationDirection === 'up' &&
+      normalizeTypographyUp(editor, definition, entry)
+    )
       return
 
     if (
       (editor.typographyNormalizationDirection === 'down' ||
         editor.typographyNormalizationDirection == null) &&
-      normalizeTypographyDown(editor, entry)
+      normalizeTypographyDown(editor, definition, entry)
     )
       return
 
@@ -53,10 +56,12 @@ export function withTypography(editor: Editor) {
 }
 
 export function TypographyPlugin() {
+  const definition = unstable_Typography()
+
   return Plugin({
-    withPlugin: withTypography,
+    withPlugin: editor => withTypography(editor, definition),
     control: {
-      definition: unstable_Typography(),
+      definition,
       onChange: (editor, value) => {
         Editor.withoutNormalizing(editor, () => {
           const at = getSelection(editor)

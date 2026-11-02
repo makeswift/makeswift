@@ -122,6 +122,9 @@ class Definition extends ControlDefinition<
    * Unlike `fromData`, doesn't parse the data, as typography stored in rich
    * text nodes isn't validated.
    */
+  toValue(data: DataType): ValueType
+  toValue(data: undefined): undefined
+  toValue(data: DataType | undefined): ValueType | undefined
   toValue(data: DataType | undefined): ValueType | undefined {
     return match(data)
       .with(undefined, () => undefined)

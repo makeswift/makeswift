@@ -1,11 +1,11 @@
 import { Editor, Element, NodeEntry, Transforms, Node, Text } from 'slate'
-import { type Data, RichTextTypography } from '@makeswift/controls'
+import { type Data, RichTextTypography, unstable_TypographyDefinition } from '@makeswift/controls'
 
 import { MakeswiftEditor } from '../types'
 import keys from '../../utils/keys'
 import deepEqual from '../../utils/deepEqual'
 import { shallowMergeTypographies } from './normalizeTypographyDown'
-import { type TypographyValue, toTypographyData, toTypographyValue } from './typography-value'
+import type { TypographyValue } from './typography-value'
 
 function shallowAnd<A extends Record<string, Data>, B extends Record<string, Data>>(
   a: A,
@@ -113,7 +113,11 @@ function isException(node: Node): boolean {
   return Text.isText(node) && node.text === ''
 }
 
-export function normalizeTypographyUp(editor: MakeswiftEditor, entry: NodeEntry): boolean {
+export function normalizeTypographyUp(
+  editor: MakeswiftEditor,
+  definition: unstable_TypographyDefinition,
+  entry: NodeEntry,
+): boolean {
   const [node, path] = entry
   if (Element.isElement(node) && node.children.length) {
     const typographiesOfChildren = node.children
@@ -125,29 +129,29 @@ export function normalizeTypographyUp(editor: MakeswiftEditor, entry: NodeEntry)
     )
     if (typographiesOfChildren.length === definedTypographiesOfChildren.length) {
       let sharedTypography: TypographyValue = shallowAndTypographies(
-        ...definedTypographiesOfChildren.map(typography => toTypographyValue(typography)),
+        ...definedTypographiesOfChildren.map(typography => definition.toValue(typography)),
       )
 
       if (sharedTypography.style.length > 0 || sharedTypography.id != null) {
         const rootTypography: TypographyValue = shallowMergeTypographies(
           sharedTypography,
-          toTypographyValue(node.typography),
+          definition.toValue(node.typography),
         )
         Editor.withoutNormalizing(editor, () => {
           Transforms.setNodes(
             editor,
-            { typography: toTypographyData(rootTypography) },
+            { typography: definition.toData(rootTypography) },
             { at: path },
           )
           for (let i = 0; i < node.children.length; i++) {
             const typography: TypographyValue = shallowInverseAndTypographies(
-              toTypographyValue(node.children.at(i)?.typography) ?? { style: [] },
+              definition.toValue(node.children.at(i)?.typography) ?? { style: [] },
               sharedTypography,
             )
 
             Transforms.setNodes(
               editor,
-              { typography: toTypographyData(typography) },
+              { typography: definition.toData(typography) },
               { at: [...path, i] },
             )
           }

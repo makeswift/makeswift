@@ -1,9 +1,9 @@
 import { Editor, Element, NodeEntry, Transforms } from 'slate'
-import { shallowMerge } from '@makeswift/controls'
+import { shallowMerge, unstable_TypographyDefinition } from '@makeswift/controls'
 
 import { MakeswiftEditor } from '../types'
 import { TYPOGRAPHY_KEY } from '.'
-import { type TypographyValue, toTypographyData, toTypographyValue } from './typography-value'
+import type { TypographyValue } from './typography-value'
 
 export function shallowMergeTypographies(
   commonTypography?: TypographyValue,
@@ -31,7 +31,11 @@ export function shallowMergeTypographies(
   }
 }
 
-export function normalizeTypographyDown(editor: MakeswiftEditor, entry: NodeEntry): boolean {
+export function normalizeTypographyDown(
+  editor: MakeswiftEditor,
+  definition: unstable_TypographyDefinition,
+  entry: NodeEntry,
+): boolean {
   const [normalizationNode, normalizationPath] = entry
 
   if (
@@ -43,12 +47,12 @@ export function normalizeTypographyDown(editor: MakeswiftEditor, entry: NodeEntr
       Transforms.unsetNodes(editor, TYPOGRAPHY_KEY, { at: normalizationPath })
       for (let i = 0; i < normalizationNode.children.length; i++) {
         const resultingTypography = shallowMergeTypographies(
-          toTypographyValue(normalizationNode.typography),
-          toTypographyValue(normalizationNode.children.at(i)?.typography),
+          definition.toValue(normalizationNode.typography),
+          definition.toValue(normalizationNode.children.at(i)?.typography),
         )
         Transforms.setNodes(
           editor,
-          { typography: toTypographyData(resultingTypography) },
+          { typography: definition.toData(resultingTypography) },
           { at: [...normalizationPath, i] },
         )
       }
