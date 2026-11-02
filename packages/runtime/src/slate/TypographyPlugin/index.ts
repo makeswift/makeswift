@@ -1,11 +1,6 @@
 import { BaseEditor, Descendant, Editor, NodeEntry, Text, Transforms } from 'slate'
 import { unstable_Typography } from '@makeswift/controls'
 
-import { clearActiveTypographyStyle } from './clearActiveTypographyStyle'
-import { clearDeviceActiveTypography } from './clearDeviceActiveTypography'
-import { detachActiveTypography } from './detachActiveTypography'
-import { setActiveTypographyId } from './setActiveTypographyId'
-import { setActiveTypographyStyle } from './setActiveTypographyStyle'
 import { getValue } from './getValue'
 import { getSelection } from '../selectors'
 import { Plugin } from '../../controls/rich-text-v2/plugin'
@@ -13,14 +8,6 @@ import { normalizeTypographyUp } from './normalizeTypographyUp'
 import { normalizeTypographyDown } from './normalizeTypographyDown'
 import { normalizeSimilarText } from './normalizeSimilarText'
 import clsx from 'clsx'
-
-export const TypographyActions = {
-  setActiveTypographyId,
-  setActiveTypographyStyle,
-  clearActiveTypographyStyle,
-  clearDeviceActiveTypography,
-  detachActiveTypography,
-}
 
 export const TYPOGRAPHY_KEY = 'typography'
 
