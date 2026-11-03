@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.5
+
+### Patch Changes
+
+- 02ee853: updates the MakeswiftFonts component and associated logic for compatibility with custom fonts
+
 ## 0.29.3-canary.4
 
 ### Patch Changes
