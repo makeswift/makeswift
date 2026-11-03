@@ -3,5 +3,6 @@
 exports[`Typography constructor returns correct definition 1`] = `
 unstable_TypographyDefinition {
   "config": {},
+  "version": 1,
 }
 `;

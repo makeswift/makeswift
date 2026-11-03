@@ -17,7 +17,12 @@ import {
 import { createEditor } from 'slate'
 import { Slate as SlateReact, Editable, withReact, ReactEditor } from 'slate-react'
 
-import { Slate, richTextDTOtoDAO, type RichTextValue } from '@makeswift/controls'
+import {
+  Slate,
+  richTextDTOtoDAO,
+  unstable_TypographyDefinition,
+  type RichTextValue,
+} from '@makeswift/controls'
 
 import { useBuilderEditMode } from '../../..'
 import { useSlateReset } from '../../use-slate-reset'
@@ -47,7 +52,11 @@ export const EditableText = forwardRef(function EditableText(
   { id, text, width, margin }: Props,
   ref: Ref<PropControllersHandle<Descriptors>>,
 ) {
-  const [editor] = useState(() => withBlock(withTypography(withBuilder(withReact(createEditor())))))
+  const [editor] = useState(() => {
+    // An explicit v0 definition is used to match the rich text v1 data written by the builder
+    const v0TypographyDefinition = new unstable_TypographyDefinition(undefined)
+    return withBlock(withTypography(withBuilder(withReact(createEditor())), v0TypographyDefinition))
+  })
   const [isPreservingDOMSElection, setIsPreservingDOMSelection] = useState(false)
   useSyncDOMSelection(editor, isPreservingDOMSElection)
   const delaySync = useSyncWithBuilder(editor, text)
