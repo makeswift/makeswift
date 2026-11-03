@@ -14,6 +14,7 @@ import { useRegisterDocument } from '../hooks/use-register-document'
 import { useBuiltinSuspense } from '../hooks/use-builtin-suspense'
 import { ActivityOrFallback } from './activity-with-fallback'
 
+import { CustomFontFaces } from './CustomFontFaces'
 import { DocumentRoot } from './DocumentRoot'
 
 type Props = {
@@ -48,9 +49,17 @@ export const MakeswiftComponent = memo(
     const builtinSuspense = useBuiltinSuspense(getRootElement(rootDocument).type)
 
     return (
-      <ActivityOrFallback suspenseFallback={builtinSuspense}>
-        <DocumentRoot rootDocument={rootDocument} />
-      </ActivityOrFallback>
+      <>
+        {snapshot.customFonts != null && (
+          <CustomFontFaces
+            customFontVariants={snapshot.customFonts.variants}
+            siteId={snapshot.customFonts.siteId}
+          />
+        )}
+        <ActivityOrFallback suspenseFallback={builtinSuspense}>
+          <DocumentRoot rootDocument={rootDocument} />
+        </ActivityOrFallback>
+      </>
     )
   },
 )

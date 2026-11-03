@@ -1,4 +1,6 @@
 import {
+  type CustomFontVariant,
+  type GetFontsAPI,
   MakeswiftClient,
   MakeswiftComponentDocument,
   MakeswiftComponentDocumentFallback,
@@ -14,6 +16,18 @@ import { Link } from '../../controls'
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
 const baseUrl = `${runtime.apiOrigin}/content/v1/element-trees`
+const fontsUrl = `${runtime.apiOrigin}/v1_unstable/fonts`
+
+const customFontVariants: CustomFontVariant[] = [
+  {
+    id: '[variant-id]',
+    family: 'Brand Sans',
+    weight: 400,
+    style: 'normal',
+    fileUrl: 'https://fonts.example.com/brand.woff2',
+    fileFormat: 'woff2',
+  },
+]
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })
@@ -49,6 +63,81 @@ afterEach(() => {
 describe('getComponentSnapshot using the element tree content endpoint', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    server.use(
+      http.get(fontsUrl, () =>
+        HttpResponse.json<GetFontsAPI>({
+          siteId: '[site-id]',
+          googleFonts: [],
+          customFontVariants,
+        }),
+      ),
+    )
+  })
+
+  test.each([
+    { label: 'an existing', document: makeDocument('myTree', null) },
+    { label: 'an empty', document: makeEmptyDocument('myTree', null) },
+  ])("includes the site's custom fonts for $label document", async ({ document }) => {
+    // Arrange
+    const client = createTestClient()
+    server.use(
+      http.get(`${baseUrl}/myTree`, () => HttpResponse.json(document), { once: true }),
+      graphql.operation(() => HttpResponse.json({})),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot('myTree', {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result.customFonts).toEqual({ siteId: '[site-id]', variants: customFontVariants })
+  })
+
+  test.each([
+    { label: 'is not found', response: () => HttpResponse.text('', { status: 404 }) },
+    { label: 'is unparseable', response: () => HttpResponse.json([{}]) },
+  ])('has no custom fonts when the fonts response $label', async ({ response }) => {
+    // Arrange
+    const client = createTestClient()
+    const document = makeEmptyDocument('myTree', null)
+    server.use(
+      http.get(fontsUrl, response, { once: true }),
+      http.get(`${baseUrl}/myTree`, () => HttpResponse.json(document), { once: true }),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot('myTree', {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result.document).toEqual(document)
+    expect(result.customFonts).toBeNull()
+  })
+
+  test('logs and has no custom fonts when fetching them fails', async () => {
+    // Arrange
+    const client = createTestClient()
+    const document = makeEmptyDocument('myTree', null)
+    server.use(
+      http.get(fontsUrl, () => HttpResponse.text('Forbidden', { status: 403 }), { once: true }),
+      http.get(`${baseUrl}/myTree`, () => HttpResponse.json(document), { once: true }),
+    )
+
+    // Act
+    const result = await client.getComponentSnapshot('myTree', {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result.document).toEqual(document)
+    expect(result.customFonts).toBeNull()
+    expect(console.error).toHaveBeenCalledWith(
+      'Failed to fetch custom fonts for component snapshot',
+      expect.objectContaining({ message: 'Failed to fetch fonts: 403 Forbidden' }),
+    )
   })
 
   test('returns null document data on a 200 empty document response', async () => {

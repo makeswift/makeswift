@@ -1,7 +1,13 @@
+import { type z } from 'zod'
+
 import { type SnippetLocation } from '../api/graphql/generated/types'
 import { type CacheData } from '../api/api-resources-client'
 
 import { type Element, type Document } from '../state/read-only-state'
+
+import { type customFontVariant } from './schema'
+
+type CustomFontVariant = z.infer<typeof customFontVariant>
 
 export type Snippet = {
   id: string
@@ -67,4 +73,6 @@ export function pageToRootDocument(pageDocument: MakeswiftPageDocument): Documen
 export type MakeswiftPageSnapshot = {
   document: MakeswiftPageDocument
   cacheData: CacheData
+  // Missing from snapshots created by older runtime versions
+  customFontVariants?: CustomFontVariant[]
 }

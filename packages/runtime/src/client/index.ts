@@ -47,6 +47,7 @@ import { toIterablePaginationResult } from '../utils/pagination'
 import { isNonNullable } from '../utils/isNonNullable'
 
 import {
+  type MakeswiftComponentCustomFonts,
   type MakeswiftComponentDocument,
   type MakeswiftComponentSnapshot,
 } from './component-snapshot'
@@ -598,6 +599,8 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     }
 
     const siteVersion = await siteVersionPromise
+    // Started now but awaited last, so fonts load in parallel without delaying introspection
+    const fontsPromise = this.getFontsOrNull(siteVersion, 'page')
     const response = await this.fetch(
       `v4/pages/${encodeURIComponent(pathname)}/document?${queryParams()}`,
       siteVersion,
@@ -630,7 +633,29 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     return {
       document,
       cacheData,
+      customFontVariants: (await fontsPromise)?.customFontVariants ?? [],
     }
+  }
+
+  // Custom fonts shouldn't keep a snapshot from rendering, so a failure to fetch them is logged
+  // and treated as the site having none
+  private async getFontsOrNull(
+    siteVersion: SiteVersion | null,
+    snapshotType: 'page' | 'component',
+  ): Promise<GetFontsAPI | null> {
+    try {
+      return await this.unstable_getFonts(siteVersion)
+    } catch (error) {
+      console.error(`Failed to fetch custom fonts for ${snapshotType} snapshot`, error)
+      return null
+    }
+  }
+
+  private async getComponentCustomFonts(
+    siteVersion: SiteVersion | null,
+  ): Promise<MakeswiftComponentCustomFonts | null> {
+    const fonts = await this.getFontsOrNull(siteVersion, 'component')
+    return fonts == null ? null : { siteId: fonts.siteId, variants: fonts.customFontVariants }
   }
 
   async getComponentSnapshot(
@@ -646,6 +671,8 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
     },
   ): Promise<MakeswiftComponentSnapshot> {
     const siteVersion = await siteVersionPromise
+    // Started now but awaited last, so fonts load in parallel without delaying introspection
+    const customFontsPromise = this.getComponentCustomFonts(siteVersion)
     const key = deterministicUUID({ id, locale, seed: this.apiKey.split('-').at(0) })
     const searchParams = new URLSearchParams()
     if (locale) searchParams.set('locale', locale)
@@ -691,6 +718,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
         allowLocaleFallback,
         requestedLocale: locale ?? null,
       },
+      customFonts: await customFontsPromise,
     }
   }
 
@@ -714,6 +742,8 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
   ): Promise<MakeswiftComponentSnapshot[]> {
     if (ids.length === 0) return []
     const siteVersion = await siteVersionPromise
+    // Fetched once for all components, and awaited last so it doesn't delay introspection
+    const customFontsPromise = this.getComponentCustomFonts(siteVersion)
 
     // Step 1: Bulk fetch
     let documents = await this.getElementTreesBulk(ids, siteVersion, locale)
@@ -744,6 +774,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
       .filter(isNonNullable)
 
     const cacheDataMap = await this.introspectMany(treesToIntrospect, siteVersion, locale ?? null)
+    const customFonts = await customFontsPromise
 
     // Step 4: Build per-component results
     return ids.map((id, i) => {
@@ -756,6 +787,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
           key,
           cacheData: CacheData.empty(),
           meta: { allowLocaleFallback, requestedLocale: locale ?? null },
+          customFonts,
         }
       }
 
@@ -764,6 +796,7 @@ export class MakeswiftClient extends MakeswiftRestAPIClient {
         key,
         cacheData: cacheDataMap.get(id) ?? CacheData.empty(),
         meta: { allowLocaleFallback, requestedLocale: locale ?? null },
+        customFonts,
       }
     })
   }

@@ -1,4 +1,9 @@
-import { MakeswiftClient, MakeswiftComponentDocument } from '../../client'
+import {
+  type CustomFontVariant,
+  type GetFontsAPI,
+  MakeswiftClient,
+  MakeswiftComponentDocument,
+} from '../../client'
 import { http, HttpResponse, graphql } from 'msw'
 
 import { createReactRuntime } from '../../runtimes/react/testing/react-runtime'
@@ -10,6 +15,18 @@ import { CacheData } from '../../api/api-resources-client'
 const TEST_API_KEY = 'myApiKey'
 const runtime = createReactRuntime()
 const baseUrl = `${runtime.apiOrigin}/v0/element-trees/bulk`
+const fontsUrl = `${runtime.apiOrigin}/v1_unstable/fonts`
+
+const customFontVariants: CustomFontVariant[] = [
+  {
+    id: '[variant-id]',
+    family: 'Brand Sans',
+    weight: 400,
+    style: 'normal',
+    fileUrl: 'https://fonts.example.com/brand.woff2',
+    fileFormat: 'woff2',
+  },
+]
 
 function createTestClient() {
   return new MakeswiftClient(TEST_API_KEY, { runtime })
@@ -22,6 +39,16 @@ afterEach(() => {
 describe('unstable_getComponentSnapshots', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    server.use(
+      http.get(fontsUrl, () =>
+        HttpResponse.json<GetFontsAPI>({
+          siteId: '[site-id]',
+          googleFonts: [],
+          customFontVariants,
+        }),
+      ),
+    )
   })
 
   function setupGraphqlMock() {
@@ -103,6 +130,45 @@ describe('unstable_getComponentSnapshots', () => {
     // comp-3 found
     expect(results[2].document.id).toBe('comp-3')
     expect(results[2].document.data).not.toBeNull()
+  })
+
+  test("fetches the site's custom fonts once and includes them in every snapshot", async () => {
+    // Arrange
+    const client = createTestClient()
+    setupGraphqlMock()
+
+    const fontsHandler = jest.fn(() =>
+      HttpResponse.json<GetFontsAPI>({ siteId: '[site-id]', googleFonts: [], customFontVariants }),
+    )
+
+    const documents: (MakeswiftComponentDocument | null)[] = [
+      {
+        id: 'comp-1',
+        name: 'Component A',
+        data: { type: 'typeA', key: 'key-1', props: {} },
+        locale: null,
+        siteId: 'mySiteId',
+        inheritsFromParent: false,
+      },
+      null,
+    ]
+
+    server.use(
+      http.get(fontsUrl, fontsHandler),
+      http.post(baseUrl, () => HttpResponse.json(documents, { status: 200 }), { once: true }),
+    )
+
+    // Act
+    const results = await client.unstable_getComponentSnapshots(['comp-1', 'comp-2'], {
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(fontsHandler).toHaveBeenCalledTimes(1)
+    expect(results.map(result => result.customFonts)).toEqual([
+      { siteId: '[site-id]', variants: customFontVariants },
+      { siteId: '[site-id]', variants: customFontVariants },
+    ])
   })
 
   test('throws when bulk fetch fails with non-404', async () => {

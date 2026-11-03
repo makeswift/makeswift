@@ -2,7 +2,7 @@ import { useMemo, ReactNode } from 'react'
 
 import { DocumentRoot } from '../DocumentRoot'
 import { type Document } from '../../../../state/read-only-state'
-import { MakeswiftPageDocument } from '../../../../client'
+import { type CustomFontVariant, MakeswiftPageDocument } from '../../../../client'
 import { usePageSnippets } from '../hooks/use-page-snippets'
 
 import { BodySnippet } from './BodySnippet'
@@ -11,17 +11,27 @@ import { flattenMetadataSettings, type PageMetadataSettings } from './page-seo-s
 
 type Props = {
   page: MakeswiftPageDocument
+  customFontVariants?: CustomFontVariant[]
   rootDocument: Document
   metadata?: boolean | PageMetadataSettings
 }
 
-export function Page({ page, rootDocument, metadata = true }: Props): ReactNode {
+export function Page({
+  page,
+  customFontVariants,
+  rootDocument,
+  metadata = true,
+}: Props): ReactNode {
   const { bodySnippets } = usePageSnippets({ page })
   const pageMetadataSettings = useMemo(() => flattenMetadataSettings(metadata), [metadata])
 
   return (
     <>
-      <PageHead document={page} metadata={pageMetadataSettings} />
+      <PageHead
+        document={page}
+        customFontVariants={customFontVariants}
+        metadata={pageMetadataSettings}
+      />
 
       <DocumentRoot rootDocument={rootDocument} />
 
