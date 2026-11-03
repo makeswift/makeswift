@@ -1,12 +1,14 @@
 import { useMemo, useSyncExternalStore, ReactNode } from 'react'
 
-import { type MakeswiftPageDocument } from '../../../../client'
+import { type CustomFontVariant, type MakeswiftPageDocument } from '../../../../client'
 import { type Site } from '../../../../api'
 
 import { useApiResourcesClient } from '../../hooks/use-api-resources-client'
 import { useFrameworkContext } from '../hooks/use-framework-context'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 import { usePageSnippets } from '../hooks/use-page-snippets'
+
+import { CustomFontFaces } from '../CustomFontFaces'
 
 import { PageTitle, PageMeta, PageLink } from './head-tags'
 import { type PageMetadataSettings } from './page-seo-settings'
@@ -18,12 +20,20 @@ const defaultFavicon = {
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAACXBIWXMAABcRAAAXEQHKJvM/AAABjElEQVRYhc2XzU3EMBCFB8TddAAXn6EE6GCpgNABZ1/IXnymBOgAOmA7YM8+ABVsXEHQQFaKQryeN3Yk3ilKJtEnv/nLUd/3pFG0riGi88yrnQn+UfJ5FUi0riWiB2H4nQn+KRd0DFP8agXEfkqCYJBoHdtxIQxfm+DfFgEhoith3NYE30o/qgGR2BJB+xY7kdYEL8oNFUi0jiFMJuxVWrJqEMFxsyUNCsE6AeNztvBp7aJ143vXksoRnwhYtmNdSoIQa6RlO9YXEWW7KgoCleOgxgTf1QZBT+RZ2lXFING6UxCCq+ceeUE8fYdknY599v9sJvzGBP+yCEgC7GPmETc0OJ+0awAlkhe2pAbIXAeFZ8xe2g2Nk3c3ub0xwWt6zY9qbmiqGVMbZK21ZC/YmhlbeBMTzZNDQqcvDb1kM1x32iqZSt1HaqukfKvq34BAOTLsrH+ETNmUkKHHA+428RgeclPVWozeSyAI2EdWB34jtqXNTAySOY3i/KgFIlqOa4GkFmBegorzg4joG07he/M7zl6jAAAAAElFTkSuQmCC',
 }
 
+// Shared so a snapshot without custom fonts doesn't pass a new array on every render
+const noCustomFontVariants: CustomFontVariant[] = []
+
 type Props = {
   document: MakeswiftPageDocument
+  customFontVariants?: CustomFontVariant[]
   metadata?: PageMetadataSettings
 }
 
-export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
+export function PageHead({
+  document: page,
+  customFontVariants = noCustomFontVariants,
+  metadata = {},
+}: Props): ReactNode {
   const {
     title: useTitle = false,
     favicon: useFavicon = false,
@@ -111,6 +121,7 @@ export function PageHead({ document: page, metadata = {} }: Props): ReactNode {
           href={`https://fonts.googleapis.com/css?family=${fontFamilyParamValue}&display=swap`}
         />
       )}
+      <CustomFontFaces customFontVariants={customFontVariants} siteId={page.site.id} />
       {headSnippets.map(snippet => (
         <HeadSnippet key={snippet.id} snippet={snippet} />
       ))}
