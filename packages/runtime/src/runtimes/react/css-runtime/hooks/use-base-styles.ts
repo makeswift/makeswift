@@ -4,6 +4,7 @@ import { processCss, toRawCss } from '../serialize-css'
 import { MakeswiftStylePrecedence } from '../types'
 import React from 'react'
 import { MakeswiftStyle } from '../components/makeswift-style'
+import { getHrefForBaseStyle } from '../utils'
 
 export function useBaseStyles({ styles }: { styles: CSSObject }) {
   const { forceImportant, stylesRegistry } = useStylesContext()
@@ -18,10 +19,10 @@ export function useBaseStyles({ styles }: { styles: CSSObject }) {
     }
     stylesRegistry.setBaseStyles(styleData)
   }
-  const href = `makeswift-base-styles-${contentHash}`
+  const href = getHrefForBaseStyle(styleData)
   const styleElement = React.createElement(MakeswiftStyle, {
     key: contentHash,
-    href: href,
+    href,
     css: styleData.css,
     precedence: MakeswiftStylePrecedence.HIGH,
   })

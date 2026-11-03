@@ -1,4 +1,4 @@
-import { generateClassName } from '../utils'
+import { generateClassName, getHrefForKeyframes } from '../utils'
 import React from 'react'
 import { MakeswiftStyle } from '../components/makeswift-style'
 import { useStylesContext } from './use-styles-context'
@@ -22,7 +22,7 @@ export function useKeyframes(cssBody: string): {
   stylesRegistry.setKeyframes(styleData)
 
   const styleElement = React.createElement(MakeswiftStyle, {
-    href: keyframesName,
+    href: getHrefForKeyframes(styleData),
     css: cssString,
   })
 

@@ -1,4 +1,4 @@
-import { generateClassName } from '../utils'
+import { generateClassName, getHrefForClassStyle } from '../utils'
 import { CSSObject } from '@emotion/serialize'
 import React from 'react'
 import clsx from 'clsx'
@@ -34,7 +34,7 @@ export function useStyle(style: CSSObject) {
 
   const styleElement = React.createElement(MakeswiftStyle, {
     key: className,
-    href: className,
+    href: getHrefForClassStyle(styleData),
     css: styleData.css,
   })
 
