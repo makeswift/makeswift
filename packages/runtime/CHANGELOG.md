@@ -1,5 +1,25 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.4
+
+### Patch Changes
+
+- c7519c4: Allow for inline color data for the `Backgrounds` prop controller.
+- 9197b97: Allow for inline color data for the `Border` prop controller.
+- e945956: Allow for inline color data for the `NavigationLinks` prop controller.
+- e945956: Allow for inline color data for the `ResponsiveColor` prop controller.
+- 392e937: Allow for inline color data for the `Shadows` prop controller.
+- 0ff71b8: Allow for inline color data for the `unstable_Typography` control.
+- Updated dependencies [c7519c4]
+- Updated dependencies [9197b97]
+- Updated dependencies [e945956]
+- Updated dependencies [e945956]
+- Updated dependencies [392e937]
+- Updated dependencies [1ac3f7f]
+- Updated dependencies [0ff71b8]
+  - @makeswift/controls@0.1.24-canary.1
+  - @makeswift/prop-controllers@0.4.18-canary.1
+
 ## 0.29.3-canary.3
 
 ### Patch Changes

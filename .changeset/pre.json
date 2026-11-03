@@ -19,7 +19,14 @@
   },
   "changesets": [
     "fair-views-invent",
+    "inline-colors-backgrounds",
+    "inline-colors-border",
     "inline-colors-color",
+    "inline-colors-navigation-links",
+    "inline-colors-responsive-color",
+    "inline-colors-shadows",
+    "inline-colors-style",
+    "inline-colors-typography",
     "kind-items-switch",
     "silver-books-smoke"
   ]
