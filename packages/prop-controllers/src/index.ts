@@ -14,6 +14,7 @@ export {
   borderPropControllerDataSchema,
   getBorderPropControllerDataResponsiveBorderData,
   getBorderPropControllerDataSwatchIds,
+  getResponsiveBorderDataSwatchIds,
   createBorderPropControllerDataFromResponsiveBorderData,
   copyBorderPropControllerData,
 } from './border'

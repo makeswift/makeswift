@@ -5,19 +5,16 @@ import { type ResponsiveValue } from '@makeswift/controls'
 import {
   ResponsiveBorderData,
   BorderSideData,
-  getBorderPropControllerDataSwatchIds,
+  getResponsiveBorderDataSwatchIds,
 } from '@makeswift/prop-controllers'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import { Swatch } from '../../api'
-import { isNonNullable } from '../utils/isNonNullable'
+import { resolveColor } from '../utils/resolveColor'
 
 function mapSideColor(swatches: (Swatch | null)[], { color, ...restOfSide }: BorderSideData) {
   return {
     ...restOfSide,
-    color: color && {
-      alpha: color.alpha,
-      swatch: swatches.filter(isNonNullable).find(s => s && s.id === color.swatchId),
-    },
+    color: color && resolveColor(color, swatches),
   }
 }
 
@@ -39,7 +36,7 @@ export type BorderPropControllerData = ResponsiveValue<BorderData>
 export function useBorder(
   value: ResponsiveBorderData | undefined,
 ): BorderPropControllerData | undefined {
-  const swatchIds = getBorderPropControllerDataSwatchIds(value)
+  const swatchIds = getResponsiveBorderDataSwatchIds(value)
   const swatches = useSwatches(swatchIds)
 
   if (value == null) return undefined
