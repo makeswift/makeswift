@@ -56,6 +56,24 @@ export const valueWithCSSVariableFontFamily: ValueType<StyleDefinition> = {
   ],
 }
 
+export const valueWithInlineBorderColor: ValueType<StyleDefinition> = {
+  border: [
+    {
+      deviceId: 'desktop',
+      value: {
+        borderTop: {
+          width: 2,
+          style: 'solid',
+          color: { type: 'inline', hue: 238, saturation: 87, lightness: 49, alpha: 0.5 },
+        },
+        borderRight: null,
+        borderBottom: null,
+        borderLeft: null,
+      },
+    },
+  ],
+}
+
 export const registerComponents = (runtime: ReactRuntime) => {
   runtime.registerComponent(Button, {
     type: MakeswiftComponentType.Button,

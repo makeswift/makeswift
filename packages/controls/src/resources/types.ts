@@ -8,6 +8,9 @@ export type SwatchColorData = z.infer<typeof Schema.swatchColorData>
 export type InlineColorData = z.infer<typeof Schema.inlineColorData>
 export type ColorDataV2 = z.infer<typeof Schema.colorDataV2>
 export type ResolvedColorData = z.infer<typeof Schema.resolvedColorData>
+export type ResolvedInlineColorData = z.infer<
+  typeof Schema.resolvedInlineColorData
+>
 export type File = z.infer<typeof Schema.file>
 export type PagePathnameSlice = z.infer<typeof Schema.pagePathnameSlice>
 export type Typography = z.infer<typeof Schema.typography>
