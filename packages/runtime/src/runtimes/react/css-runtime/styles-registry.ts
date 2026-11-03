@@ -1,4 +1,12 @@
-import { getControlledStylePrecedence, styleTagHtml } from './utils'
+import {
+  getControlledStylePrecedence,
+  getHrefForBaseStyle,
+  getHrefForClassStyle,
+  getHrefForCssReset,
+  getHrefForFontFace,
+  getHrefForKeyframes,
+  styleTagHtml,
+} from './utils'
 import {
   BaseStylesData,
   ClassStyleData,
@@ -245,8 +253,8 @@ export class StylesRegistry {
     const cssResets = this.getCssResets()
     const hrefValues = new Array<string>()
     const allCss = new Array<string>()
-    for (const [contentHash, cssResetData] of cssResets.entries()) {
-      hrefValues.push(`makeswift-css-reset-${contentHash}`)
+    for (const cssResetData of cssResets.values()) {
+      hrefValues.push(getHrefForCssReset(cssResetData))
       allCss.push(cssResetData.css)
     }
     const combinedHref = hrefValues.join(' ')
@@ -265,16 +273,16 @@ export class StylesRegistry {
 
     const hrefValues = new Array<string>()
     const allCss = new Array<string>()
-    for (const [contentHash, fontFaceData] of fontFaces.entries()) {
-      hrefValues.push(`makeswift-font-face-${contentHash}`)
+    for (const fontFaceData of fontFaces.values()) {
+      hrefValues.push(getHrefForFontFace(fontFaceData))
       allCss.push(fontFaceData.css)
     }
-    for (const [className, uncontrolledStyleData] of styles.entries()) {
-      hrefValues.push(className)
+    for (const uncontrolledStyleData of styles.values()) {
+      hrefValues.push(getHrefForClassStyle(uncontrolledStyleData))
       allCss.push(uncontrolledStyleData.css)
     }
-    for (const [keyframesName, keyframesData] of keyframes.entries()) {
-      hrefValues.push(keyframesName)
+    for (const keyframesData of keyframes.values()) {
+      hrefValues.push(getHrefForKeyframes(keyframesData))
       allCss.push(keyframesData.css)
     }
     const combinedHref = hrefValues.join(' ')
@@ -290,8 +298,8 @@ export class StylesRegistry {
     const baseStyles = this.getBaseStyles()
     const hrefValues = new Array<string>()
     const allCss = new Array<string>()
-    for (const [contentHash, baseStylesData] of baseStyles.entries()) {
-      hrefValues.push(`makeswift-base-styles-${contentHash}`)
+    for (const baseStylesData of baseStyles.values()) {
+      hrefValues.push(getHrefForBaseStyle(baseStylesData))
       allCss.push(baseStylesData.css)
     }
     const combinedHref = hrefValues.join(' ')
@@ -308,14 +316,14 @@ export class StylesRegistry {
     const customPrecedenceValues = new Set<string>()
     const customPrecedenceToHrefValues = new Map<string, Array<string>>()
     const customPrecedenceToCss = new Map<string, Array<string>>()
-    for (const [className, controlledStyleData] of controlledStyles.entries()) {
+    for (const controlledStyleData of controlledStyles.values()) {
       const precedence = getControlledStylePrecedence(controlledStyleData)
       customPrecedenceValues.add(precedence)
 
       const hrefValues = customPrecedenceToHrefValues.get(precedence) ?? []
       const css = customPrecedenceToCss.get(precedence) ?? []
 
-      hrefValues.push(className)
+      hrefValues.push(getHrefForClassStyle(controlledStyleData))
       css.push(controlledStyleData.css)
 
       customPrecedenceToHrefValues.set(precedence, hrefValues)

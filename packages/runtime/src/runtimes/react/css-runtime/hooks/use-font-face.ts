@@ -4,6 +4,7 @@ import { processCss, toRawCss } from '../serialize-css'
 import { MakeswiftStylePrecedence } from '../types'
 import { MakeswiftStyle } from '../components/makeswift-style'
 import React from 'react'
+import { getHrefForFontFace } from '../utils'
 
 export function useFontFace({ styles }: { styles: CSSObject }) {
   const { stylesRegistry } = useStylesContext()
@@ -21,7 +22,7 @@ export function useFontFace({ styles }: { styles: CSSObject }) {
     }
     stylesRegistry.setFontFace(styleData)
   }
-  const href = `makeswift-font-face-${contentHash}`
+  const href = getHrefForFontFace(styleData)
   const styleElement = React.createElement(MakeswiftStyle, {
     key: contentHash,
     href,
