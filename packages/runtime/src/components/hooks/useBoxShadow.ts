@@ -1,5 +1,5 @@
-import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
+import { resolveColor } from '../utils/resolveColor'
 import { type ResponsiveValue } from '@makeswift/controls'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 import {
@@ -48,13 +48,7 @@ export function useBoxShadow(
       }) => ({
         ...restOfShadow,
         payload: {
-          color:
-            color != null
-              ? {
-                  swatch: swatches.filter(isNonNullable).find(s => s && s.id === color.swatchId),
-                  alpha: color.alpha,
-                }
-              : null,
+          color: color != null ? resolveColor(color, swatches) : null,
           inset: inset ?? ShadowDefaultValue.inset,
           offsetX: offsetX ?? ShadowDefaultValue.offsetX,
           offsetY: offsetY ?? ShadowDefaultValue.offsetY,
