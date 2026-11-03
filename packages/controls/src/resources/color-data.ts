@@ -9,11 +9,19 @@ import {
   type ColorData,
   type ColorDataV2,
   type InlineColorData,
+  type NullableColorData,
+  type NullableColorDataV2,
+  type NullableSwatchColorData,
   type ResolvedInlineColorData,
   type SwatchColorData,
 } from './types'
 
-export function toColorDataV2({ swatchId, alpha }: ColorData): SwatchColorData {
+export function toColorDataV2(color: ColorData): SwatchColorData
+export function toColorDataV2(color: NullableColorData): NullableSwatchColorData
+export function toColorDataV2({
+  swatchId,
+  alpha,
+}: NullableColorData): NullableSwatchColorData {
   return { type: 'swatch', swatchId, alpha }
 }
 
@@ -21,7 +29,9 @@ export function toColorDataV2({ swatchId, alpha }: ColorData): SwatchColorData {
  * Throws for inline colors, which data written by earlier versions can't
  * represent.
  */
-export function toColorDataV1(color: ColorDataV2): ColorData {
+export function toColorDataV1(color: ColorDataV2): ColorData
+export function toColorDataV1(color: NullableColorDataV2): NullableColorData
+export function toColorDataV1(color: NullableColorDataV2): NullableColorData {
   if (color.type === 'inline') {
     throw new Error(
       `Inline colors can't be written as swatch color data: ${JSON.stringify(color)}`,

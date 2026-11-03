@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { type NullableColorDataV2 } from '@makeswift/controls'
 import { Schema, type ResponsiveValue } from './prop-controllers'
 
 export const colorDataSchema = z.object({
@@ -7,6 +8,14 @@ export const colorDataSchema = z.object({
 })
 
 export type ColorData = z.infer<typeof colorDataSchema>
+
+export function getColorDataV2SwatchIds(
+  color: NullableColorDataV2 | null | undefined,
+): string[] {
+  return color?.type === 'swatch' && color.swatchId != null
+    ? [color.swatchId]
+    : []
+}
 
 export const lengthDataSchema = z.object({
   value: z.number(),

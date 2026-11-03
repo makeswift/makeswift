@@ -310,3 +310,310 @@ exports[`correctly renders box component with background image 1`] = `
   </div>
 </div>
 `;
+
+exports[`correctly renders box component with inline color background 1`] = `
+.ms-12226a4 {
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.ms-u7pdys {
+  position: relative;
+}
+
+.ms-u7pdys > * {
+  border-radius: inherit;
+  height: inherit;
+}
+
+.ms-u7pdys > :last-child {
+  position: relative;
+}
+
+.ms-1vg8v23 {
+  display: flex;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-7cpjp3 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
+    align-self: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-7cpjp3 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
+    align-self: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-7cpjp3 {
+    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;
+    -ms-grid-row-align: auto;
+    align-self: auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ms-g6asym {
+    opacity: 1;
+    -webkit-transition: all 0ms;
+    transition: all 0ms;
+  }
+  .ms-g6asym > div > .grid-item {
+    opacity: 1;
+  }
+}
+
+.ms-187jnny {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-187jnny {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-187jnny {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-187jnny {
+    display: block;
+  }
+}
+
+.ms-hc67zt {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+  background-color: hsla(238, 87%, 49%, 0.5);
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-m001dn {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-m001dn {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-m001dn {
+    -webkit-align-content: flex-start;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+  }
+}
+
+.ms-1fqsart {
+  width: 100%;
+  background: rgba(161, 168, 194, 0.18);
+  height: 80px;
+  padding: 8px;
+}
+
+.ms-53v5nr {
+  max-width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-53v5nr {
+    width: 1160px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-53v5nr {
+    width: 1160px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-53v5nr {
+    width: 1160px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-19oni3y {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 60px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-19oni3y {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 60px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-19oni3y {
+    margin-top: 40px;
+    margin-right: auto;
+    margin-bottom: 60px;
+    margin-left: auto;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-1ypjwdd {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-1ypjwdd {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-1ypjwdd {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 470px;
+    padding-left: 10px;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-be1rlk {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-be1rlk {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-be1rlk {
+    border-top: 0px solid black;
+    border-right: 0px solid black;
+    border-bottom: 0px solid black;
+    border-left: 0px solid black;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .ms-ioe3ig {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .ms-ioe3ig {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .ms-ioe3ig {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+}
+
+
+<div
+  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-7cpjp3 ms-g6asym"
+  id="test-box"
+>
+  <div
+    class="ms-187jnny"
+  >
+    <div
+      class="ms-hc67zt"
+    />
+  </div>
+  <div
+    class="ms-1ypjwdd ms-1jjl2k3 ms-be1rlk ms-12226a4 ms-m001dn"
+  >
+    <div
+      class="ms-1fqsart"
+      style="visibility: initial;"
+    >
+      <svg
+        height="100%"
+        style="overflow: visible;"
+        width="100%"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          fill="none"
+          height="100%"
+          rx="4"
+          ry="4"
+          stroke="rgba(161, 168, 194, 0.40)"
+          stroke-dasharray="4 2"
+          stroke-width="2"
+          width="100%"
+          x="0"
+          y="0"
+        />
+      </svg>
+    </div>
+  </div>
+</div>
+`;
