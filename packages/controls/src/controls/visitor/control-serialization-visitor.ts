@@ -112,7 +112,7 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
     return this.serializeConfig(def)
   }
   visitStyleV1(def: StyleDefinition): SerializedRecord {
-    return this.serializeConfig(def)
+    return this.serializeConfig(def, { version: def.version })
   }
   visitStyleV2(
     def: StyleV2Definition<ControlDefinition, unknown>,
@@ -126,6 +126,6 @@ export abstract class ControlSerializationVisitor extends ControlDefinitionVisit
     return this.serializeConfig(def, { version: def.version })
   }
   visitTypography(def: unstable_TypographyDefinition): SerializedRecord {
-    return this.serializeConfig(def)
+    return this.serializeConfig(def, { version: def.version })
   }
 }

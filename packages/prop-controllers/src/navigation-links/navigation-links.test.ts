@@ -5,6 +5,8 @@ import {
   NavigationLinksPropControllerDataV0,
   NavigationLinksPropControllerDataV1,
   NavigationLinksPropControllerDataV1Type,
+  NavigationLinksPropControllerDataV2Type,
+  NavigationLinks,
   NavigationLinksData,
   createNavigationLinksPropControllerDataFromNavigationLinksData,
   getNavigationLinksPropControllerDataNavigationLinksData,
@@ -115,7 +117,7 @@ describe('NavigationLinksPropController', () => {
         )
 
       // Assert
-      expect(result).toBe(data)
+      expect(result).toEqual(data)
     })
   })
 
@@ -1091,6 +1093,90 @@ describe('NavigationLinksPropController', () => {
 
         // Assert
         expect(result).toEqual(expected)
+      })
+    })
+  })
+
+  describe('v2 data', () => {
+    const value: NavigationLinksData = [
+      {
+        id: 'button-1',
+        type: 'button',
+        payload: {
+          label: 'Button',
+          color: [
+            {
+              deviceId: 'desktop',
+              value: { type: 'swatch', swatchId: 'swatch-id-1', alpha: 1 },
+            },
+          ],
+          textColor: [
+            {
+              deviceId: 'desktop',
+              value: {
+                type: 'inline',
+                hue: 238,
+                saturation: 87,
+                lightness: 49,
+                alpha: 0.5,
+              },
+            },
+          ],
+        },
+      },
+    ]
+    const data = createNavigationLinksPropControllerDataFromNavigationLinksData(
+      value,
+      NavigationLinks(),
+    )
+
+    test('is written by the current descriptor', () => {
+      expect(data).toEqual({
+        [ControlDataTypeKey]: NavigationLinksPropControllerDataV2Type,
+        value,
+      })
+    })
+
+    test('is read', () => {
+      expect(
+        getNavigationLinksPropControllerDataNavigationLinksData(data),
+      ).toBe(value)
+    })
+
+    test('returns only swatch ids', () => {
+      expect(getNavigationLinksPropControllerSwatchIds(data)).toEqual([
+        'swatch-id-1',
+      ])
+    })
+
+    test('copies swatches and leaves inline colors as is', () => {
+      const context: CopyContext = {
+        replacementContext: createReplacementContext({
+          swatchIds: { 'swatch-id-1': 'new-swatch-id' },
+        }),
+        copyElement: (el) => el,
+      }
+
+      expect(copyNavigationLinksPropControllerData(data, context)).toEqual({
+        [ControlDataTypeKey]: NavigationLinksPropControllerDataV2Type,
+        value: [
+          {
+            ...value[0],
+            payload: {
+              ...value[0].payload,
+              color: [
+                {
+                  deviceId: 'desktop',
+                  value: {
+                    type: 'swatch',
+                    swatchId: 'new-swatch-id',
+                    alpha: 1,
+                  },
+                },
+              ],
+            },
+          },
+        ],
       })
     })
   })

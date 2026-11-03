@@ -9,7 +9,11 @@ import {
 } from '../../../testing'
 
 import { pageDocument } from '../__fixtures__/page-document'
-import { boxComponentData, imageBackgroundData } from '../__fixtures__/element-data/box-component'
+import {
+  boxComponentData,
+  imageBackgroundData,
+  inlineColorBackgroundData,
+} from '../__fixtures__/element-data/box-component'
 import * as Resources from '../__fixtures__/resources'
 
 const createPageWithBox = (...args: Parameters<typeof boxComponentData>) => {
@@ -41,6 +45,16 @@ describe('correctly renders box component', () => {
     const snapshot = createPageWithBox({
       htmlId,
       backgrounds: [imageBackgroundData(Resources.file1.id)],
+    })
+
+    const render = await testMakeswiftPageRendering({ snapshot })
+    expect(render.container.querySelector(`#${htmlId}`)).toMatchSnapshot()
+  })
+  test('with inline color background', async () => {
+    const htmlId = 'test-box'
+    const snapshot = createPageWithBox({
+      htmlId,
+      backgrounds: [inlineColorBackgroundData()],
     })
 
     const render = await testMakeswiftPageRendering({ snapshot })

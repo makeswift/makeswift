@@ -29,8 +29,26 @@ export const colorDataV2 = z.discriminatedUnion('type', [
   inlineColorData,
 ])
 
+export const nullableColorData = colorData.extend({
+  swatchId: z.string().nullable(),
+})
+
+export const nullableSwatchColorData = nullableColorData.extend({
+  type: z.literal('swatch'),
+})
+
+export const nullableColorDataV2 = z.discriminatedUnion('type', [
+  nullableSwatchColorData,
+  inlineColorData,
+])
+
 export const resolvedColorData = z.object({
   swatch,
+  alpha: z.number(),
+})
+
+export const resolvedInlineColorData = z.object({
+  swatch: swatch.omit({ id: true }),
   alpha: z.number(),
 })
 

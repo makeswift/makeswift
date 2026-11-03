@@ -49,10 +49,14 @@ export const borderSideSchema = <C extends z.ZodTypeAny>(color: C) =>
       width: v.width,
     }))
 
-export const borderSide = borderSideSchema(ResourceSchema.colorData)
-export const resolvedBorderSide = borderSideSchema(
+export const resolvedBorderColor = z.union([
   ResourceSchema.resolvedColorData,
-)
+  ResourceSchema.resolvedInlineColorData,
+])
+
+export const borderSide = borderSideSchema(ResourceSchema.colorData)
+export const borderSideV2 = borderSideSchema(ResourceSchema.colorDataV2)
+export const resolvedBorderSide = borderSideSchema(resolvedBorderColor)
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/border
@@ -78,6 +82,7 @@ export const borderSchema = <C extends z.ZodTypeAny>(color: C) =>
     }))
 
 export const border = borderSchema(ResourceSchema.colorData)
+export const borderV2 = borderSchema(ResourceSchema.colorDataV2)
 
 /**
  * https://developer.mozilla.org/en-US/docs/Web/CSS/font-family

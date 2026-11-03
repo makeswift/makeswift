@@ -1,6 +1,19 @@
 import { z } from 'zod'
 
 import { responsiveValue } from '../../common/schema'
+import { ResourceSchema } from '../../resources'
+
+export const colorData = z.object({
+  swatchId: z.string().nullable(),
+  alpha: z.number().nullable(),
+})
+
+export const swatchColorData = colorData.extend({ type: z.literal('swatch') })
+
+export const colorDataV2 = z.discriminatedUnion('type', [
+  swatchColorData,
+  ResourceSchema.inlineColorData,
+])
 
 export function responsiveStyle<C extends z.ZodTypeAny>(color: C) {
   return responsiveValue(

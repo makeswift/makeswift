@@ -64,6 +64,7 @@ RichTextV2Definition {
       "control": {
         "definition": Typography {
           "config": {},
+          "version": 1,
         },
       },
     },
@@ -210,6 +211,7 @@ exports[`RichTextV2 serialization deserialized definition in block mode contains
           "definition": {
             "config": {},
             "type": "makeswift::controls::typography",
+            "version": 1,
           },
           "getValue": [MessagePort],
           "onChange": [MessagePort],

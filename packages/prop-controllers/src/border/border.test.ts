@@ -3,7 +3,11 @@ import {
   BorderPropControllerDataV0,
   BorderPropControllerDataV1,
   BorderPropControllerDataV1Type,
+  BorderPropControllerDataV2Type,
+  Border,
   copyBorderPropControllerData,
+  createBorderPropControllerDataFromResponsiveBorderData,
+  ResponsiveBorderData,
   getBorderPropControllerDataResponsiveBorderData,
   getBorderPropControllerDataSwatchIds,
 } from './border'
@@ -214,6 +218,80 @@ describe('BorderPropController', () => {
 
       // Assert
       expect(result).toMatchObject(expected)
+    })
+  })
+
+  describe('v2 data', () => {
+    const value: ResponsiveBorderData = [
+      {
+        deviceId: 'desktop',
+        value: {
+          borderTop: {
+            width: 1,
+            style: 'solid',
+            color: { type: 'swatch', swatchId: 'swatch-id-1', alpha: 1 },
+          },
+          borderRight: null,
+          borderBottom: {
+            width: 2,
+            style: 'dashed',
+            color: {
+              type: 'inline',
+              hue: 238,
+              saturation: 87,
+              lightness: 49,
+              alpha: 0.5,
+            },
+          },
+          borderLeft: null,
+        },
+      },
+    ]
+    const data = createBorderPropControllerDataFromResponsiveBorderData(
+      Border(),
+      value,
+    )
+
+    test('is written by the current descriptor', () => {
+      expect(data).toEqual({
+        [ControlDataTypeKey]: BorderPropControllerDataV2Type,
+        value,
+      })
+    })
+
+    test('is read', () => {
+      expect(getBorderPropControllerDataResponsiveBorderData(data)).toBe(value)
+    })
+
+    test('returns only swatch ids', () => {
+      expect(getBorderPropControllerDataSwatchIds(data)).toEqual([
+        'swatch-id-1',
+      ])
+    })
+
+    test('copies swatches and leaves inline colors as is', () => {
+      expect(
+        copyBorderPropControllerData(data, {
+          replacementContext: createReplacementContext({
+            swatchIds: { 'swatch-id-1': 'new-swatch-id' },
+          }),
+          copyElement: (el) => el,
+        }),
+      ).toEqual({
+        [ControlDataTypeKey]: BorderPropControllerDataV2Type,
+        value: [
+          {
+            deviceId: 'desktop',
+            value: {
+              ...value[0].value,
+              borderTop: {
+                ...value[0].value.borderTop,
+                color: { type: 'swatch', swatchId: 'new-swatch-id', alpha: 1 },
+              },
+            },
+          },
+        ],
+      })
     })
   })
 })

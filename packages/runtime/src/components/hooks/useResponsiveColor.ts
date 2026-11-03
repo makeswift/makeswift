@@ -6,6 +6,7 @@ import {
 
 import { isNonNullable } from '../utils/isNonNullable'
 import type { ColorValue as Color } from '../utils/types'
+import { resolveColor } from '../utils/resolveColor'
 import { useSwatches } from '../../runtimes/react/hooks/makeswift-api'
 
 export function useResponsiveColor(
@@ -18,10 +19,10 @@ export function useResponsiveColor(
 
   return color
     .map(({ value: v, ...rest }) => {
-      const { swatchId, alpha } = v
-      const swatch = swatches.find(s => s && s.id === swatchId)
+      const value = resolveColor(v, swatches)
 
-      return swatch == null ? null : { ...rest, value: { swatch, alpha } }
+      // an override whose swatch can't be found isn't rendered
+      return value.swatch == null ? null : { ...rest, value }
     })
     .filter(isNonNullable)
 }

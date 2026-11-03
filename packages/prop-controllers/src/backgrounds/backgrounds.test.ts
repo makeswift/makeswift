@@ -6,6 +6,9 @@ import {
   BackgroundsDescriptor,
   BackgroundsPropControllerDataV2,
   BackgroundsPropControllerDataV2Type,
+  BackgroundsPropControllerDataV3,
+  BackgroundsPropControllerDataV3Type,
+  backgroundsPropControllerDataSchema,
   copyBackgroundsPropControllerData,
   createBackgroundsPropControllerDataFromResponsiveBackgroundsData,
   getBackgroundsPropControllerDataResponsiveBackgroundsData,
@@ -15,73 +18,62 @@ import {
 } from './backgrounds'
 
 const fileId = '[fileId]'
-const backgrounds: BackgroundsPropControllerDataV1 = [
+
+const backgroundsWith = <C>(
+  color: (swatchId: string | null, alpha: number) => C,
+) => [
   {
     deviceId: 'desktop',
     value: [
       {
         id: 'id',
-        type: 'image-v1',
+        type: 'image-v1' as const,
         payload: {
-          version: 1,
-          image: { id: fileId, type: 'makeswift-file', version: 1 },
+          version: 1 as const,
+          image: {
+            id: fileId,
+            type: 'makeswift-file' as const,
+            version: 1 as const,
+          },
           position: { x: 0, y: 0 },
         },
       },
-      {
-        id: '1',
-        type: 'color',
-        payload: { swatchId: '[swatch1]', alpha: 100 },
-      },
+      { id: '1', type: 'color' as const, payload: color('[swatch1]', 100) },
       {
         id: '2',
-        type: 'gradient',
+        type: 'gradient' as const,
         payload: {
           stops: [
-            {
-              id: 'stop1',
-              location: 0,
-              color: { swatchId: '[swatch2]', alpha: 100 },
-            },
-            {
-              id: 'stop2',
-              location: 100,
-              color: { swatchId: '[swatch3]', alpha: 100 },
-            },
+            { id: 'stop1', location: 0, color: color('[swatch2]', 100) },
+            { id: 'stop2', location: 100, color: color('[swatch3]', 100) },
           ],
         },
       },
       {
         id: '3',
-        type: 'video',
-        payload: { maskColor: { swatchId: '[swatch4]', alpha: 100 } },
+        type: 'video' as const,
+        payload: { maskColor: color('[swatch4]', 100) },
       },
-      {
-        id: '4',
-        type: 'color',
-        payload: { swatchId: null, alpha: 0.5 },
-      },
+      { id: '4', type: 'color' as const, payload: color(null, 0.5) },
       {
         id: '5',
-        type: 'gradient',
+        type: 'gradient' as const,
         payload: {
-          stops: [
-            {
-              id: 'stop1',
-              location: 0,
-              color: { swatchId: null, alpha: 0.6 },
-            },
-          ],
+          stops: [{ id: 'stop1', location: 0, color: color(null, 0.6) }],
         },
       },
       {
         id: '6',
-        type: 'video',
-        payload: { maskColor: { swatchId: null, alpha: 0.07 } },
+        type: 'video' as const,
+        payload: { maskColor: color(null, 0.07) },
       },
     ],
   },
 ]
+
+const backgrounds: BackgroundsPropControllerDataV1 = backgroundsWith(
+  (swatchId, alpha) => ({ swatchId, alpha }),
+)
 
 const v1Data: BackgroundsPropControllerDataV1 = backgrounds
 const v2Data: BackgroundsPropControllerDataV2 = {
@@ -89,11 +81,44 @@ const v2Data: BackgroundsPropControllerDataV2 = {
   value: backgrounds,
 }
 
+const inlineColor = {
+  type: 'inline' as const,
+  hue: 238,
+  saturation: 87,
+  lightness: 49,
+  alpha: 0.5,
+}
+
+const backgroundsV2: ResponsiveBackgroundsData = backgroundsWith(
+  (swatchId, alpha) => ({ type: 'swatch' as const, swatchId, alpha }),
+)
+
+const v3Data: BackgroundsPropControllerDataV3 = {
+  [ControlDataTypeKey]: BackgroundsPropControllerDataV3Type,
+  value: [
+    {
+      deviceId: 'desktop',
+      value: [
+        ...backgroundsV2[0].value,
+        { id: '7', type: 'color', payload: inlineColor },
+        {
+          id: '8',
+          type: 'gradient',
+          payload: {
+            stops: [{ id: 'stop1', location: 0, color: inlineColor }],
+          },
+        },
+        { id: '9', type: 'video', payload: { maskColor: inlineColor } },
+      ],
+    },
+  ],
+}
+
 describe('BackgroundsPropController', () => {
   describe('getBackgroundsPropControllerDataResponsiveBackgroundsData', () => {
     test('returns value for BackgroundsPropControllerDataV2Type', () => {
       // Arrange
-      const backgrounds: ResponsiveBackgroundsData = [
+      const backgrounds: BackgroundsPropControllerDataV1 = [
         {
           deviceId: 'desktop',
           value: [
@@ -115,12 +140,27 @@ describe('BackgroundsPropController', () => {
         getBackgroundsPropControllerDataResponsiveBackgroundsData(data)
 
       // Assert
-      expect(result).toBe(backgrounds)
+      expect(result).toEqual(backgrounds)
+    })
+
+    test.each([v1Data, v2Data])('reads v1 colors as swatch colors', (data) => {
+      expect(
+        getBackgroundsPropControllerDataResponsiveBackgroundsData(data),
+      ).toEqual(backgroundsV2)
+    })
+
+    test('returns value for BackgroundsPropControllerDataV3Type', () => {
+      // Act
+      const result =
+        getBackgroundsPropControllerDataResponsiveBackgroundsData(v3Data)
+
+      // Assert
+      expect(result).toBe(v3Data.value)
     })
 
     test('returns value for BackgroundsPropControllerDataV1 data', () => {
       // Arrange
-      const backgrounds: ResponsiveBackgroundsData = [
+      const backgrounds: BackgroundsPropControllerDataV1 = [
         {
           deviceId: 'desktop',
           value: [
@@ -138,11 +178,30 @@ describe('BackgroundsPropController', () => {
         getBackgroundsPropControllerDataResponsiveBackgroundsData(backgrounds)
 
       // Assert
-      expect(result).toBe(backgrounds)
+      expect(result).toEqual(backgrounds)
     })
   })
 
   describe('createBackgroundsPropControllerDataFromResponsiveBackgroundsData', () => {
+    test('returns BackgroundsPropControllerDataV3 when definition version is 3', () => {
+      // Arrange
+      const definition: BackgroundsDescriptor = {
+        type: Types.Backgrounds,
+        version: 3,
+        options: {},
+      }
+
+      // Act
+      const result =
+        createBackgroundsPropControllerDataFromResponsiveBackgroundsData(
+          v3Data.value,
+          definition,
+        )
+
+      // Assert
+      expect(result).toEqual(v3Data)
+    })
+
     test('returns BackgroundsPropControllerDataV2 when definition version is 2', () => {
       // Arrange
       const backgrounds: ResponsiveBackgroundsData = [
@@ -205,7 +264,16 @@ describe('BackgroundsPropController', () => {
         )
 
       // Assert
-      expect(result).toBe(backgrounds)
+      expect(result).toEqual(backgrounds)
+    })
+
+    test('writes swatch colors as v2 data when definition version is 2', () => {
+      expect(
+        createBackgroundsPropControllerDataFromResponsiveBackgroundsData(
+          backgroundsV2,
+          { type: Types.Backgrounds, version: 2, options: {} },
+        ),
+      ).toEqual(v2Data)
     })
   })
 
@@ -224,6 +292,7 @@ describe('BackgroundsPropController', () => {
     test.each([
       { version: 1, data: v1Data },
       { version: 2, data: v2Data },
+      { version: 3, data: v3Data },
     ])('returns array with id for v$version data', ({ data }) => {
       // Act
       const result = getBackgroundsPropControllerFileIds(data)
@@ -248,6 +317,7 @@ describe('BackgroundsPropController', () => {
     test.each([
       { version: 1, data: v1Data },
       { version: 2, data: v2Data },
+      { version: 3, data: v3Data },
     ])(
       'returns array with swatch ids for v$version color background',
       ({ data }) => {
@@ -269,6 +339,7 @@ describe('BackgroundsPropController', () => {
     test.each([
       { version: 1 as const, data: v1Data },
       { version: 2 as const, data: v2Data },
+      { version: 3 as const, data: v3Data },
     ])('returns copied v$version when data', ({ data, version }) => {
       // Arrange
       const descriptor: BackgroundsDescriptor = {
@@ -309,6 +380,15 @@ describe('BackgroundsPropController', () => {
 
       // Assert
       expect(result).toEqual(expected)
+    })
+  })
+
+  describe('backgroundsPropControllerDataSchema', () => {
+    test('parses inline colors', () => {
+      expect(backgroundsPropControllerDataSchema.safeParse(v3Data)).toEqual({
+        success: true,
+        data: v3Data,
+      })
     })
   })
 })
