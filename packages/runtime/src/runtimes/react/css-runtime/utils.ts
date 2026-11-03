@@ -3,7 +3,14 @@ import { DEFAULT_CSS_CLASS_NAME_PREFIX, DEFAULT_CSS_PRECEDENCE } from './constan
 import { StylesRegistry } from './styles-registry'
 import { MakeswiftStyle } from './components/makeswift-style'
 import { ComponentProps } from 'react'
-import { ControlledStyleData } from './types'
+import {
+  BaseStylesData,
+  ClassStyleData,
+  ControlledStyleData,
+  CssResetData,
+  FontFaceData,
+  KeyframesData,
+} from './types'
 
 export function generateClassName({
   data,
@@ -34,4 +41,24 @@ export function styleTagHtml({ href, precedence, css }: ComponentProps<typeof Ma
 
 export function getControlledStylePrecedence(styleData: ControlledStyleData): string {
   return styleData.className
+}
+
+export function getHrefForBaseStyle(styleData: BaseStylesData): string {
+  return `makeswift-base-styles-${styleData.contentHash}`
+}
+
+export function getHrefForFontFace(styleData: FontFaceData): string {
+  return `makeswift-font-face-${styleData.contentHash}`
+}
+
+export function getHrefForCssReset(styleData: CssResetData): string {
+  return `makeswift-css-reset-${styleData.contentHash}`
+}
+
+export function getHrefForClassStyle(styleData: ClassStyleData): string {
+  return styleData.className
+}
+
+export function getHrefForKeyframes(styleData: KeyframesData): string {
+  return styleData.keyframesName
 }

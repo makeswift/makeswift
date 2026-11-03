@@ -4,6 +4,7 @@ import { processCss, toRawCss } from '../serialize-css'
 import { MakeswiftStylePrecedence } from '../types'
 import { MakeswiftStyle } from '../components/makeswift-style'
 import React from 'react'
+import { getHrefForCssReset } from '../utils'
 
 export function useCssReset({ styles }: { styles: Array<CSSObject> }) {
   const { enableCssReset, forceImportant, stylesRegistry } = useStylesContext()
@@ -23,7 +24,7 @@ export function useCssReset({ styles }: { styles: Array<CSSObject> }) {
 
   const styleElement = React.createElement(MakeswiftStyle, {
     key: contentHash,
-    href: `makeswift-css-reset-${contentHash}`,
+    href: getHrefForCssReset(styleData),
     css: styleData.css,
     precedence: MakeswiftStylePrecedence.RESET,
   })

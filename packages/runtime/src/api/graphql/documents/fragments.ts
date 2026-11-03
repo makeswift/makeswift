@@ -159,5 +159,17 @@ export const SiteFragment = /* GraphQL */ `
         }
       }
     }
+    customFontFamilies {
+      __typename
+      family
+      variants {
+        __typename
+        id
+        weight
+        style
+        isActive
+        fontFileUrl
+      }
+    }
   }
 `
