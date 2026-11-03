@@ -1,20 +1,24 @@
 /** @jest-environment jsdom */
 
-import { Color, ColorData } from '@makeswift/controls'
+import { Color } from '@makeswift/controls'
 import { testPageControlPropRendering } from '../page-control-prop-rendering'
 import { http, HttpResponse } from 'msw'
 import { server } from '../../../../../mocks/server'
-import { swatchId, swatch, value, cacheData } from './fixtures'
+import { swatchId, swatch, value, inlineValue, cacheData, toDataV0, toDataV1 } from './fixtures'
 
 const swatchesBaseUrl = `/api/makeswift/swatches`
 
 describe.each([
   {
     version: 0,
-    toData: (value: ColorData) => value,
+    toData: toDataV0,
   },
   {
     version: 1,
+    toData: toDataV1,
+  },
+  {
+    version: 2,
   },
 ])('color data v$version', ({ toData }) => {
   describe.each([
@@ -50,6 +54,15 @@ describe.each([
         cacheData: cacheData(swatch),
         expectedRenders: 1,
       })
+    })
+  })
+})
+
+describe('inline color data', () => {
+  test('renders without fetching a swatch', async () => {
+    await testPageControlPropRendering(Color({ defaultValue: 'rgb(255,0,0)' }), {
+      value: inlineValue,
+      expectedRenders: 1,
     })
   })
 })

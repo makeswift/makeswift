@@ -1,2 +1,5 @@
 export * from './border'
-export { type BorderData, type BorderSideData } from '@makeswift/controls'
+export {
+  type BorderDataV2 as BorderData,
+  type BorderSideDataV2 as BorderSideData,
+} from '@makeswift/controls'

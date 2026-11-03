@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactRuntimeProvider, SiteVersion } from '@makeswift/runtime/next'
+import { ReactRuntimeProvider, RootStyleRegistry, SiteVersion } from '@makeswift/runtime/next'
 
 import '@/lib/makeswift/components'
 import { runtime } from '@/lib/makeswift/runtime'
@@ -14,7 +14,7 @@ export function MakeswiftProvider({
 }) {
   return (
     <ReactRuntimeProvider runtime={runtime} siteVersion={siteVersion}>
-      {children}
+      <RootStyleRegistry>{children}</RootStyleRegistry>
     </ReactRuntimeProvider>
   )
 }

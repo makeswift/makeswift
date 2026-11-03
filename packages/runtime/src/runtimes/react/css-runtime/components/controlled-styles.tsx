@@ -4,7 +4,7 @@ import { ReactNode, useEffect } from 'react'
 import { pollBoxModel } from '../../poll-box-model'
 import { MakeswiftStyle } from './makeswift-style'
 import { ControlledStyleData } from '../types'
-import { getControlledStylePrecedence } from '../utils'
+import { getControlledStylePrecedence, getHrefForClassStyle } from '../utils'
 import { useIsInBuilder } from '../../hooks/use-is-in-builder'
 
 type Props = {
@@ -63,7 +63,7 @@ export function ControlledStyle({
 
   return (
     <MakeswiftStyle
-      href={className}
+      href={getHrefForClassStyle(styleData)}
       css={styleData.css}
       precedence={getControlledStylePrecedence(styleData)}
     />

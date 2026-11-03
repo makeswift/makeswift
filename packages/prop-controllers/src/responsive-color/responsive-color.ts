@@ -1,5 +1,16 @@
 import { z } from 'zod'
-import { colorDataSchema } from '../data'
+import {
+  copyColorDataV2,
+  ResourceSchema,
+  toColorDataV1,
+  toColorDataV2,
+  type ColorDataV2,
+} from '@makeswift/controls'
+import {
+  colorDataSchema,
+  getColorDataV2SwatchIds,
+  type ColorData,
+} from '../data'
 import {
   ControlDataTypeKey,
   CopyContext,
@@ -8,18 +19,20 @@ import {
   Schema,
 } from '../prop-controllers'
 import { match } from 'ts-pattern'
-import {
-  ColorData,
-  ContextResource,
-  replaceResourceIfNeeded,
-  shouldRemoveResource,
-} from '@makeswift/controls'
 
-const responsiveColorDataSchema = Schema.responsiveValue(colorDataSchema)
+export const responsiveColorDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  Schema.responsiveValue(color)
 
-export type ResponsiveColorData = z.infer<typeof responsiveColorDataSchema>
+export type ResponsiveColor<Color> = z.infer<
+  ReturnType<typeof responsiveColorDataSchema<z.ZodType<Color>>>
+>
 
-const responsiveColorPropControllerDataV0Schema = responsiveColorDataSchema
+export type ResponsiveColorDataV1 = ResponsiveColor<ColorData>
+
+export type ResponsiveColorData = ResponsiveColor<ColorDataV2>
+
+const responsiveColorPropControllerDataV0Schema =
+  responsiveColorDataSchema(colorDataSchema)
 
 type ResponsiveColorPropControllerDataV0 = z.infer<
   typeof responsiveColorPropControllerDataV0Schema
@@ -30,16 +43,30 @@ const ResponsiveColorPropControllerDataV1Type =
 
 const responsiveColorPropControllerDataV1Schema = z.object({
   [ControlDataTypeKey]: z.literal(ResponsiveColorPropControllerDataV1Type),
-  value: responsiveColorDataSchema,
+  value: responsiveColorDataSchema(colorDataSchema),
 })
 
 type ResponsiveColorPropControllerDataV1 = z.infer<
   typeof responsiveColorPropControllerDataV1Schema
 >
 
+/** v2 colors are either a swatch or an inline color */
+const ResponsiveColorPropControllerDataV2Type =
+  'prop-controllers::responsive-color::v2'
+
+const responsiveColorPropControllerDataV2Schema = z.object({
+  [ControlDataTypeKey]: z.literal(ResponsiveColorPropControllerDataV2Type),
+  value: responsiveColorDataSchema(ResourceSchema.colorDataV2),
+})
+
+type ResponsiveColorPropControllerDataV2 = z.infer<
+  typeof responsiveColorPropControllerDataV2Schema
+>
+
 export const responsiveColorPropControllerDataSchema = z.union([
   responsiveColorPropControllerDataV0Schema,
   responsiveColorPropControllerDataV1Schema,
+  responsiveColorPropControllerDataV2Schema,
 ])
 
 export type ResponsiveColorPropControllerData = z.infer<
@@ -63,9 +90,16 @@ type ResponsiveColorDescriptorV1<_T = ResponsiveColorPropControllerDataV1> = {
   options: ResponsiveColorOptions
 }
 
+type ResponsiveColorDescriptorV2<_T = ResponsiveColorPropControllerDataV2> = {
+  type: typeof Types.ResponsiveColor
+  version: 2
+  options: ResponsiveColorOptions
+}
+
 export type ResponsiveColorDescriptor<_T = ResponsiveColorPropControllerData> =
   | ResponsiveColorDescriptorV0
   | ResponsiveColorDescriptorV1
+  | ResponsiveColorDescriptorV2
 
 /**
  * @deprecated Imports from `@makeswift/prop-controllers` are deprecated. Use
@@ -73,8 +107,26 @@ export type ResponsiveColorDescriptor<_T = ResponsiveColorPropControllerData> =
  */
 export function ResponsiveColor(
   options: ResponsiveColorOptions = {},
-): ResponsiveColorDescriptorV1 {
-  return { type: Types.ResponsiveColor, version: 1, options }
+): ResponsiveColorDescriptorV2 {
+  return { type: Types.ResponsiveColor, version: 2, options }
+}
+
+export function toResponsiveColorDataV2(
+  data: ResponsiveColorDataV1,
+): ResponsiveColorData {
+  return data.map((override) => ({
+    ...override,
+    value: toColorDataV2(override.value),
+  }))
+}
+
+export function toResponsiveColorDataV1(
+  data: ResponsiveColorData,
+): ResponsiveColorDataV1 {
+  return data.map((override) => ({
+    ...override,
+    value: toColorDataV1(override.value),
+  }))
 }
 
 export function getResponsiveColorPropControllerDataResponsiveColorData(
@@ -82,10 +134,14 @@ export function getResponsiveColorPropControllerDataResponsiveColorData(
 ): ResponsiveColorData {
   return match(data)
     .with(
-      { [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type },
-      (v1) => v1.value,
+      { [ControlDataTypeKey]: ResponsiveColorPropControllerDataV2Type },
+      (v2) => v2.value,
     )
-    .otherwise((v0) => v0)
+    .with(
+      { [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type },
+      (v1) => toResponsiveColorDataV2(v1.value),
+    )
+    .otherwise((v0) => toResponsiveColorDataV2(v0))
 }
 
 export function createResponsiveColorPropControllerDataFromResponsiveColorData(
@@ -94,20 +150,28 @@ export function createResponsiveColorPropControllerDataFromResponsiveColorData(
 ): ResponsiveColorPropControllerData {
   return match(definition)
     .with(
+      { version: 2 },
+      () =>
+        ({
+          [ControlDataTypeKey]: ResponsiveColorPropControllerDataV2Type,
+          value: responsiveColorData,
+        }) as const,
+    )
+    .with(
       { version: 1 },
       () =>
         ({
           [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type,
-          value: responsiveColorData,
+          value: toResponsiveColorDataV1(responsiveColorData),
         }) as const,
     )
-    .otherwise(() => responsiveColorData)
+    .otherwise(() => toResponsiveColorDataV1(responsiveColorData))
 }
 
 export function getResponsiveColorDataSwatchIds(
   data: ResponsiveColorData,
 ): string[] {
-  return data.map((override) => override.value.swatchId)
+  return data.flatMap((override) => getColorDataV2SwatchIds(override.value))
 }
 
 export function getResponsiveColorPropControllerDataSwatchIds(
@@ -124,45 +188,30 @@ export function copyResponsiveColorData(
   data: ResponsiveColorData,
   context: CopyContext,
 ): ResponsiveColorData {
-  return data
-    .filter(
-      (override) =>
-        !shouldRemoveResource(
-          ContextResource.Swatch,
-          override.value.swatchId,
-          context,
-        ),
-    )
-    .map((override) => ({
-      ...override,
-      value: copyColorValue(override.value),
-    }))
-
-  function copyColorValue(colorValue: ColorData): ColorData {
-    return {
-      ...colorValue,
-      swatchId: replaceResourceIfNeeded(
-        ContextResource.Swatch,
-        colorValue.swatchId,
-        context,
-      ),
-    }
-  }
+  return data.flatMap((override) => {
+    const value = copyColorDataV2(override.value, context)
+    return value == null ? [] : [{ ...override, value }]
+  })
 }
 
 export function copyResponsiveColorPropControllerData(
   data: ResponsiveColorPropControllerData | undefined,
   context: CopyContext,
 ): ResponsiveColorPropControllerData | undefined {
+  const copy = (data: ResponsiveColorDataV1) =>
+    toResponsiveColorDataV1(
+      copyResponsiveColorData(toResponsiveColorDataV2(data), context),
+    )
+
   return match(data)
     .with(undefined, () => undefined)
     .with(
-      { [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type },
-      (v1) =>
-        ({
-          [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type,
-          value: copyResponsiveColorData(v1.value, context),
-        }) as const,
+      { [ControlDataTypeKey]: ResponsiveColorPropControllerDataV2Type },
+      (v2) => ({ ...v2, value: copyResponsiveColorData(v2.value, context) }),
     )
-    .otherwise((v0) => copyResponsiveColorData(v0, context))
+    .with(
+      { [ControlDataTypeKey]: ResponsiveColorPropControllerDataV1Type },
+      (v1) => ({ ...v1, value: copy(v1.value) }),
+    )
+    .otherwise((v0) => copy(v0))
 }

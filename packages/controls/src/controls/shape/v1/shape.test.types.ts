@@ -12,6 +12,37 @@ import { Number } from '../../number'
 
 import { Shape } from './shape'
 
+type ExpectedColorData =
+  | {
+      type: 'swatch'
+      swatchId: string
+      alpha: number
+      [ControlDataTypeKey]: 'color::v2'
+    }
+  | {
+      type: 'inline'
+      hue: number
+      saturation: number
+      lightness: number
+      alpha: number
+      [ControlDataTypeKey]: 'color::v2'
+    }
+  | {
+      swatchId: string
+      alpha: number
+      [ControlDataTypeKey]?: 'color::v1'
+    }
+
+type ExpectedColorValue =
+  | { type: 'swatch'; swatchId: string; alpha: number }
+  | {
+      type: 'inline'
+      hue: number
+      saturation: number
+      lightness: number
+      alpha: number
+    }
+
 describe('Shape Types', () => {
   describe('infers types from control definitions', () => {
     test('Shape {Color, List<Number>}', () => {
@@ -39,11 +70,7 @@ describe('Shape Types', () => {
       type Data = DataType<typeof def>
 
       expectTypeOf<Data>().toEqualTypeOf<{
-        color: {
-          swatchId: string
-          alpha: number
-          [ControlDataTypeKey]?: 'color::v1'
-        }
+        color: ExpectedColorData
         list: {
           id: string
           type?: string
@@ -58,7 +85,7 @@ describe('Shape Types', () => {
 
       type Value = ValueType<typeof def>
       expectTypeOf<Value>().toEqualTypeOf<{
-        color: { swatchId: string; alpha: number }
+        color: ExpectedColorValue
         list: number[]
       }>()
 

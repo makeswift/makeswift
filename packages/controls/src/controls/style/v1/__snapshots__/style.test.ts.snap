@@ -12,6 +12,7 @@ StyleDefinition {
       "makeswift::controls::style::property::text-style",
     ],
   },
+  "version": 1,
 }
 `;
 
@@ -23,6 +24,7 @@ StyleDefinition {
       "makeswift::controls::style::property::margin",
     ],
   },
+  "version": 1,
 }
 `;
 
@@ -34,5 +36,6 @@ StyleDefinition {
       "makeswift::controls::style::property::margin",
     ],
   },
+  "version": 1,
 }
 `;

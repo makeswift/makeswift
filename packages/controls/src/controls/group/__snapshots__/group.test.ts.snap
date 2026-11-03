@@ -20,6 +20,7 @@ exports[`Group Group data gracefully handles missing/extra props fromData 1`] = 
   "color": {
     "alpha": 1,
     "swatchId": "[swatch-id]",
+    "type": "swatch",
   },
   "link": undefined,
   "list": undefined,
@@ -53,9 +54,10 @@ exports[`Group Group data gracefully handles missing/extra props toData 1`] = `
   "@@makeswift/type": "group::v1",
   "value": {
     "color": {
-      "@@makeswift/type": "color::v1",
+      "@@makeswift/type": "color::v2",
       "alpha": 1,
       "swatchId": "[swatch-id]",
+      "type": "swatch",
     },
     "link": {
       "payload": {
@@ -102,6 +104,7 @@ exports[`Group Group versioned data is gracefully handles missing/extra props fr
   "color": {
     "alpha": 1,
     "swatchId": "[swatch-id]",
+    "type": "swatch",
   },
   "link": undefined,
   "list": undefined,
@@ -135,9 +138,10 @@ exports[`Group Group versioned data is gracefully handles missing/extra props to
   "@@makeswift/type": "group::v1",
   "value": {
     "color": {
-      "@@makeswift/type": "color::v1",
+      "@@makeswift/type": "color::v2",
       "alpha": 1,
       "swatchId": "[swatch-id]",
+      "type": "swatch",
     },
     "link": {
       "payload": {
@@ -177,7 +181,7 @@ GroupDefinition {
         "config": {
           "defaultValue": "red",
         },
-        "version": 1,
+        "version": 2,
       },
     },
   },
@@ -204,7 +208,7 @@ exports[`Group serialization serialize/deserialize composable group of controls 
                 "defaultValue": "red",
               },
               "type": "makeswift::controls::color",
-              "version": 1,
+              "version": 2,
             },
           },
         },
@@ -231,7 +235,7 @@ exports[`Group serialization serialize/deserialize group of controls 1`] = `
           "defaultValue": "red",
         },
         "type": "makeswift::controls::color",
-        "version": 1,
+        "version": 2,
       },
     },
   },

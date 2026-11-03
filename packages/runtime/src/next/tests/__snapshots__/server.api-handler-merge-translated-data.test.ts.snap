@@ -235,6 +235,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                         {
                           "text": "GRAN Oferta de Verano",
                           "typography": {
+                            "@@makeswift/type": "typography::v1",
                             "id": "VHlwb2dyYXBoeToyYTk5ZTk2NS02OWIzLTQ0YjgtOTdkMS05MmM0ODM4YmUwZTc=",
                             "style": [],
                           },
@@ -322,6 +323,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                   {
                                     "text": "¿Por qué comprar con nosotros?",
                                     "typography": {
+                                      "@@makeswift/type": "typography::v1",
                                       "style": [
                                         {
                                           "deviceId": "mobile",
@@ -338,6 +340,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                             "color": {
                                               "alpha": 1,
                                               "swatchId": "U3dhdGNoOjkzYTcxNjk1LWI5ZGEtNDExNC04NGM1LWMzYjBmM2RlY2U3NA==",
+                                              "type": "swatch",
                                             },
                                             "fontSize": {
                                               "unit": "px",
@@ -410,6 +413,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                   {
                                     "text": "En nuestra tienda, la moda se encuentra con la innovación para crear una experiencia de compra como ninguna otra. Desde nuestro Estudio de Prueba Virtual que te permite previsualizar outfits con precisión, hasta StyleMatch que cura looks personalizados solo para ti, hacemos que encontrar tu ajuste perfecto sea fácil y divertido. Nuestra Garantía de Ajuste+ asegura que cada pieza se sienta como si hubiera sido hecha para ti, mientras que la App Compañero de Closet te ayuda a construir y estilizar un guardarropa que amarás. Además, con nuestro Filtro EcoEdit, puedes comprar de manera sostenible sin comprometer el estilo. Y con el Acceso Anticipado DropAlert, siempre estarás un paso adelante de las tendencias. No es solo comprar—es estilizar de manera inteligente.",
                                     "typography": {
+                                      "@@makeswift/type": "typography::v1",
                                       "style": [
                                         {
                                           "deviceId": "desktop",
@@ -655,6 +659,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Estudio de Prueba Virtual",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -671,6 +676,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -727,6 +733,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Míralo. Estilízalo. Ámalo. Nuestro Estudio de Prueba Virtual te permite previsualizar outfits en un modelo 3D que coincide con tu tipo de cuerpo—para que puedas comprar con confianza y saltarte el drama del probador.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -825,6 +832,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "StyleMatch",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -841,6 +849,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -897,6 +906,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Descubre tu look perfecto en segundos. StyleMatch recomienda piezas basadas en tu gusto, compras pasadas, e incluso tu estado de ánimo. Es como tener un estilista personal en tu bolsillo.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -995,6 +1005,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Garantía de Ajuste+",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -1011,6 +1022,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -1067,6 +1079,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Nunca te preocupes por la talla incorrecta otra vez. Garantía de Ajuste+ usa tallaje basado en datos más intercambios gratuitos para asegurar que cada pieza te quede perfectamente—o lo arreglaremos, sin preguntas.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -1165,6 +1178,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "App Compañero de Closet",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -1181,6 +1195,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -1237,6 +1252,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Construye tu guardarropa de ensueño digitalmente. Nuestra App Compañero de Closet mantiene registro de lo que posees, te ayuda a estilizar nuevos outfits, y sugiere qué comprar después para completar tu look.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -1335,6 +1351,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Filtro EcoEdit",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -1351,6 +1368,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -1407,6 +1425,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "La moda se encuentra con la sostenibilidad. Compra sin culpa filtrando nuestra colección por piezas hechas éticamente, recicladas, o de bajo impacto—porque lucir bien también debería sentirse bien.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -1505,6 +1524,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Acceso anticipado DropAlert",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -1521,6 +1541,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -1577,6 +1598,7 @@ exports[`MakeswiftApiHandler [app router] \${PATH} returns translatable data for
                                                   {
                                                     "text": "Sé el primero en la fila para los lanzamientos más populares. Con DropAlert™, obtienes acceso exclusivo anticipado a colecciones limitadas, alertas de restock, y estilos solo para VIP—antes que nadie más.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -2084,6 +2106,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                         {
                           "text": "GRAN Oferta de Verano",
                           "typography": {
+                            "@@makeswift/type": "typography::v1",
                             "id": "VHlwb2dyYXBoeToyYTk5ZTk2NS02OWIzLTQ0YjgtOTdkMS05MmM0ODM4YmUwZTc=",
                             "style": [],
                           },
@@ -2171,6 +2194,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                   {
                                     "text": "¿Por qué comprar con nosotros?",
                                     "typography": {
+                                      "@@makeswift/type": "typography::v1",
                                       "style": [
                                         {
                                           "deviceId": "mobile",
@@ -2187,6 +2211,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                             "color": {
                                               "alpha": 1,
                                               "swatchId": "U3dhdGNoOjkzYTcxNjk1LWI5ZGEtNDExNC04NGM1LWMzYjBmM2RlY2U3NA==",
+                                              "type": "swatch",
                                             },
                                             "fontSize": {
                                               "unit": "px",
@@ -2259,6 +2284,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                   {
                                     "text": "En nuestra tienda, la moda se encuentra con la innovación para crear una experiencia de compra como ninguna otra. Desde nuestro Estudio de Prueba Virtual que te permite previsualizar outfits con precisión, hasta StyleMatch que cura looks personalizados solo para ti, hacemos que encontrar tu ajuste perfecto sea fácil y divertido. Nuestra Garantía de Ajuste+ asegura que cada pieza se sienta como si hubiera sido hecha para ti, mientras que la App Compañero de Closet te ayuda a construir y estilizar un guardarropa que amarás. Además, con nuestro Filtro EcoEdit, puedes comprar de manera sostenible sin comprometer el estilo. Y con el Acceso Anticipado DropAlert, siempre estarás un paso adelante de las tendencias. No es solo comprar—es estilizar de manera inteligente.",
                                     "typography": {
+                                      "@@makeswift/type": "typography::v1",
                                       "style": [
                                         {
                                           "deviceId": "desktop",
@@ -2504,6 +2530,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Estudio de Prueba Virtual",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -2520,6 +2547,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -2576,6 +2604,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Míralo. Estilízalo. Ámalo. Nuestro Estudio de Prueba Virtual te permite previsualizar outfits en un modelo 3D que coincide con tu tipo de cuerpo—para que puedas comprar con confianza y saltarte el drama del probador.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -2674,6 +2703,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "StyleMatch",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -2690,6 +2720,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -2746,6 +2777,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Descubre tu look perfecto en segundos. StyleMatch recomienda piezas basadas en tu gusto, compras pasadas, e incluso tu estado de ánimo. Es como tener un estilista personal en tu bolsillo.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -2844,6 +2876,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Garantía de Ajuste+",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -2860,6 +2893,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -2916,6 +2950,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Nunca te preocupes por la talla incorrecta otra vez. Garantía de Ajuste+ usa tallaje basado en datos más intercambios gratuitos para asegurar que cada pieza te quede perfectamente—o lo arreglaremos, sin preguntas.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -3014,6 +3049,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "App Compañero de Closet",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -3030,6 +3066,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -3086,6 +3123,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Construye tu guardarropa de ensueño digitalmente. Nuestra App Compañero de Closet mantiene registro de lo que posees, te ayuda a estilizar nuevos outfits, y sugiere qué comprar después para completar tu look.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -3184,6 +3222,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Filtro EcoEdit",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -3200,6 +3239,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -3256,6 +3296,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "La moda se encuentra con la sostenibilidad. Compra sin culpa filtrando nuestra colección por piezas hechas éticamente, recicladas, o de bajo impacto—porque lucir bien también debería sentirse bien.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",
@@ -3354,6 +3395,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Acceso anticipado DropAlert",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "tablet",
@@ -3370,6 +3412,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                             "color": {
                                                               "alpha": 1,
                                                               "swatchId": "U3dhdGNoOjJkN2FkYjMwLWNkZTItNDI2NS1hN2Q0LTY3ZTkzNTg2ODMxMg==",
+                                                              "type": "swatch",
                                                             },
                                                             "fontSize": {
                                                               "unit": "px",
@@ -3426,6 +3469,7 @@ exports[`MakeswiftApiHandler [pages router] \${PATH} returns translatable data f
                                                   {
                                                     "text": "Sé el primero en la fila para los lanzamientos más populares. Con DropAlert™, obtienes acceso exclusivo anticipado a colecciones limitadas, alertas de restock, y estilos solo para VIP—antes que nadie más.",
                                                     "typography": {
+                                                      "@@makeswift/type": "typography::v1",
                                                       "style": [
                                                         {
                                                           "deviceId": "desktop",

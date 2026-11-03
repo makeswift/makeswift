@@ -81,13 +81,13 @@ exports[`Page List of checkboxes when value is [true, false, undefined]: snapsho
 }
 `;
 
-exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: resolvedValue 1`] = `
+exports[`Page List of colors when value is {"value":[{"type":"swatch","swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: resolvedValue 1`] = `
 [
   "rgba(16, 24, 234, 0.5)",
 ]
 `;
 
-exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: snapshot 1`] = `
+exports[`Page List of colors when value is {"value":[{"type":"swatch","swatchId":"[swatch-test-id]","alpha":0.5}],"swatch":{"__typename":"Swatch","hue":238,"saturation":87,"lightness":49},"defaultValue":"rgb(255,0,0)"}: snapshot 1`] = `
 {
   "cacheData": {
     "apiResources": {},
@@ -120,9 +120,10 @@ exports[`Page List of colors when value is {"value":[{"swatchId":"[swatch-test-i
                     "id": "xxxxxxxx-xxxx-xxxx-xxxx-100000000003",
                     "type": "makeswift::controls::color",
                     "value": {
-                      "@@makeswift/type": "color::v1",
+                      "@@makeswift/type": "color::v2",
                       "alpha": 0.5,
                       "swatchId": "[swatch-test-id]",
+                      "type": "swatch",
                     },
                   },
                 ],

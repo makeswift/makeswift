@@ -148,4 +148,16 @@ export type SiteFragment = {
       node: { family: string; variants: Array<{ specifier: string }> }
     } | null>
   }
+  customFontFamilies: Array<{
+    __typename: 'SiteCustomFontFamily'
+    family: string
+    variants: Array<{
+      __typename: 'CustomFontVariant'
+      id: string
+      weight: number
+      style: string
+      isActive: boolean
+      fontFileUrl: string
+    }>
+  }>
 }

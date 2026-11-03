@@ -42,7 +42,7 @@ describe('ShapeV2', () => {
               label: 'Background color',
             },
             type: 'makeswift::controls::color',
-            version: 1,
+            version: 2,
           },
           shape: {
             type: 'makeswift::controls::shape-v2',
@@ -63,7 +63,7 @@ describe('ShapeV2', () => {
                     defaultValue: 'red',
                   },
                   type: 'makeswift::controls::color',
-                  version: 1,
+                  version: 2,
                 },
               },
             },
@@ -147,6 +147,7 @@ describe('ShapeV2', () => {
       expect(value).toStrictEqual({
         checkbox: true,
         color: {
+          type: 'swatch',
           swatchId: '[swatchId]',
           alpha: 1,
         },
@@ -157,12 +158,24 @@ describe('ShapeV2', () => {
       const result = shapeV2.toData({
         checkbox: true,
         color: {
+          type: 'swatch',
           swatchId: '[swatchId]',
           alpha: 1,
         },
       })
 
-      expect(result).toStrictEqual(data)
+      expect(result).toStrictEqual({
+        ...data,
+        value: {
+          ...data.value,
+          color: {
+            [ControlDataTypeKey]: 'color::v2',
+            type: 'swatch',
+            swatchId: '[swatchId]',
+            alpha: 1,
+          },
+        },
+      })
     })
 
     test('copyData', () => {

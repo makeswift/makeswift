@@ -1,8 +1,13 @@
 import { z } from 'zod'
 import {
   ContextResource,
+  ResourceSchema,
   replaceResourceIfNeeded,
   shouldRemoveResource,
+  toColorDataV1,
+  toColorDataV2,
+  type NullableColorData,
+  type NullableColorDataV2,
 } from '@makeswift/controls'
 
 import {
@@ -13,21 +18,18 @@ import {
   Schema,
 } from '../prop-controllers'
 import { P, match } from 'ts-pattern'
-import { imageDataV0Schema, imageDataV1Schema } from '../data'
-
-const backgroundsColorDataSchema = z.object({
-  swatchId: z.string().nullable(),
-  alpha: z.number(),
-})
-
-type BackgroundsColorData = z.infer<typeof backgroundsColorDataSchema>
+import {
+  getColorDataV2SwatchIds,
+  imageDataV0Schema,
+  imageDataV1Schema,
+} from '../data'
 
 function copyBackgroundsColorData(
-  data: BackgroundsColorData | null,
+  data: NullableColorDataV2 | null,
   context: CopyContext,
-): BackgroundsColorData | null {
+): NullableColorDataV2 | null {
   if (data == null) return data
-  if (data.swatchId == null) {
+  if (data.type === 'inline' || data.swatchId == null) {
     return { ...data }
   }
 
@@ -45,29 +47,33 @@ function copyBackgroundsColorData(
   }
 }
 
-const colorBackgroundDataSchema = z.object({
-  type: z.literal('color'),
-  id: z.string(),
-  payload: backgroundsColorDataSchema.nullable(),
-})
+const colorBackgroundDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    type: z.literal('color'),
+    id: z.string(),
+    payload: color.nullable(),
+  })
 
-const gradientStopDataSchema = z.object({
-  id: z.string(),
-  location: z.number(),
-  color: backgroundsColorDataSchema.nullable(),
-})
+const gradientStopDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    id: z.string(),
+    location: z.number(),
+    color: color.nullable(),
+  })
 
-const gradientDataSchema = z.object({
-  angle: z.number().optional(),
-  isRadial: z.boolean().optional(),
-  stops: z.array(gradientStopDataSchema),
-})
+const gradientDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    angle: z.number().optional(),
+    isRadial: z.boolean().optional(),
+    stops: z.array(gradientStopDataSchema(color)),
+  })
 
-const gradientBackgroundDataSchema = z.object({
-  type: z.literal('gradient'),
-  id: z.string(),
-  payload: gradientDataSchema,
-})
+const gradientBackgroundDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    type: z.literal('gradient'),
+    id: z.string(),
+    payload: gradientDataSchema(color),
+  })
 
 const backgroundImagePositionDataSchema = z.object({
   x: z.number(),
@@ -139,39 +145,48 @@ const backgroundVideoAspectRatioDataSchema = z.union([
   z.literal('standard'),
 ])
 
-const backgroundVideoDataSchema = z.object({
-  url: z.string().optional(),
-  maskColor: backgroundsColorDataSchema.nullable().optional(),
-  opacity: z.number().optional(),
-  zoom: z.number().optional(),
-  aspectRatio: backgroundVideoAspectRatioDataSchema.optional(),
-  parallax: z.number().optional(),
-})
+const backgroundVideoDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    url: z.string().optional(),
+    maskColor: color.nullable().optional(),
+    opacity: z.number().optional(),
+    zoom: z.number().optional(),
+    aspectRatio: backgroundVideoAspectRatioDataSchema.optional(),
+    parallax: z.number().optional(),
+  })
 
-const videoBackgroundDataSchema = z.object({
-  type: z.literal('video'),
-  id: z.string(),
-  payload: backgroundVideoDataSchema,
-})
+const videoBackgroundDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.object({
+    type: z.literal('video'),
+    id: z.string(),
+    payload: backgroundVideoDataSchema(color),
+  })
 
-const backgroundDataSchema = z.union([
-  colorBackgroundDataSchema,
-  gradientBackgroundDataSchema,
-  imageBackgroundDataSchema,
-  videoBackgroundDataSchema,
-])
+const backgroundDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  z.union([
+    colorBackgroundDataSchema(color),
+    gradientBackgroundDataSchema(color),
+    imageBackgroundDataSchema,
+    videoBackgroundDataSchema(color),
+  ])
 
-export type BackgroundData = z.infer<typeof backgroundDataSchema>
+const responsiveBackgroundsDataSchema = <C extends z.ZodTypeAny>(color: C) =>
+  Schema.responsiveValue(z.array(backgroundDataSchema(color)))
 
-const responsiveBackgroundsDataSchema = Schema.responsiveValue(
-  z.array(backgroundDataSchema),
-)
-
-export type ResponsiveBackgroundsData = z.infer<
-  typeof responsiveBackgroundsDataSchema
+type ResponsiveBackgrounds<Color> = z.infer<
+  ReturnType<typeof responsiveBackgroundsDataSchema<z.ZodType<Color>>>
 >
 
-const backgroundsPropControllerDataV1Schema = responsiveBackgroundsDataSchema
+export type ResponsiveBackgroundsData =
+  ResponsiveBackgrounds<NullableColorDataV2>
+
+type ResponsiveBackgroundsDataV1 = ResponsiveBackgrounds<NullableColorData>
+
+export type BackgroundData = ResponsiveBackgroundsData[number]['value'][number]
+
+const backgroundsPropControllerDataV1Schema = responsiveBackgroundsDataSchema(
+  ResourceSchema.nullableColorData,
+)
 
 export type BackgroundsPropControllerDataV1 = z.infer<
   typeof backgroundsPropControllerDataV1Schema
@@ -182,16 +197,30 @@ export const BackgroundsPropControllerDataV2Type =
 
 const backgroundsPropControllerDataV2Schema = z.object({
   [ControlDataTypeKey]: z.literal(BackgroundsPropControllerDataV2Type),
-  value: responsiveBackgroundsDataSchema,
+  value: responsiveBackgroundsDataSchema(ResourceSchema.nullableColorData),
 })
 
 export type BackgroundsPropControllerDataV2 = z.infer<
   typeof backgroundsPropControllerDataV2Schema
 >
 
+/** v3 colors are either a swatch or an inline color */
+export const BackgroundsPropControllerDataV3Type =
+  'prop-controllers::backgrounds::v3'
+
+const backgroundsPropControllerDataV3Schema = z.object({
+  [ControlDataTypeKey]: z.literal(BackgroundsPropControllerDataV3Type),
+  value: responsiveBackgroundsDataSchema(ResourceSchema.nullableColorDataV2),
+})
+
+export type BackgroundsPropControllerDataV3 = z.infer<
+  typeof backgroundsPropControllerDataV3Schema
+>
+
 export const backgroundsPropControllerDataSchema = z.union([
   backgroundsPropControllerDataV1Schema,
   backgroundsPropControllerDataV2Schema,
+  backgroundsPropControllerDataV3Schema,
 ])
 
 export type BackgroundsPropControllerData = z.infer<
@@ -212,9 +241,16 @@ type BackgroundsDescriptorV2<_T = BackgroundsPropControllerData> = {
   options: BackgroundsOptions
 }
 
+type BackgroundsDescriptorV3<_T = BackgroundsPropControllerData> = {
+  type: typeof Types.Backgrounds
+  version: 3
+  options: BackgroundsOptions
+}
+
 export type BackgroundsDescriptor<_T = BackgroundsPropControllerData> =
   | BackgroundsDescriptorV1
   | BackgroundsDescriptorV2
+  | BackgroundsDescriptorV3
 
 export type ResolveBackgroundsPropControllerValue<
   T extends BackgroundsDescriptor,
@@ -228,19 +264,71 @@ export type ResolveBackgroundsPropControllerValue<
  */
 export function Backgrounds(
   options: BackgroundsOptions = {},
-): BackgroundsDescriptorV2 {
-  return { type: Types.Backgrounds, version: 2, options }
+): BackgroundsDescriptorV3 {
+  return { type: Types.Backgrounds, version: 3, options }
 }
+
+function mapBackgroundColors<From, To>(
+  data: ResponsiveBackgrounds<From>,
+  callback: (color: From) => To,
+): ResponsiveBackgrounds<To>
+// zod's types can't be narrowed while `Color` is a type parameter
+function mapBackgroundColors(
+  data: ResponsiveBackgrounds<unknown>,
+  callback: (color: unknown) => unknown,
+): ResponsiveBackgrounds<unknown> {
+  return data.map((override) => ({
+    ...override,
+    value: override.value.map((item) =>
+      match(item)
+        .with({ type: 'color' }, (item) => ({
+          ...item,
+          payload: item.payload && callback(item.payload),
+        }))
+        .with({ type: 'gradient' }, (item) => ({
+          ...item,
+          payload: {
+            ...item.payload,
+            stops: item.payload.stops.map((stop) => ({
+              ...stop,
+              color: stop.color && callback(stop.color),
+            })),
+          },
+        }))
+        .with({ type: 'video' }, (item) => ({
+          ...item,
+          payload: {
+            ...item.payload,
+            maskColor:
+              item.payload.maskColor && callback(item.payload.maskColor),
+          },
+        }))
+        .otherwise((item) => item),
+    ),
+  }))
+}
+
+const toResponsiveBackgroundsDataV2 = (
+  data: ResponsiveBackgroundsDataV1,
+): ResponsiveBackgroundsData => mapBackgroundColors(data, toColorDataV2)
+
+const toResponsiveBackgroundsDataV1 = (
+  data: ResponsiveBackgroundsData,
+): ResponsiveBackgroundsDataV1 => mapBackgroundColors(data, toColorDataV1)
 
 export function getBackgroundsPropControllerDataResponsiveBackgroundsData(
   data: BackgroundsPropControllerData | undefined,
 ): ResponsiveBackgroundsData | undefined {
   return match(data)
+    .with(undefined, () => undefined)
     .with(
-      { [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type },
-      (v2) => v2.value,
+      { [ControlDataTypeKey]: BackgroundsPropControllerDataV3Type },
+      (v3) => v3.value,
     )
-    .otherwise((v0) => v0)
+    .with({ [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type }, (v2) =>
+      toResponsiveBackgroundsDataV2(v2.value),
+    )
+    .otherwise((v1) => toResponsiveBackgroundsDataV2(v1))
 }
 
 export function createBackgroundsPropControllerDataFromResponsiveBackgroundsData(
@@ -249,21 +337,35 @@ export function createBackgroundsPropControllerDataFromResponsiveBackgroundsData
 ): BackgroundsPropControllerData {
   return match(definition)
     .with(
+      { version: 3 },
+      () =>
+        ({
+          [ControlDataTypeKey]: BackgroundsPropControllerDataV3Type,
+          value: data,
+        }) as const,
+    )
+    .with(
       { version: 2 },
       () =>
         ({
           [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
-          value: data,
+          value: toResponsiveBackgroundsDataV1(data),
         }) as const,
     )
-    .otherwise(() => data)
+    .otherwise(() => toResponsiveBackgroundsDataV1(data))
 }
 
 export function getBackgroundsPropControllerFileIds(
   data: BackgroundsPropControllerData | undefined,
 ): string[] {
-  const value = getBackgroundsPropControllerDataResponsiveBackgroundsData(data)
+  return getResponsiveBackgroundsDataFileIds(
+    getBackgroundsPropControllerDataResponsiveBackgroundsData(data),
+  )
+}
 
+export function getResponsiveBackgroundsDataFileIds(
+  value: ResponsiveBackgroundsData | undefined,
+): string[] {
   return (
     value
       ?.flatMap((override) => override.value)
@@ -287,25 +389,29 @@ export function getBackgroundsPropControllerFileIds(
 export function getBackgroundsPropControllerSwatchIds(
   data: BackgroundsPropControllerData | undefined,
 ): string[] {
-  const value = getBackgroundsPropControllerDataResponsiveBackgroundsData(data)
+  return getResponsiveBackgroundsDataSwatchIds(
+    getBackgroundsPropControllerDataResponsiveBackgroundsData(data),
+  )
+}
 
+export function getResponsiveBackgroundsDataSwatchIds(
+  value: ResponsiveBackgroundsData | undefined,
+): string[] {
   return (
     value
       ?.flatMap((override) => override.value)
       .flatMap(({ type, payload }) => {
         switch (type) {
           case 'color':
-            return payload?.swatchId == null ? [] : [payload.swatchId]
+            return getColorDataV2SwatchIds(payload)
 
           case 'gradient':
             return payload.stops.flatMap((stop) =>
-              stop.color?.swatchId == null ? [] : stop.color.swatchId,
+              getColorDataV2SwatchIds(stop.color),
             )
 
           case 'video':
-            return payload.maskColor?.swatchId == null
-              ? []
-              : [payload.maskColor.swatchId]
+            return getColorDataV2SwatchIds(payload.maskColor)
 
           default:
             return []
@@ -316,11 +422,9 @@ export function getBackgroundsPropControllerSwatchIds(
 
 function copyResponsiveBackgroundsData(
   descriptor: BackgroundsDescriptor,
-  data: ResponsiveBackgroundsData | undefined,
+  data: ResponsiveBackgroundsData,
   ctx: CopyContext,
-): ResponsiveBackgroundsData | undefined {
-  if (data == null) return data
-
+): ResponsiveBackgroundsData {
   return data.map((override) => ({
     ...override,
     value: override.value.flatMap((backgroundItem) => {
@@ -428,24 +532,30 @@ export function copyBackgroundsPropControllerData(
   data: BackgroundsPropControllerData | undefined,
   context: CopyContext,
 ): BackgroundsPropControllerData | undefined {
+  const copy = (data: ResponsiveBackgroundsDataV1) =>
+    toResponsiveBackgroundsDataV1(
+      copyResponsiveBackgroundsData(
+        descriptor,
+        toResponsiveBackgroundsDataV2(data),
+        context,
+      ),
+    )
+
   return match(data)
     .with(undefined, () => undefined)
     .with(
-      { [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type },
-      (v1) => {
-        const value = copyResponsiveBackgroundsData(
-          descriptor,
-          v1.value,
-          context,
-        )
-
-        if (value == null) return undefined
-
-        return {
-          [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type,
-          value,
-        } as const
-      },
+      { [ControlDataTypeKey]: BackgroundsPropControllerDataV3Type },
+      (v3) => ({
+        ...v3,
+        value: copyResponsiveBackgroundsData(descriptor, v3.value, context),
+      }),
     )
-    .otherwise((v0) => copyResponsiveBackgroundsData(descriptor, v0, context))
+    .with(
+      { [ControlDataTypeKey]: BackgroundsPropControllerDataV2Type },
+      (v2) => ({
+        ...v2,
+        value: copy(v2.value),
+      }),
+    )
+    .otherwise((v1) => copy(v1))
 }
