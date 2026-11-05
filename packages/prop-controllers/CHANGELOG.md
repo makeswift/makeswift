@@ -1,5 +1,21 @@
 # @makeswift/prop-controllers
 
+## 0.4.18
+
+### Patch Changes
+
+- c7519c4: Allow for inline color data for the `Backgrounds` prop controller.
+- 9197b97: Allow for inline color data for the `Border` prop controller.
+- 3baeed2: Allow for inline color data for the `Color` control.
+- e945956: Allow for inline color data for the `NavigationLinks` prop controller.
+- e945956: Allow for inline color data for the `ResponsiveColor` prop controller.
+- 392e937: Allow for inline color data for the `Shadows` prop controller.
+- Updated dependencies [c7519c4]
+- Updated dependencies [3baeed2]
+- Updated dependencies [1ac3f7f]
+- Updated dependencies [0ff71b8]
+  - @makeswift/controls@0.1.24
+
 ## 0.4.17
 
 ### Patch Changes
