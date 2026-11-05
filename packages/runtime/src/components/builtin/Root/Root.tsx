@@ -12,6 +12,7 @@ import { Element } from '../../../runtimes/react/components/Element'
 import { GridItem } from '../../shared/grid-item'
 import BackgroundsContainer from '../../shared/BackgroundsContainer'
 
+import { usePageBackgrounds } from './use-page-backgrounds'
 import Placeholder from './components/Placeholder'
 import { useStyle } from '../../../runtimes/react/css-runtime/hooks/use-style'
 import { CSSObject } from '@emotion/serialize'
@@ -41,13 +42,15 @@ const Root = forwardRef(function Page(
   ref: Ref<HTMLDivElement>,
 ) {
   const { styleElement: cssResetStyleElement } = useCssReset({ styles: cssResetStyles })
+  const { styleElement: backgroundsStyleElement, rootBackgrounds } = usePageBackgrounds(backgrounds)
   const { className, styleElement } = useStyle({ display: 'flex', flexWrap: 'wrap', width: '100%' })
 
   return (
     <>
       {cssResetStyleElement}
+      {backgroundsStyleElement}
       {styleElement}
-      <BackgroundsContainer ref={ref} style={{ background: 'white' }} backgrounds={backgrounds}>
+      <BackgroundsContainer ref={ref} backgrounds={rootBackgrounds}>
         <div className={className}>
           {children && children.elements.length > 0 ? (
             children.elements.map((child, index) => (

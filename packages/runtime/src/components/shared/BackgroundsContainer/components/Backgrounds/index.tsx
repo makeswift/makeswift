@@ -11,7 +11,7 @@ import { useStyle } from '../../../../../runtimes/react/css-runtime/hooks/use-st
 
 const BackgroundVideo = lazy(() => import('../BackgroundVideo'))
 
-function getColor(color: Color | null | undefined) {
+export function getColor(color: Color | null | undefined) {
   if (color == null) return 'black'
 
   if (color.swatch == null) {
@@ -23,7 +23,7 @@ function getColor(color: Color | null | undefined) {
 
 type GradientStop = { color: Color | null | undefined; location: number }
 
-const getStopsStyle = (stops: GradientStop[]) =>
+export const getStopsStyle = (stops: GradientStop[]) =>
   stops.map(({ color, location }) => `${getColor(color)} ${location}%`).join(',')
 
 const absoluteFillStyle: CSSObject = {
