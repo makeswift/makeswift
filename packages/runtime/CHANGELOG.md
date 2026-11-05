@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.6
+
+### Patch Changes
+
+- 5bbe118: cleanup of deprecated gql resources
+
 ## 0.29.3-canary.5
 
 ### Patch Changes
