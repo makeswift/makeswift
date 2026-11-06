@@ -1,6 +1,6 @@
 import { type ResourceResolver } from '@makeswift/controls'
 
-import { getElementId } from '../../state/read-only-state'
+import { resolveElementId } from '../../state/read-only-state'
 import { ApiResourcesClient } from '../../api/api-resources-client'
 import { Store } from '../../state/store'
 
@@ -22,8 +22,7 @@ export const createResourceResolver = ({
   resolveTypography: typographyId => apiClient.resolveTypography(typographyId),
   resolvePagePathnameSlice: pageId => apiClient.resolvePagePathnameSlice({ pageId, locale }),
   resolveElementId: elementKey => {
-    const read = () =>
-      documentKey == null ? null : getElementId(store.getState(), documentKey, elementKey)
+    const read = () => resolveElementId({ state: store.getState(), documentKey: null, elementKey })
 
     let lastValue: string | null = null
     return {
