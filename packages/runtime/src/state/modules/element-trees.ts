@@ -54,6 +54,15 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
   return getElementIds(state, documentKey).get(elementKey) ?? null
 }
 
+export function getElementIdAcrossDocuments(state: State, elementKey: string): string | null {
+  for (const tree of state.values()) {
+    const elementId = tree.elementIds.get(elementKey)
+    if (elementId != null) return elementId
+  }
+
+  return null
+}
+
 export function reducer(state: State = getInitialState(), action: Action | UnknownAction): State {
   if (!isKnownAction(action)) return state
 

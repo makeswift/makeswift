@@ -156,6 +156,30 @@ export function getElementId(state: State, documentKey: string, elementKey: stri
   return ElementTrees.getElementId(getElementTreesSlice(state), documentKey, elementKey)
 }
 
+export function getElementIdAcrossDocuments(state: State, elementKey: string): string | null {
+  return ElementTrees.getElementIdAcrossDocuments(getElementTreesSlice(state), elementKey)
+}
+
+/**
+ * Resolves an element ID. When a `documentKey` is provided, lookup is scoped to
+ * that document. Otherwise, every document in state is searched.
+ */
+export function resolveElementId({
+  state,
+  documentKey,
+  elementKey,
+}: {
+  state: State
+  documentKey: string | null
+  elementKey: string
+}): string | null {
+  if (documentKey == null) {
+    return getElementIdAcrossDocuments(state, elementKey)
+  }
+
+  return getElementId(state, documentKey, elementKey)
+}
+
 export function getElementPropControllerDescriptors(
   state: State,
   documentKey: string,
