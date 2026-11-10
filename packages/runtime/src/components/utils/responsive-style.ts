@@ -1,7 +1,14 @@
 import { WidthProperty } from 'csstype'
 import { type CSSObject } from '@emotion/serialize'
 
-import type { ResponsiveValueType as ExtractResponsiveValue } from '@makeswift/controls'
+import {
+  type ResponsiveValueType as ExtractResponsiveValue,
+  type Breakpoints,
+  type FallbackStrategy,
+  join as joinResponsiveValues,
+  getBreakpoint,
+  getBreakpointMediaQuery,
+} from '@makeswift/controls'
 
 import type {
   LengthData,
@@ -12,14 +19,6 @@ import type {
   ResponsiveLengthData,
   ResponsiveTextStyleData,
 } from '@makeswift/prop-controllers'
-
-import {
-  type Breakpoints,
-  type FallbackStrategy,
-  join as joinResponsiveValues,
-  getBreakpoint,
-  getBreakpointMediaQuery,
-} from '@makeswift/controls'
 
 import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
 
