@@ -1,7 +1,14 @@
 import { WidthProperty } from 'csstype'
 import { type CSSObject } from '@emotion/serialize'
 
-import type { ResponsiveValueType as ExtractResponsiveValue } from '@makeswift/controls'
+import {
+  type ResponsiveValueType as ExtractResponsiveValue,
+  type Breakpoints,
+  type FallbackStrategy,
+  join as joinResponsiveValues,
+  getBreakpoint,
+  getBreakpointMediaQuery,
+} from '@makeswift/controls'
 
 import type {
   LengthData,
@@ -12,14 +19,6 @@ import type {
   ResponsiveLengthData,
   ResponsiveTextStyleData,
 } from '@makeswift/prop-controllers'
-
-import {
-  type Breakpoints,
-  type FallbackStrategy,
-  join as joinResponsiveValues,
-  getBreakpoint,
-  getBreakpointMediaQuery,
-} from '@makeswift/controls'
 
 import { useBreakpoints } from '../../runtimes/react/hooks/use-breakpoints'
 
@@ -32,6 +31,7 @@ import { BorderPropControllerData } from '../hooks/useBorder'
 import { colorToString } from './colorToString'
 import { BoxShadow, ResponsiveBoxShadow } from '../hooks'
 import { DropFirst } from './drop-first'
+import { formatFontFamilyName } from '../../utils/format-font-family-name'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   breakpoints: Breakpoints,
@@ -294,7 +294,7 @@ export function responsiveTextStyle(
       } = textStyle
 
       return {
-        ...(fontFamily == null ? {} : { fontFamily: `"${fontFamily}"` }),
+        ...(fontFamily == null ? {} : { fontFamily: formatFontFamilyName(fontFamily) }),
         ...(fontWeight == null ? {} : { fontWeight }),
         ...(letterSpacing == null ? {} : { letterSpacing }),
         ...(fontSize == null ? {} : { fontSize: `${fontSize.value}${fontSize.unit}` }),

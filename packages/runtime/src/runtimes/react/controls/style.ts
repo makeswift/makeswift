@@ -16,6 +16,7 @@ import { lengthPercentageDataToString } from '../../../css/length-percentage'
 import { marginPropertyDataToStyle } from '../../../css/margin'
 import { paddingPropertyDataToStyle } from '../../../css/padding'
 import { Breakpoints } from '../../../state/modules/breakpoints'
+import { formatFontFamilyName } from '../../../utils/format-font-family-name'
 
 const defaultMargin = {
   marginTop: 0,
@@ -72,9 +73,7 @@ export function styleV1Css(
         }),
         ...(properties.includes(Style.TextStyle) && {
           ...(textStyle?.fontFamily && {
-            fontFamily: textStyle.fontFamily.toLowerCase().startsWith('var(')
-              ? textStyle.fontFamily
-              : `"${textStyle.fontFamily}"`,
+            fontFamily: formatFontFamilyName(textStyle.fontFamily),
           }),
           ...(textStyle?.letterSpacing && { letterSpacing: textStyle.letterSpacing }),
           ...(textStyle?.fontSize && { fontSize: fontSizeToString(textStyle.fontSize) }),

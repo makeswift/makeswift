@@ -56,7 +56,7 @@ exports[`Page correctly renders a global element 1`] = `
 
 @media only screen and (min-width: 769px) {
   .ms-4836z9 {
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 30px;
     font-weight: 700;
     line-height: 1.5;
@@ -66,7 +66,7 @@ exports[`Page correctly renders a global element 1`] = `
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-4836z9 {
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 30px;
     font-weight: 700;
     line-height: 1.5;
@@ -76,7 +76,7 @@ exports[`Page correctly renders a global element 1`] = `
 
 @media only screen and (max-width: 575px) {
   .ms-4836z9 {
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
     font-weight: 700;
     line-height: 1.5;
@@ -162,7 +162,7 @@ exports[`Page correctly renders a localized global element 1`] = `
 @media only screen and (min-width: 769px) {
   .ms-4836z9 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 30px;
     font-weight: 700;
     line-height: 1.5;
@@ -173,7 +173,7 @@ exports[`Page correctly renders a localized global element 1`] = `
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-4836z9 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 30px;
     font-weight: 700;
     line-height: 1.5;
@@ -184,7 +184,7 @@ exports[`Page correctly renders a localized global element 1`] = `
 @media only screen and (max-width: 575px) {
   .ms-4836z9 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
     font-weight: 700;
     line-height: 1.5;
