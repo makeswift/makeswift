@@ -31,6 +31,7 @@ import { BorderPropControllerData } from '../hooks/useBorder'
 import { colorToString } from './colorToString'
 import { BoxShadow, ResponsiveBoxShadow } from '../hooks'
 import { DropFirst } from './drop-first'
+import { formatFontFamilyName } from '../../utils/format-font-family-name'
 
 export function responsiveStyle<V, A extends ReadonlyArray<ResponsiveValue<V> | null | undefined>>(
   breakpoints: Breakpoints,
@@ -293,7 +294,7 @@ export function responsiveTextStyle(
       } = textStyle
 
       return {
-        ...(fontFamily == null ? {} : { fontFamily: `"${fontFamily}"` }),
+        ...(fontFamily == null ? {} : { fontFamily: formatFontFamilyName(fontFamily) }),
         ...(fontWeight == null ? {} : { fontWeight }),
         ...(letterSpacing == null ? {} : { letterSpacing }),
         ...(fontSize == null ? {} : { fontSize: `${fontSize.value}${fontSize.unit}` }),

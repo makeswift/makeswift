@@ -20,6 +20,7 @@ import { ColorValue } from '../../../components/utils/types'
 import { isNonNullable } from '../../../utils/isNonNullable'
 import { useBreakpoints } from '../hooks/use-breakpoints'
 import { useStyle } from '../css-runtime/hooks/use-style'
+import { formatFontFamilyName } from '../../../utils/format-font-family-name'
 
 export function typographyFragementToTypographyControlData(
   fragment: Typography | null,
@@ -168,9 +169,9 @@ export default function useEnhancedTypography(
 }
 
 function typographyToCssObject(value: EnhancedTypographyValue): CSSObject {
-  let styles: CSSObject = {}
+  const styles: CSSObject = {}
   if (value.color != null) styles.color = colorToString(value.color)
-  if (value.fontFamily != null) styles.fontFamily = value.fontFamily
+  if (value.fontFamily != null) styles.fontFamily = formatFontFamilyName(value.fontFamily)
   if (value.fontSize != null && value.fontSize.value != null && value.fontSize.unit != null)
     styles.fontSize = `${value.fontSize.value}${value.fontSize.unit}`
   if (value.fontWeight != null) styles.fontWeight = value.fontWeight

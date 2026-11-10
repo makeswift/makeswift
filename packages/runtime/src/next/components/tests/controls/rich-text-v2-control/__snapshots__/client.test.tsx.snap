@@ -18,7 +18,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 769px) {
   .ms-1uxgkzy {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -26,7 +26,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-1uxgkzy {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -34,7 +34,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (max-width: 575px) {
   .ms-1uxgkzy {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -42,7 +42,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 769px) {
   .ms-1rv2riu {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -50,7 +50,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-1rv2riu {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -58,7 +58,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (max-width: 575px) {
   .ms-1rv2riu {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -66,7 +66,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 769px) {
   .ms-c2x32f {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -74,7 +74,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-c2x32f {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -82,7 +82,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (max-width: 575px) {
   .ms-c2x32f {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -90,7 +90,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 769px) {
   .ms-1armmxo {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -98,7 +98,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-1armmxo {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -106,7 +106,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (max-width: 575px) {
   .ms-1armmxo {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -114,7 +114,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 769px) {
   .ms-xpmun0 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -122,7 +122,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-xpmun0 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -130,7 +130,7 @@ exports[`editable text reverts host styles on slate-internal text spans: resolve
 @media only screen and (max-width: 575px) {
   .ms-xpmun0 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -901,7 +901,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 769px) {
   .ms-ngb86t {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -909,7 +909,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-ngb86t {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -917,7 +917,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (max-width: 575px) {
   .ms-ngb86t {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -925,7 +925,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 769px) {
   .ms-1kdcvyw {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -933,7 +933,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-1kdcvyw {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -941,7 +941,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (max-width: 575px) {
   .ms-1kdcvyw {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -949,7 +949,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 769px) {
   .ms-1rtjhv5 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -957,7 +957,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-1rtjhv5 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -965,7 +965,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (max-width: 575px) {
   .ms-1rtjhv5 {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -973,7 +973,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 769px) {
   .ms-xf1hck {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -981,7 +981,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-xf1hck {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -989,7 +989,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (max-width: 575px) {
   .ms-xf1hck {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -997,7 +997,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 769px) {
   .ms-hen83v {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -1005,7 +1005,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (min-width: 576px) and (max-width: 768px) {
   .ms-hen83v {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
@@ -1013,7 +1013,7 @@ exports[`renders provided text content: resolvedValue 1`] = `
 @media only screen and (max-width: 575px) {
   .ms-hen83v {
     color: hsla(238, 87%, 49%, 1);
-    font-family: Lato;
+    font-family: "Lato";
     font-size: 16px;
   }
 }
