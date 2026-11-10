@@ -1,5 +1,14 @@
 # @makeswift/controls
 
+## 0.1.24
+
+### Patch Changes
+
+- c7519c4: Allow for inline color data for the `Backgrounds` prop controller.
+- 3baeed2: Allow for inline color data for the `Color` control.
+- 1ac3f7f: Allow for inline color data for `Style` control borders.
+- 0ff71b8: Allow for inline color data for the `unstable_Typography` control.
+
 ## 0.1.23
 
 ### Patch Changes

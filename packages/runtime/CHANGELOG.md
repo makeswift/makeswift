@@ -1,5 +1,33 @@
 # @makeswift/runtime
 
+## 0.29.3
+
+### Patch Changes
+
+- 240652d: Fixes an issue where font family values were not being formatted consistently
+- 065c327: Refactor the unversioned resources introspection to use the new bulk endpoints from the makeswift cdn.
+- c7519c4: Allow for inline color data for the `Backgrounds` prop controller.
+- 9197b97: Allow for inline color data for the `Border` prop controller.
+- 3baeed2: Allow for inline color data for the `Color` control.
+- e945956: Allow for inline color data for the `NavigationLinks` prop controller.
+- e945956: Allow for inline color data for the `ResponsiveColor` prop controller.
+- 392e937: Allow for inline color data for the `Shadows` prop controller.
+- 0ff71b8: Allow for inline color data for the `unstable_Typography` control.
+- 83ee9b4: Add component snapshot metadata field for internal builder use
+- 02ee853: updates the MakeswiftFonts component and associated logic for compatibility with custom fonts
+- 05c635b: Update the host API type for site fonts to include custom font variants
+- 5bbe118: cleanup of deprecated gql resources
+- Updated dependencies [c7519c4]
+- Updated dependencies [9197b97]
+- Updated dependencies [3baeed2]
+- Updated dependencies [e945956]
+- Updated dependencies [e945956]
+- Updated dependencies [392e937]
+- Updated dependencies [1ac3f7f]
+- Updated dependencies [0ff71b8]
+  - @makeswift/controls@0.1.24
+  - @makeswift/prop-controllers@0.4.18
+
 ## 0.29.2
 
 ### Patch Changes
