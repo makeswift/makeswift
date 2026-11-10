@@ -6,6 +6,7 @@ import { useApiResourcesClient } from '../hooks/use-api-resources-client'
 import { useIsInBuilder } from '../hooks/use-is-in-builder'
 import { useFontFace } from '../css-runtime/hooks/use-font-face'
 import { CSSObject } from '@emotion/serialize'
+import { formatFontFamilyName } from '../../../utils/format-font-family-name'
 
 type Props = {
   siteId: string
@@ -64,7 +65,7 @@ function FontFace({
   fileUrl: string
 }) {
   const styles: CSSObject = {
-    fontFamily: family,
+    fontFamily: formatFontFamilyName(family),
     fontWeight: weight,
     fontStyle: style,
     src: `url(${fileUrl})`,
