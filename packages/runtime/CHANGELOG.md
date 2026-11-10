@@ -1,5 +1,11 @@
 # @makeswift/runtime
 
+## 0.29.3-canary.7
+
+### Patch Changes
+
+- 240652d: Fixes an issue where font family values were not being formatted consistently
+
 ## 0.29.3-canary.6
 
 ### Patch Changes

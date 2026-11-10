@@ -18,6 +18,7 @@
     "vite-rsc-hono-react-cloudflare": "0.0.1"
   },
   "changesets": [
+    "bright-lizards-hear",
     "fair-views-invent",
     "inline-colors-backgrounds",
     "inline-colors-border",
