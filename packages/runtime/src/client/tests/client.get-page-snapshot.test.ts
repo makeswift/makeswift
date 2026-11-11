@@ -1,4 +1,9 @@
-import { MakeswiftClient, type MakeswiftPageDocument } from '../../client'
+import {
+  type CustomFontVariant,
+  type GetFontsAPI,
+  MakeswiftClient,
+  type MakeswiftPageDocument,
+} from '../../client'
 import { http, HttpResponse } from 'msw'
 
 import { type RestApiClientError } from '../../api/rest-api-client'
@@ -46,7 +51,31 @@ describe('getPageSnapshot', () => {
   const pathname = 'blog/hello-world'
   const snapshotUrl = `${runtime.apiOrigin}/v4/pages/${encodeURIComponent(pathname)}/document`
   const graphqlUrl = `${runtime.apiOrigin}/graphql`
+  const fontsUrl = `${runtime.apiOrigin}/v1_unstable/fonts`
   const locale = 'es-MX'
+
+  const customFontVariants: CustomFontVariant[] = [
+    {
+      id: '[variant-id]',
+      family: 'Brand Sans',
+      weight: 400,
+      style: 'normal',
+      fileUrl: 'https://fonts.example.com/brand.woff2',
+      fileFormat: 'woff2',
+    },
+  ]
+
+  beforeEach(() => {
+    server.use(
+      http.get(fontsUrl, () =>
+        HttpResponse.json<GetFontsAPI>({
+          siteId: '[site-id]',
+          googleFonts: [],
+          customFontVariants,
+        }),
+      ),
+    )
+  })
 
   test.each([undefined, 'fr', 'es-MX'])(
     'correctly passes `locale` parameter (%s)',
@@ -133,6 +162,74 @@ describe('getPageSnapshot', () => {
       expect(result?.document.id).toEqual(expectedPageId)
     },
   )
+
+  test("includes the site's custom font variants", async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(snapshotUrl, () => HttpResponse.json(pageDocument), { once: true }),
+      http.post(graphqlUrl, () => HttpResponse.json({}), { once: true }),
+    )
+
+    // Act
+    const result = await client.getPageSnapshot(pathname, {
+      locale,
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result?.customFontVariants).toEqual(customFontVariants)
+  })
+
+  test.each([
+    { label: 'is not found', response: () => HttpResponse.text('', { status: 404 }) },
+    { label: 'is unparseable', response: () => HttpResponse.json([{}]) },
+  ])('has no custom font variants when the fonts response $label', async ({ response }) => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(fontsUrl, response, { once: true }),
+      http.get(snapshotUrl, () => HttpResponse.json(pageDocument), { once: true }),
+      http.post(graphqlUrl, () => HttpResponse.json({}), { once: true }),
+    )
+
+    // Act
+    const result = await client.getPageSnapshot(pathname, {
+      locale,
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result?.document).toEqual(pageDocument)
+    expect(result?.customFontVariants).toEqual([])
+  })
+
+  test('logs and renders no custom font variants when fetching them fails', async () => {
+    // Arrange
+    const client = createTestClient()
+
+    server.use(
+      http.get(fontsUrl, () => HttpResponse.text('Forbidden', { status: 403 }), { once: true }),
+      http.get(snapshotUrl, () => HttpResponse.json(pageDocument), { once: true }),
+      http.post(graphqlUrl, () => HttpResponse.json({}), { once: true }),
+    )
+
+    // Act
+    const result = await client.getPageSnapshot(pathname, {
+      locale,
+      siteVersion: TestWorkingSiteVersion,
+    })
+
+    // Assert
+    expect(result?.document).toEqual(pageDocument)
+    expect(result?.customFontVariants).toEqual([])
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to fetch custom fonts for page snapshot',
+      expect.objectContaining({ message: 'Failed to fetch fonts: 403 Forbidden' }),
+    )
+  })
 
   test('returns null on 404', async () => {
     // Arrange

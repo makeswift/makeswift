@@ -11,6 +11,9 @@ import {
 import { deterministicUUID } from '../utils/deterministic-uuid'
 
 import * as Schema from './schema/component-document'
+import { type customFontVariant } from './schema'
+
+type CustomFontVariant = z.infer<typeof customFontVariant>
 
 export type MakeswiftComponentDocument = z.infer<typeof Schema.componentDocument>
 export type MakeswiftComponentDocumentFallback = z.infer<typeof Schema.componentDocumentFallback>
@@ -67,9 +70,17 @@ export function componentDocumentToRootEmbeddedDocument({
   return rootDocument
 }
 
+export type MakeswiftComponentCustomFonts = {
+  siteId: string
+  variants: CustomFontVariant[]
+}
+
 export type MakeswiftComponentSnapshot = {
   document: MakeswiftComponentDocument | MakeswiftComponentDocumentFallback
   key: string
   cacheData: CacheData
   meta: MakeswiftComponentMetadata
+  // Missing from snapshots created by older runtime versions, and null when the site's fonts
+  // couldn't be fetched
+  customFonts?: MakeswiftComponentCustomFonts | null
 }
