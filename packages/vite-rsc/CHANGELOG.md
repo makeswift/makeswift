@@ -1,5 +1,12 @@
 # @makeswift/vite-rsc
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [3dd4519]
+  - @makeswift/runtime@0.29.4
+
 ## 0.0.4
 
 ### Patch Changes

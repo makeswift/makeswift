@@ -1,5 +1,14 @@
 # vite-rsc-hono-react-cloudflare
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies [3dd4519]
+  - @makeswift/runtime@0.29.4
+  - @makeswift/hono-react@0.3.4
+  - @makeswift/vite-rsc@0.0.5
+
 ## 0.0.5
 
 ### Patch Changes

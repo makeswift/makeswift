@@ -1,5 +1,11 @@
 # @makeswift/controls
 
+## 0.1.25
+
+### Patch Changes
+
+- 3dd4519: Support additional border styles and custom CSS heights in Box data.
+
 ## 0.1.24
 
 ### Patch Changes
