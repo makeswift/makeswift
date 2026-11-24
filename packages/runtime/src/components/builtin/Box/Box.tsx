@@ -51,8 +51,12 @@ type Props = {
   children?: GridData
 } & BoxAnimationProps
 
-// `auto` and `stretch` are the Height input's options. Any other stored value is a CSS height.
-function heightStyle(height: string = 'auto'): CSSObject {
+/**
+ * The height prop historically stored auto and stretch, which were used as CSS align-self values rather than actual heights.
+ * To support explicit heights, the prop now also accepts actual CSS height values (e.g. 200px); auto and stretch still
+ * map to align-self, and any other value is applied as a CSS height.
+ */
+function alignmentOrHeightStyle(height: string = 'auto'): CSSObject {
   return height === 'auto' || height === 'stretch'
     ? { alignSelf: height }
     : { alignSelf: 'auto', height }
@@ -173,7 +177,7 @@ const Box = forwardRef(function Box(
     margin,
     borderRadius,
     useStyle({ display: 'flex' }),
-    useStyle(useResponsiveStyle([height], ([value]) => heightStyle(value))),
+    useStyle(useResponsiveStyle([height], ([value]) => alignmentOrHeightStyle(value))),
     animationClassName,
   )
 

@@ -25,8 +25,6 @@ export const percentageLength = z.object({
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/border-style
- *
- * The border inputs offer `dotted`, `dashed` and `solid`. Stored data may hold any of these.
  */
 export const borderStyle = z.enum([
   'dotted',
