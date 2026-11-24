@@ -133,6 +133,39 @@ describe('Style', () => {
       expect(definition.toData(value)).toEqual(data)
     })
 
+    const borderData = (style: string) => ({
+      [ControlDataTypeKey]: 'style::v1' as const,
+      border: [
+        {
+          deviceId: 'desktop',
+          value: {
+            borderTop: { width: 1, style, color: null },
+            borderRight: null,
+            borderBottom: null,
+            borderLeft: null,
+          },
+        },
+      ],
+    })
+
+    test.each([
+      'dotted',
+      'dashed',
+      'solid',
+      'double',
+      'groove',
+      'ridge',
+      'inset',
+      'outset',
+    ])('safeParse accepts a `%s` border', (style) => {
+      const input = borderData(style)
+
+      expect(definition.safeParse(input)).toEqual({
+        success: true,
+        data: input,
+      })
+    })
+
     test.each([
       [data, value],
       [v0Data, swatchOnlyValue],
