@@ -1,5 +1,13 @@
 # @makeswift/prop-controllers
 
+## 0.4.19-canary.0
+
+### Patch Changes
+
+- 3dd4519: Support additional border styles and custom CSS heights in Box data.
+- Updated dependencies [3dd4519]
+  - @makeswift/controls@0.1.25-canary.0
+
 ## 0.4.18
 
 ### Patch Changes

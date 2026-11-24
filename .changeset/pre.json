@@ -18,19 +18,6 @@
     "vite-rsc-hono-react-cloudflare": "0.0.1"
   },
   "changesets": [
-    "bright-lizards-hear",
-    "fair-views-invent",
-    "inline-colors-backgrounds",
-    "inline-colors-border",
-    "inline-colors-color",
-    "inline-colors-navigation-links",
-    "inline-colors-responsive-color",
-    "inline-colors-shadows",
-    "inline-colors-style",
-    "inline-colors-typography",
-    "kind-items-switch",
-    "nine-moles-battle",
-    "silver-books-smoke",
-    "tidy-graphs-retire"
+    "permissive-control-data"
   ]
 }
