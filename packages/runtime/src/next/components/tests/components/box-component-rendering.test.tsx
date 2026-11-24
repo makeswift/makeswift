@@ -60,4 +60,30 @@ describe('correctly renders box component', () => {
     const render = await testMakeswiftPageRendering({ snapshot })
     expect(render.container.querySelector(`#${htmlId}`)).toMatchSnapshot()
   })
+
+  describe('with a height that is not one of the Height options', () => {
+    test.each([
+      ['on every device', [{ deviceId: 'desktop', value: 'calc(0.5 * 100vw * 0.8333)' }]],
+      [
+        'on desktop, with `auto` on mobile',
+        [
+          { deviceId: 'desktop', value: '300px' },
+          { deviceId: 'mobile', value: 'auto' },
+        ],
+      ],
+      [
+        'on mobile, with `stretch` on desktop',
+        [
+          { deviceId: 'desktop', value: 'stretch' },
+          { deviceId: 'mobile', value: '300px' },
+        ],
+      ],
+    ])('%s', async (_, height) => {
+      const htmlId = 'test-box'
+      const snapshot = createPageWithBox({ htmlId, height })
+
+      const render = await testMakeswiftPageRendering({ snapshot })
+      expect(render.container.querySelector(`#${htmlId}`)).toMatchSnapshot()
+    })
+  })
 })

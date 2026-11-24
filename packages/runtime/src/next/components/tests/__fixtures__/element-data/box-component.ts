@@ -1,17 +1,28 @@
 import { type ElementData } from '@makeswift/controls'
-import { type BackgroundData } from '@makeswift/prop-controllers'
+import {
+  type BackgroundData,
+  type ResponsiveIconRadioGroupValue,
+} from '@makeswift/prop-controllers'
 
 import { MakeswiftComponentType } from '../../../../../components/builtin/constants'
 
 export const boxComponentData = ({
   htmlId,
   backgrounds = [],
+  height,
 }: {
   htmlId: string
-  backgrounds: BackgroundData[]
+  backgrounds?: BackgroundData[]
+  height?: ResponsiveIconRadioGroupValue
 }): ElementData => ({
   key: 'a87eab9c-1c2b-462e-8f79-e836dd836271',
   props: {
+    ...(height != null && {
+      height: {
+        '@@makeswift/type': 'prop-controllers::responsive-icon-radio-group::v1',
+        value: height,
+      },
+    }),
     backgrounds: {
       '@@makeswift/type': 'prop-controllers::backgrounds::v3',
       value: [

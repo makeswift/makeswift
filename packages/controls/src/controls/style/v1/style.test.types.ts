@@ -93,7 +93,15 @@ describe('Style Types', () => {
     type Border =
       | {
           width: number | null | undefined
-          style: 'dotted' | 'dashed' | 'solid'
+          style:
+            | 'dotted'
+            | 'dashed'
+            | 'solid'
+            | 'double'
+            | 'groove'
+            | 'ridge'
+            | 'inset'
+            | 'outset'
           color?:
             | { type: 'swatch'; swatchId: string; alpha: number }
             | {
@@ -181,7 +189,15 @@ describe('Style Types', () => {
     type V0Border =
       | {
           width: number | null | undefined
-          style: 'dotted' | 'dashed' | 'solid'
+          style:
+            | 'dotted'
+            | 'dashed'
+            | 'solid'
+            | 'double'
+            | 'groove'
+            | 'ridge'
+            | 'inset'
+            | 'outset'
           color?: { swatchId: string; alpha: number } | null | undefined
         }
       | null

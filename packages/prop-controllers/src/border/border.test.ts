@@ -5,6 +5,7 @@ import {
   BorderPropControllerDataV1Type,
   BorderPropControllerDataV2Type,
   Border,
+  borderPropControllerDataSchema,
   copyBorderPropControllerData,
   createBorderPropControllerDataFromResponsiveBorderData,
   ResponsiveBorderData,
@@ -292,6 +293,45 @@ describe('BorderPropController', () => {
           },
         ],
       })
+    })
+  })
+
+  describe('reads all supported border styles', () => {
+    const borderData = (style: string) => ({
+      [ControlDataTypeKey]: BorderPropControllerDataV2Type,
+      value: [
+        {
+          deviceId: 'desktop',
+          value: {
+            borderTop: { width: 1, style, color: null },
+            borderRight: null,
+            borderBottom: null,
+            borderLeft: null,
+          },
+        },
+      ],
+    })
+
+    test.each([
+      'dotted',
+      'dashed',
+      'solid',
+      'double',
+      'groove',
+      'ridge',
+      'inset',
+      'outset',
+    ])('reads a `%s` border', (style) => {
+      // Arrange
+      const data = borderData(style)
+
+      // Act
+      const result = borderPropControllerDataSchema.parse(data)
+
+      // Assert
+      expect(getBorderPropControllerDataResponsiveBorderData(result)).toEqual(
+        data.value,
+      )
     })
   })
 })

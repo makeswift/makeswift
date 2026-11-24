@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { type CSSObject } from '@emotion/serialize'
 import { v4 as uuid } from 'uuid'
 
 import { Element } from '../../../runtimes/react'
@@ -35,7 +36,7 @@ type Props = {
   id?: string
   backgrounds?: ResponsiveBackgroundsData
   width?: string
-  height?: ResponsiveIconRadioGroupValue<'auto' | 'stretch'>
+  height?: ResponsiveIconRadioGroupValue
   verticalAlign?: ResponsiveIconRadioGroupValue<
     'flex-start' | 'center' | 'flex-end' | 'space-between'
   >
@@ -49,6 +50,17 @@ type Props = {
   hidePlaceholder?: boolean
   children?: GridData
 } & BoxAnimationProps
+
+/**
+ * The `height` prop historically stored `auto` and `stretch`, which were used as CSS `align-self` values rather than actual heights.
+ * To support explicit heights, the prop now also accepts actual CSS height values (e.g. `200px`); `auto` and `stretch` still
+ * map to `align-self`, and any other value is applied as a CSS height.
+ */
+function alignmentOrHeightStyle(alignmentOrHeight: string = 'auto'): CSSObject {
+  return alignmentOrHeight === 'auto' || alignmentOrHeight === 'stretch'
+    ? { alignSelf: alignmentOrHeight }
+    : { height: alignmentOrHeight }
+}
 
 const Box = forwardRef(function Box(
   {
@@ -165,7 +177,7 @@ const Box = forwardRef(function Box(
     margin,
     borderRadius,
     useStyle({ display: 'flex' }),
-    useStyle(useResponsiveStyle([height], ([alignSelf = 'auto']) => ({ alignSelf }))),
+    useStyle(useResponsiveStyle([height], ([value]) => alignmentOrHeightStyle(value))),
     animationClassName,
   )
 

@@ -1,81 +1,25 @@
 # vite-rsc-hono-react-cloudflare
 
-## 0.0.5-canary.7
+## 0.0.5
 
 ### Patch Changes
 
 - Updated dependencies [240652d]
-  - @makeswift/runtime@0.29.3-canary.7
-  - @makeswift/hono-react@0.3.3-canary.7
-  - @makeswift/vite-rsc@0.0.4-canary.7
-
-## 0.0.5-canary.6
-
-### Patch Changes
-
-- Updated dependencies [5bbe118]
-  - @makeswift/runtime@0.29.3-canary.6
-  - @makeswift/hono-react@0.3.3-canary.6
-  - @makeswift/vite-rsc@0.0.4-canary.6
-
-## 0.0.5-canary.5
-
-### Patch Changes
-
-- Updated dependencies [02ee853]
-  - @makeswift/runtime@0.29.3-canary.5
-  - @makeswift/hono-react@0.3.3-canary.5
-  - @makeswift/vite-rsc@0.0.4-canary.5
-
-## 0.0.5-canary.4
-
-### Patch Changes
-
+- Updated dependencies [065c327]
 - Updated dependencies [c7519c4]
 - Updated dependencies [9197b97]
+- Updated dependencies [3baeed2]
 - Updated dependencies [e945956]
 - Updated dependencies [e945956]
 - Updated dependencies [392e937]
 - Updated dependencies [0ff71b8]
-  - @makeswift/runtime@0.29.3-canary.4
-  - @makeswift/hono-react@0.3.3-canary.4
-  - @makeswift/vite-rsc@0.0.4-canary.4
-
-## 0.0.5-canary.3
-
-### Patch Changes
-
-- Updated dependencies [05c635b]
-  - @makeswift/runtime@0.29.3-canary.3
-  - @makeswift/hono-react@0.3.3-canary.3
-  - @makeswift/vite-rsc@0.0.4-canary.3
-
-## 0.0.5-canary.2
-
-### Patch Changes
-
-- Updated dependencies [3baeed2]
-  - @makeswift/runtime@0.29.3-canary.2
-  - @makeswift/hono-react@0.3.3-canary.2
-  - @makeswift/vite-rsc@0.0.4-canary.2
-
-## 0.0.5-canary.1
-
-### Patch Changes
-
-- Updated dependencies [065c327]
-  - @makeswift/runtime@0.29.3-canary.1
-  - @makeswift/hono-react@0.3.3-canary.1
-  - @makeswift/vite-rsc@0.0.4-canary.1
-
-## 0.0.5-canary.0
-
-### Patch Changes
-
 - Updated dependencies [83ee9b4]
-  - @makeswift/runtime@0.29.3-canary.0
-  - @makeswift/hono-react@0.3.3-canary.0
-  - @makeswift/vite-rsc@0.0.4-canary.0
+- Updated dependencies [02ee853]
+- Updated dependencies [05c635b]
+- Updated dependencies [5bbe118]
+  - @makeswift/runtime@0.29.3
+  - @makeswift/hono-react@0.3.3
+  - @makeswift/vite-rsc@0.0.4
 
 ## 0.0.4
 
