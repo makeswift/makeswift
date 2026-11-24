@@ -28,27 +28,19 @@ exports[`correctly renders box component with a height that is not one of the He
 }
 
 @media only screen and (min-width: 769px) {
-  .ms-1ogwnbx {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
+  .ms-byc513 {
     height: 300px;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-1ogwnbx {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
+  .ms-byc513 {
     height: 300px;
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .ms-1ogwnbx {
+  .ms-byc513 {
     -webkit-align-self: auto;
     -ms-flex-item-align: auto;
     -ms-grid-row-align: auto;
@@ -258,7 +250,7 @@ exports[`correctly renders box component with a height that is not one of the He
 
 
 <div
-  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-1ogwnbx ms-g6asym"
+  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-byc513 ms-g6asym"
   id="test-box"
 >
   <div
@@ -323,31 +315,19 @@ exports[`correctly renders box component with a height that is not one of the He
 }
 
 @media only screen and (min-width: 769px) {
-  .ms-ljwou8 {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
+  .ms-vw708b {
     height: calc(0.5 * 100vw * 0.8333);
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-ljwou8 {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
+  .ms-vw708b {
     height: calc(0.5 * 100vw * 0.8333);
   }
 }
 
 @media only screen and (max-width: 575px) {
-  .ms-ljwou8 {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
+  .ms-vw708b {
     height: calc(0.5 * 100vw * 0.8333);
   }
 }
@@ -554,7 +534,7 @@ exports[`correctly renders box component with a height that is not one of the He
 
 
 <div
-  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-ljwou8 ms-g6asym"
+  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-vw708b ms-g6asym"
   id="test-box"
 >
   <div
@@ -619,7 +599,7 @@ exports[`correctly renders box component with a height that is not one of the He
 }
 
 @media only screen and (min-width: 769px) {
-  .ms-11wn99j {
+  .ms-1rkzjhf {
     -webkit-align-self: stretch;
     -ms-flex-item-align: stretch;
     -ms-grid-row-align: stretch;
@@ -628,7 +608,7 @@ exports[`correctly renders box component with a height that is not one of the He
 }
 
 @media only screen and (min-width: 576px) and (max-width: 768px) {
-  .ms-11wn99j {
+  .ms-1rkzjhf {
     -webkit-align-self: stretch;
     -ms-flex-item-align: stretch;
     -ms-grid-row-align: stretch;
@@ -637,11 +617,7 @@ exports[`correctly renders box component with a height that is not one of the He
 }
 
 @media only screen and (max-width: 575px) {
-  .ms-11wn99j {
-    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;
-    -ms-grid-row-align: auto;
-    align-self: auto;
+  .ms-1rkzjhf {
     height: 300px;
   }
 }
@@ -848,7 +824,7 @@ exports[`correctly renders box component with a height that is not one of the He
 
 
 <div
-  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-11wn99j ms-g6asym"
+  class="ms-u7pdys ms-53v5nr ms-19oni3y ms-ioe3ig ms-1vg8v23 ms-1rkzjhf ms-g6asym"
   id="test-box"
 >
   <div

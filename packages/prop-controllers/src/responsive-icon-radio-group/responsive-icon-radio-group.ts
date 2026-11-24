@@ -51,8 +51,6 @@ export type RawIconRadioGroupOptions<
   options: IconRadioGroupOption<T>[]
   defaultValue?: U
   hidden?: boolean
-  /** Stored data may hold a string that is not one of `options`. */
-  acceptsUnlistedValues?: boolean
 }
 
 const discriminator = {

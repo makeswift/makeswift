@@ -296,7 +296,7 @@ describe('BorderPropController', () => {
     })
   })
 
-  describe('border styles the border input does not offer', () => {
+  describe('reads all supported border styles', () => {
     const borderData = (style: string) => ({
       [ControlDataTypeKey]: BorderPropControllerDataV2Type,
       value: [
@@ -312,20 +312,26 @@ describe('BorderPropController', () => {
       ],
     })
 
-    test.each(['double', 'groove', 'ridge', 'inset', 'outset'])(
-      'reads a `%s` border',
-      (style) => {
-        // Arrange
-        const data = borderData(style)
+    test.each([
+      'dotted',
+      'dashed',
+      'solid',
+      'double',
+      'groove',
+      'ridge',
+      'inset',
+      'outset',
+    ])('reads a `%s` border', (style) => {
+      // Arrange
+      const data = borderData(style)
 
-        // Act
-        const result = borderPropControllerDataSchema.parse(data)
+      // Act
+      const result = borderPropControllerDataSchema.parse(data)
 
-        // Assert
-        expect(getBorderPropControllerDataResponsiveBorderData(result)).toEqual(
-          data.value,
-        )
-      },
-    )
+      // Assert
+      expect(getBorderPropControllerDataResponsiveBorderData(result)).toEqual(
+        data.value,
+      )
+    })
   })
 })

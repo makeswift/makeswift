@@ -148,17 +148,23 @@ describe('Style', () => {
       ],
     })
 
-    test.each(['double', 'groove', 'ridge', 'inset', 'outset'])(
-      'safeParse accepts a `%s` border, which the border input does not offer',
-      (style) => {
-        const input = borderData(style)
+    test.each([
+      'dotted',
+      'dashed',
+      'solid',
+      'double',
+      'groove',
+      'ridge',
+      'inset',
+      'outset',
+    ])('safeParse accepts a `%s` border', (style) => {
+      const input = borderData(style)
 
-        expect(definition.safeParse(input)).toEqual({
-          success: true,
-          data: input,
-        })
-      },
-    )
+      expect(definition.safeParse(input)).toEqual({
+        success: true,
+        data: input,
+      })
+    })
 
     test.each([
       [data, value],

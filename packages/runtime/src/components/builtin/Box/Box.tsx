@@ -52,14 +52,14 @@ type Props = {
 } & BoxAnimationProps
 
 /**
- * The height prop historically stored auto and stretch, which were used as CSS align-self values rather than actual heights.
- * To support explicit heights, the prop now also accepts actual CSS height values (e.g. 200px); auto and stretch still
- * map to align-self, and any other value is applied as a CSS height.
+ * The `height` prop historically stored `auto` and `stretch`, which were used as CSS `align-self` values rather than actual heights.
+ * To support explicit heights, the prop now also accepts actual CSS height values (e.g. `200px`); `auto` and `stretch` still
+ * map to `align-self`, and any other value is applied as a CSS height.
  */
-function alignmentOrHeightStyle(height: string = 'auto'): CSSObject {
-  return height === 'auto' || height === 'stretch'
-    ? { alignSelf: height }
-    : { alignSelf: 'auto', height }
+function alignmentOrHeightStyle(alignmentOrHeight: string = 'auto'): CSSObject {
+  return alignmentOrHeight === 'auto' || alignmentOrHeight === 'stretch'
+    ? { alignSelf: alignmentOrHeight }
+    : { height: alignmentOrHeight }
 }
 
 const Box = forwardRef(function Box(

@@ -67,7 +67,6 @@ export function registerComponent(runtime: ReactRuntimeCore) {
             { value: 'stretch', label: 'Stretch', icon: 'HeightMatch16' },
           ],
           defaultValue: 'auto',
-          acceptsUnlistedValues: true,
         }),
         verticalAlign: ResponsiveIconRadioGroup({
           label: 'Align items',
