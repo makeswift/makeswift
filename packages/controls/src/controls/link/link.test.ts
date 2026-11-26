@@ -1,7 +1,12 @@
+import { noOpResourceResolver } from '../../testing/mocks/resource-resolver'
 import { testDefinition } from '../../testing/test-definition'
+
+import { createDeferred } from '../../lib/deferred'
+import { StableValue } from '../../lib/stable-value'
 
 import { createReplacementContext, type CopyContext } from '../../context'
 import { Targets } from '../../introspection'
+import { type PagePathnameSlice } from '../../resources'
 
 import { type ValueType } from '../associated-types'
 import { ControlDefinition } from '../definition'
@@ -203,6 +208,53 @@ describe('Link', () => {
 
     test.each([null, undefined])('gracefully handles %s', (value) => {
       expect(Link().copyData(value, context)).toBe(value)
+    })
+  })
+
+  describe('resolveValue', () => {
+    test('[OPEN_PAGE] `triggerResolve` waits for the page fetch to complete', async () => {
+      // Arrange
+      const fetchResult = createDeferred<PagePathnameSlice | null>()
+
+      // simulates a resource store that only has the page once the fetch has completed
+      let loadedPage: PagePathnameSlice | null = null
+      const pageValue = {
+        ...StableValue({ name: 'page-pathname', read: () => loadedPage }),
+        fetch: async () => {
+          const result = await fetchResult.promise
+          loadedPage = result
+          return result
+        },
+      }
+
+      const linkValue = Link().resolveValue(
+        {
+          type: 'OPEN_PAGE',
+          payload: { pageId: 'fake-page-id', openInNewTab: false },
+        },
+        {
+          ...noOpResourceResolver,
+          resolvePagePathnameSlice: () => pageValue,
+        },
+      )
+
+      // Act
+      let resolved = false
+      const triggerResolve = linkValue.triggerResolve().then(() => {
+        resolved = true
+      })
+
+      // Assert: should not resolve until `fetchResult` is resolved
+
+      // wait a tick
+      await Promise.resolve()
+      expect(resolved).toBe(false)
+
+      // simulate completed page fetch
+      fetchResult.resolve({ id: 'test-page-id', pathname: 'about/our-team' })
+
+      await triggerResolve
+      expect(linkValue.readStable().href).toBe('/about/our-team')
     })
   })
 

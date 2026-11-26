@@ -224,7 +224,7 @@ class Definition<
       ...stableValue,
       triggerResolve: async () => {
         if (pageSub.readStable() == null) {
-          pageSub.fetch()
+          await pageSub.fetch()
         }
       },
     }
