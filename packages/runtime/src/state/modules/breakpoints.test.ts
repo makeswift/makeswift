@@ -1,6 +1,100 @@
 import { parseBreakpointsInput } from './breakpoints'
 
 describe('parseBreakpointsInput', () => {
+  describe('default breakpoint configuration', () => {
+    test('accepts only a default breakpoint with viewport and label', async () => {
+      // Arrange
+      const input = {
+        default: { viewport: 780, label: 'Tablet' },
+      }
+
+      // Act
+      const result = parseBreakpointsInput(input)
+
+      // Assert
+      expect(result).toEqual([{ id: 'desktop', label: 'Tablet', viewportWidth: 780 }])
+    })
+
+    test('accepts only a default breakpoint with just viewport', async () => {
+      // Arrange
+      const input = {
+        default: { viewport: 780 },
+      }
+
+      // Act
+      const result = parseBreakpointsInput(input)
+
+      // Assert
+      expect(result).toEqual([{ id: 'desktop', label: 'Desktop', viewportWidth: 780 }])
+    })
+
+    test('accepts only a default breakpoint with just label', async () => {
+      // Arrange
+      const input = {
+        default: { label: 'Tablet' },
+      }
+
+      // Act
+      const result = parseBreakpointsInput(input)
+
+      // Assert
+      expect(result).toEqual([{ id: 'desktop', label: 'Tablet' }])
+    })
+
+    test('accepts default with other breakpoints', async () => {
+      // Arrange
+      const input = {
+        default: { viewport: 1200, label: 'Large' },
+        tablet: { width: 768 },
+        mobile: { width: 575 },
+      }
+
+      // Act
+      const result = parseBreakpointsInput(input)
+
+      // Assert
+      expect(result).toEqual([
+        { id: 'desktop', label: 'Large', minWidth: 769, viewportWidth: 1200 },
+        { id: 'tablet', minWidth: 576, maxWidth: 768, viewportWidth: 768 },
+        { id: 'mobile', maxWidth: 575, viewportWidth: 575 },
+      ])
+    })
+
+    test('default label overrides the base breakpoint label', async () => {
+      // Arrange
+      const input = {
+        default: { label: 'Custom Base' },
+        tablet: { width: 768 },
+      }
+
+      // Act
+      const result = parseBreakpointsInput(input)
+
+      // Assert
+      expect(result).toEqual([
+        { id: 'desktop', label: 'Custom Base', minWidth: 769 },
+        { id: 'tablet', maxWidth: 768, viewportWidth: 768 },
+      ])
+    })
+
+    test('default viewport sets the base breakpoint viewportWidth', async () => {
+      // Arrange
+      const input = {
+        default: { viewport: 1024 },
+        tablet: { width: 768 },
+      }
+
+      // Act
+      const result = parseBreakpointsInput(input)
+
+      // Assert
+      expect(result).toEqual([
+        { id: 'desktop', label: 'Desktop', minWidth: 769, viewportWidth: 1024 },
+        { id: 'tablet', maxWidth: 768, viewportWidth: 768 },
+      ])
+    })
+  })
+
   test('adds the base breakpoint', async () => {
     // Arrange
     const input = {
@@ -105,7 +199,7 @@ describe('parseBreakpointsInput', () => {
 
     // Act
     // Assert
-    expect(() => parseBreakpointsInput(input)).toThrowError(/base breakpoint/)
+    expect(() => parseBreakpointsInput(input)).toThrowError(/Use "default" instead/)
   })
 
   test('throws an error if the the input is an empty object', async () => {

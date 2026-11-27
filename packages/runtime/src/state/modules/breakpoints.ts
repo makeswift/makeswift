@@ -128,14 +128,50 @@ export function reducer(state: State = getInitialState(), action: Action | Unkno
   }
 }
 
-export type BreakpointsInput = Record<string, { width: number; label?: string; viewport?: number }>
+export type DefaultBreakpointConfig = {
+  viewport?: number
+  label?: string
+}
+
+export type BreakpointConfig = {
+  width: number
+  label?: string
+  viewport?: number
+}
+
+export type BreakpointsInput = {
+  default?: DefaultBreakpointConfig
+  [key: string]: BreakpointConfig | DefaultBreakpointConfig | undefined
+}
+
+const DEFAULT_BREAKPOINT_KEY = 'default'
 
 export function parseBreakpointsInput(input: BreakpointsInput): Breakpoints {
   validateBreakpointsInput(input)
 
-  const sorted = Object.entries(input)
-    .map(([id, value]) => ({ ...value, id }))
+  const { [DEFAULT_BREAKPOINT_KEY]: defaultConfig, ...otherBreakpoints } = input
+
+  const hasOtherBreakpoints = Object.keys(otherBreakpoints).length > 0
+
+  if (!hasOtherBreakpoints) {
+    const baseBreakpoint: Breakpoint = {
+      id: DefaultBreakpointID.Desktop,
+      label: defaultConfig?.label ?? 'Desktop',
+      ...(defaultConfig?.viewport != null && { viewportWidth: defaultConfig.viewport }),
+    }
+    return [baseBreakpoint]
+  }
+
+  const sorted = Object.entries(otherBreakpoints)
+    .map(([id, value]) => ({ ...(value as BreakpointConfig), id }))
     .sort((a, b) => b.width - a.width) // Sort by width in descending order
+
+  const baseBreakpoint: Breakpoint = {
+    id: DefaultBreakpointID.Desktop,
+    label: defaultConfig?.label ?? 'Desktop',
+    minWidth: sorted[0].width + 1,
+    ...(defaultConfig?.viewport != null && { viewportWidth: defaultConfig.viewport }),
+  }
 
   const transformed = sorted.reduce(
     (prev, curr, index, array) => {
@@ -152,9 +188,7 @@ export function parseBreakpointsInput(input: BreakpointsInput): Breakpoints {
 
       return [...prev, breakpoint]
     },
-    [
-      { id: DefaultBreakpointID.Desktop, label: 'Desktop', minWidth: sorted[0].width + 1 },
-    ] as Breakpoints,
+    [baseBreakpoint] as Breakpoints,
   )
 
   return transformed
@@ -163,16 +197,25 @@ export function parseBreakpointsInput(input: BreakpointsInput): Breakpoints {
 function validateBreakpointsInput(input: BreakpointsInput) {
   if (DefaultBreakpointID.Desktop in input) {
     throw new Error(
-      `Cannot change the base breakpoint. "${DefaultBreakpointID.Desktop}" is reserved as the base breakpoint.`,
+      `Cannot use "${DefaultBreakpointID.Desktop}" as a breakpoint key. Use "default" instead to configure the base breakpoint.`,
     )
   }
 
-  if (Object.keys(input).length === 0) {
+  const { [DEFAULT_BREAKPOINT_KEY]: defaultConfig, ...otherBreakpoints } = input
+
+  const hasDefaultConfig = defaultConfig !== undefined
+  const hasOtherBreakpoints = Object.keys(otherBreakpoints).length > 0
+
+  if (!hasDefaultConfig && !hasOtherBreakpoints) {
     throw new Error(`Breakpoints cannot be empty. You must provide at least one breakpoint.`)
   }
 
-  const sorted = Object.entries(input)
-    .map(([id, value]) => ({ ...value, id }))
+  if (!hasOtherBreakpoints) {
+    return
+  }
+
+  const sorted = Object.entries(otherBreakpoints)
+    .map(([id, value]) => ({ ...(value as BreakpointConfig), id }))
     .sort((a, b) => b.width - a.width) // Sort by width in descending order
 
   sorted.forEach(({ id, width, viewport }, index, array) => {
